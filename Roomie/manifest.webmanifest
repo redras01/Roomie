@@ -1,6 +1,6 @@
 {
-  "name": "Dreamland",
-  "short_name": "Dreamland",
+  "name": "roomie",
+  "short_name": "roomie",
   "description": "Plan a room, share it with a friend, get ideas back.",
   "start_url": "./",
   "scope": "./",
