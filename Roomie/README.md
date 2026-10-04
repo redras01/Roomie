@@ -1,13 +1,13 @@
-# Dreamland
+# Roomie
 
 Plan a room on your phone, share it with a friend, and let them send their ideas back.
 
 ## Put it on GitHub Pages (free)
 
-1. Create a GitHub account, then a **new public repository** (for example `dreamland`).
+1. Create a GitHub account, then a **new public repository** (for example `roomie`).
 2. Upload every file in this folder, including the `icons` folder and `.nojekyll`.
 3. Repository → **Settings → Pages** → Source: *Deploy from a branch* → branch `main`, folder `/ (root)` → Save.
-4. After a minute your address appears, like `https://yourname.github.io/dreamland/`. Share that link.
+4. After a minute your address appears, like `https://yourname.github.io/roomie/`. Share that link.
 
 Screens change now and then. If something looks different, check GitHub's Pages help.
 
