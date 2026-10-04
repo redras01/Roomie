@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Dreamland</title>
-<meta name="description" content="Dreamland: plan a room, share it with a friend, and let them send ideas back.">
+<title>Roomie</title>
+<meta name="description" content="Roomie: plan a room, share it with a friend, and let them send ideas back.">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#1D6E8A">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Dreamland">
+<meta name="apple-mobile-web-app-title" content="Roomie">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 
@@ -575,7 +575,7 @@ var vdb=null,lastSnapT=0,lastAutoT=0,mirTimer=null,persistTried=false;
 var vready=new Promise(function(res){
   try{
     if(!window.indexedDB){res(null);return}
-    var rq=indexedDB.open("dreamland",1);
+    var rq=indexedDB.open("Roomie",1);
     rq.onupgradeneeded=function(){var db=rq.result;if(!db.objectStoreNames.contains("kv"))db.createObjectStore("kv");if(!db.objectStoreNames.contains("snaps"))db.createObjectStore("snaps",{keyPath:"t"})};
     rq.onsuccess=function(){vdb=rq.result;vdb.onversionchange=function(){try{vdb.close()}catch(e){}vdb=null};res(vdb)};
     rq.onerror=function(){res(null)};rq.onblocked=function(){res(null)};
@@ -1665,7 +1665,7 @@ $("tree").addEventListener("click",function(e){
   else if(act==="newv"){var nv={id:uid("v"),name:uniqueName("View "+(r.views.length+1),r.views),objs:[],lights:[]};r.views.push(nv);save();goTo(rid,nv.id);closeDrawer()}
   else if(act==="delv"){
     if(r.views.length<2){showModal({title:"Can't delete",msg:"A room needs at least one view. Duplicate it or add a new one first.",ok:"OK",cb:null});return}
-    showModal({title:"Delete view “"+v.name+"”?",msg:"This can't be undone from inside Dreamland. A snapshot is kept in the vault.",ok:"Delete",danger:true,cb:function(){
+    showModal({title:"Delete view “"+v.name+"”?",msg:"This can't be undone from inside Roomie. A snapshot is kept in the vault.",ok:"Delete",danger:true,cb:function(){
       vSnap("before deleting a view");r.views=r.views.filter(function(x){return x!==v});
       if(store.cur.r===r.id&&store.cur.v===v.id){store.cur.v=r.views[0].id;hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll()}
       save();renderTree()}});
@@ -1686,7 +1686,7 @@ $("mVault").onclick=function(){openDrawer();var v=$("vault");if(v&&v.scrollIntoV
 $("mRoom").onclick=function(){select({t:"room",id:"room"},true);openSheet();showPlan()};
 
 function openNewRoom(first){
-  $("nrT").textContent=first?"Welcome to Dreamland":"New room";
+  $("nrT").textContent=first?"Welcome to Roomie":"New room";
   $("nrName").value=first?"My room":"New room";$("nrW").value=350;$("nrH").value=400;$("nrN").value=0;
   var src=(!shared&&store.rooms.length)?room:null;
   $("nrLat").value=src&&src.lat!=null?src.lat:"";$("nrLon").value=src&&src.lon!=null?src.lon:"";
@@ -1885,12 +1885,12 @@ function renderVault(){
   $("vStatus").innerHTML="Saved in this browser, with a second copy in its database and automatic snapshots. Last backup file: <b>"+(lb?ago(lb):"never")+"</b>.";
   $("vWarn").hidden=!store.rooms.length||(!!lb&&Date.now()-lb<14*864e5);
   $("vPersist").textContent="";
-  try{if(navigator.storage&&navigator.storage.persisted)navigator.storage.persisted().then(function(p){$("vPersist").textContent=p?"This browser has agreed not to clear Dreamland's data on its own.":"If the device runs low on space, the browser may clear this data. A backup file protects you from that."}).catch(function(){})}catch(e){}
+  try{if(navigator.storage&&navigator.storage.persisted)navigator.storage.persisted().then(function(p){$("vPersist").textContent=p?"This browser has agreed not to clear Roomie's data on its own.":"If the device runs low on space, the browser may clear this data. A backup file protects you from that."}).catch(function(){})}catch(e){}
 }
 function vaultPayload(){return {t:"all",v:2,rooms:store.rooms}}
 $("vSave").hidden=EMBED;
 $("vSave").onclick=function(){
-  var d=new Date(),n="dreamland-vault-"+d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)+".json";
+  var d=new Date(),n="Roomie-vault-"+d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)+".json";
   downloadJSON(n,vaultPayload());store.lastBackup=Date.now();save();renderVault();
 };
 $("vCode").onclick=function(){
