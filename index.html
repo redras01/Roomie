@@ -26,6 +26,10 @@
 
 
 
+
+
+
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -434,6 +438,48 @@ body.friend .wing,body.friend .doorg,body.friend .out{cursor:default}
 .selgap line{stroke:var(--hot);stroke-width:1.2;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
 .sgt{fill:var(--hot);font-weight:700;stroke:#FFF6DE;paint-order:stroke;stroke-linejoin:round}
 .ver{opacity:.7;font-size:12px;text-align:center}
+.rm.sent{padding:6px 12px}
+.rm.sent .rm-name{width:100%}
+#acCode{width:100%;box-sizing:border-box;margin-top:10px}
+
+/* ===== full-screen sandbox: the map takes all remaining height ===== */
+html{height:100%;overflow:hidden}
+:root{padding-top:0!important;padding-bottom:0!important}
+body{height:100%;height:100dvh;margin:0;overflow:hidden;display:flex;flex-direction:column}
+main{flex:1 1 auto;min-height:0;width:100%;max-width:760px;box-sizing:border-box;margin:0 auto;display:flex;flex-direction:column;padding:calc(6px + env(safe-area-inset-top,0px)) 8px calc(8px + env(safe-area-inset-bottom,0px))}
+body.sheet-open main,body.friend.sheet-open main{padding-bottom:calc(44vh + 8px)}
+body.friend main{padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+.hdr{position:static;flex:0 0 auto;background:transparent}
+.projbar{padding:0 0 6px}
+.banner{flex:0 0 auto}
+.stage{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+.vtabs{flex:0 0 auto}
+.stagebody{flex:1 1 auto;min-height:0;display:flex;position:relative}
+.mapwrap{position:relative;flex:1 1 auto;min-width:0;min-height:0;padding:0}
+#plan{position:absolute;left:0;top:0;width:100%;height:100%;display:block;touch-action:none}
+.zc{position:absolute;top:6px;right:6px;bottom:6px;left:auto;width:64px;pointer-events:none}
+.zc>*{pointer-events:auto}
+.zc .b.zbig{flex:0 0 auto}
+.zc .wpanel{flex:1 1 0;min-height:0;width:100%;overflow-x:hidden;overflow-y:auto;margin-top:0;box-sizing:border-box}
+.zc .wcol{flex:1 1 0;min-height:0}
+.zc .vslider{flex:1 1 auto;height:auto;min-height:56px}
+.ideasbar{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:6;padding:0;pointer-events:auto}
+.ideasbar[hidden]{display:none}
+.b.bigshare{width:auto;padding:0 22px;min-height:46px;font-size:24px;white-space:nowrap}
+.seltools{z-index:5}
+
+/* project bar: room name gets the space, the active view is in the tabs below */
+.proj .pv{display:none}
+.proj .pn{max-width:none;flex:1 1 auto;min-width:0;font-size:22px}
+
+/* container cues: their views are view-only, my edits and received views get a coloured top strip */
+.vt.ref{background:#E9DFB8;border-style:dashed;color:var(--ink2);font-style:italic}
+.vt.ref[aria-selected=true]{background:var(--card);color:var(--ink);border-bottom-color:var(--card)}
+.vt.edit{box-shadow:inset 0 4px 0 var(--hot)}
+.vt.recv{box-shadow:inset 0 4px 0 var(--accent)}
+#sdViews .tog{display:flex;margin:2px 0}
+#pkList .b{display:block}
+#friendScr .rm .acts{margin-top:6px}
 </style>
 </head>
 <body>
@@ -448,9 +494,9 @@ body.friend .wing,body.friend .doorg,body.friend .out{cursor:default}
     </button>
     <button class="bigc alt" id="goFriend">
       <svg width="58" height="58" viewBox="0 0 58 58" aria-hidden="true"><rect x="12" y="9" width="34" height="44" rx="3" fill="#FFF6DE" stroke="#151311" stroke-width="4"/><rect x="21" y="4" width="16" height="10" rx="2" fill="#E4572E" stroke="#151311" stroke-width="3"/><path d="M19 27h20M19 35h20M19 43h12" stroke="#151311" stroke-width="3.5" stroke-linecap="round"/></svg>
-      <span><b>Help a friend with their room</b><small>Paste the code they sent you.</small></span>
+      <span><b>Help a friend with their room</b><small id="goFriendSub">Paste the code they sent you.</small></span>
     </button>
-    <p class="cap lg-foot">Your rooms stay on this device. Back them up in Rooms and views → Vault.<br><span class="ver">Build 4 Oct 2026 · single-view sharing</span></p>
+    <p class="cap lg-foot">Your rooms stay on this device. Back them up in My rooms → Rooms and views → Vault.<br><span class="ver">Build 4 Oct 2026 · two containers</span></p>
   </div>
 </section>
 
@@ -458,11 +504,14 @@ body.friend .wing,body.friend .doorg,body.friend .out{cursor:default}
   <div class="lg-in">
     <div><button class="b sm" id="frBack">← Back</button></div>
     <h1 id="frT" class="logo sm">Help a friend</h1>
-    <p class="tag">Paste the code or link your friend sent you.</p>
+    <div id="frRoomsWrap" hidden><div class="sub" style="margin-top:0">Friends' rooms</div><div id="frRooms"></div></div>
+    <div id="frEditsWrap" hidden><div class="sub">My edits</div><div id="frEdits"></div></div>
+    <div class="sub" id="frAddHead">Add a friend's room</div>
+    <p class="tag" style="font-size:18px">Paste the code or link your friend sent you.</p>
     <textarea id="frCode" placeholder="Paste it here" aria-label="Your friend's room code or link"></textarea>
     <div class="row" style="margin:0"><button class="b primary" id="frGo">Open their room</button><label class="b" for="frFile" style="display:inline-flex;align-items:center">Open a file</label><input type="file" id="frFile" accept=".json,.room,application/json,text/plain" hidden></div>
     <p class="cap bad" id="frErr" role="alert" style="margin:0"></p>
-    <p class="cap" style="margin:0">No code yet? Ask them to open Roomie, tap their room name at the top, then Share room → Copy code.</p>
+    <p class="cap" style="margin:0">Their room is saved on this device, so you only paste it once. It never appears in My rooms.</p>
   </div>
 </section>
 
@@ -476,7 +525,6 @@ body.friend .wing,body.friend .doorg,body.friend .out{cursor:default}
   </div>
 
   <span class="sr" id="measure" aria-live="polite"></span>
-  <div class="ideasbar" id="ideasBar" hidden><button class="b bigshare" id="ideasBtn">Share ideas</button></div>
 
   </header>
 
@@ -494,6 +542,7 @@ body.friend .wing,body.friend .doorg,body.friend .out{cursor:default}
       <title id="pt">Floor plan of the room</title>
       <desc id="pd">Top-down plan with draggable furniture, windows, doors, outlets and lights. Drag a wall handle to resize the room.</desc>
     </svg>
+    <div class="ideasbar" id="ideasBar" hidden><button class="b bigshare" id="ideasBtn">Share ideas</button></div>
     <div class="seltools" id="seltools" hidden>
       <button class="b rbtn" id="rl" aria-label="Rotate left: tap for 90 degrees, hold for 15 degree steps" disabled>↺</button>
       <button class="b rbtn" id="rr" aria-label="Rotate right: tap for 90 degrees, hold for 15 degree steps" disabled>↻</button>
@@ -605,7 +654,7 @@ body.friend .wing,body.friend .doorg,body.friend .out{cursor:default}
 <div class="drawer" id="drawer" hidden role="dialog" aria-modal="true" aria-labelledby="drT">
   <div class="dr-in">
     <div class="sh-head"><h2 id="drT">Rooms and views</h2><button class="b primary" id="drDone">Done</button></div>
-    <p class="cap" style="margin:0 0 4px">A room holds the walls, windows, doors and outlets. Each view is a layout of furniture inside that room.</p>
+    <p class="cap" id="drIntro" style="margin:0 0 4px">Your own rooms. A room holds the walls, windows, doors and outlets. Each view is a layout of furniture inside it, yours or a friend's.</p>
     <div id="shareBox" class="rm" hidden>
       <div class="rm-h"><b id="sbT"></b><button class="b sm" id="sbX">Close</button></div>
       <div id="sbSend" hidden>
@@ -617,11 +666,12 @@ body.friend .wing,body.friend .doorg,body.friend .out{cursor:default}
       <p class="cap" id="shNote"></p>
     </div>
     <div id="tree"></div>
-    <div class="row"><button class="b primary" id="newRoom">New room</button></div>
-    <div class="sub">Open someone's room</div>
-    <div class="row" style="margin-top:0"><input type="text" id="opCode" placeholder="Paste a link or room code" style="flex:1;min-width:150px"><button class="b" id="opGo">Open</button></div>
+    <div class="row" id="nrRow"><button class="b primary" id="newRoom">New room</button></div>
+    <div class="sub" id="opHead">Add a friend's views</div>
+    <div class="row" style="margin-top:0"><input type="text" id="opCode" placeholder="Paste a friend's link or code" style="flex:1;min-width:150px"><button class="b" id="opGo">Open</button></div>
     <div class="row"><label class="b" for="opFile" style="display:inline-flex;align-items:center">Open file</label><input type="file" id="opFile" accept=".json,.room,application/json,text/plain" hidden></div>
     <p class="cap bad" id="opErr" role="alert"></p>
+    <div id="vaultWrap">
     <div class="sub" id="vault">Vault</div>
     <div class="rm" style="margin-top:0">
       <p class="cap" id="vStatus" style="margin:0"></p>
@@ -634,8 +684,20 @@ body.friend .wing,body.friend .doorg,body.friend .out{cursor:default}
       <div id="vSnapList" class="cap" hidden></div>
     </div>
     <p class="cap">Restoring adds rooms back. It never replaces what you have now.</p>
-    <p class="cap ver">Roomie build 4 Oct 2026 · single-view sharing</p>
+    </div>
+    <p class="cap ver">Roomie build 4 Oct 2026 · two containers</p>
   </div>
+</div>
+
+<div class="modal" id="pickDlg" hidden role="dialog" aria-modal="true" aria-labelledby="pkT">
+  <div class="mbox"><h2 id="pkT">Which room is this for?</h2><p class="cap" id="pkP" style="margin:6px 0 0"></p><div id="pkList"></div><div class="row"><button class="b" id="pkNo">Cancel</button></div></div>
+</div>
+
+<div class="modal" id="addCodeDlg" hidden role="dialog" aria-modal="true" aria-labelledby="acT">
+  <div class="mbox"><h2 id="acT">Add a view from a code</h2><p class="cap" id="acRoom" style="margin:6px 0 0"></p>
+    <textarea id="acCode" placeholder="Paste the code or link" aria-label="Code or link" style="min-height:110px"></textarea>
+    <p class="cap bad" id="acErr" role="alert" style="margin:6px 0 0"></p>
+    <div class="row"><button class="b primary" id="acGo">Add view</button><label class="b" for="acFile" style="display:inline-flex;align-items:center">Open file</label><input type="file" id="acFile" accept=".json,.room,application/json,text/plain" hidden><button class="b" id="acNo">Cancel</button></div></div>
 </div>
 
 <div class="modal" id="storeDlg" hidden role="dialog" aria-modal="true" aria-labelledby="storeT">
@@ -645,7 +707,9 @@ body.friend .wing,body.friend .doorg,body.friend .out{cursor:default}
 </div>
 
 <div class="modal" id="sentDlg" hidden role="dialog" aria-modal="true" aria-labelledby="sentT">
-  <div class="mbox"><h2 id="sentT">Your ideas are ready</h2><p class="cap" id="sentP" style="margin:6px 0 0"></p>
+  <div class="mbox"><h2 id="sentT">Share</h2><p class="cap" id="sentP" style="margin:6px 0 0"></p>
+    <label style="display:block;margin-top:10px;font-size:13px;color:var(--ink2)">Your name<input type="text" id="sdName" maxlength="40" placeholder="So they know it's from you"></label>
+    <div class="sub" style="margin-top:12px">Include</div><div id="sdViews"></div>
     <div class="row"><button class="b primary" id="snLink">Share link</button><button class="b" id="snCode">Copy code</button><button class="b" id="snFile">Download file</button></div>
     <input type="text" id="snOut" readonly hidden aria-label="Share link or code"><p class="cap" id="snNote" style="margin:4px 0 0"></p>
     <div class="row"><button class="b" id="snDone">Done</button></div></div>
@@ -768,7 +832,7 @@ var sel=null,drag=null,raf=0,seq=0,canStore=true,sheetOpen=false,lastTap={id:nul
 var nodes={},onodes={},glows={},swn={};
 var NOW=new Date(),YEAR=NOW.getFullYear();
 var zoom={z:1,cx:0,cy:0},ptrs={},pinch=null,pan=null,hist={u:[],r:[]},resizing=null;
-var MARG=110,FR=false;
+var MG={l:48,r:80,t:36,b:96},FR=false,extraBox=null,curVB=null;
 var EMBED=(function(){try{return window.top!==window}catch(e){return true}})();
 
 function $(id){return document.getElementById(id)}
@@ -830,7 +894,7 @@ function clip(subj,clp){
 function newWindow(wall,pos,w){return {id:uid("w"),wall:wall,pos:pos,w:w||100,d:30,sill:90,top:220,cut:0,rad:false}}
 function makeRoom(o){
   var r={id:uid("r"),name:o.name||"New room",w:o.w||350,h:o.h||400,north:o.north||0,lat:o.lat==null?null:o.lat,lon:o.lon==null?null:o.lon,wd:49.5,follow:false,
-    windows:[],doors:[],outs:[],views:[{id:uid("v"),name:"View 1",objs:[]}]};
+    windows:[],doors:[],outs:[],kind:"mine",views:[{id:uid("v"),name:"View 1",objs:[]}]};
   r.origin=r.id;
   if(o.defaults!==false){
     r.windows.push(newWindow("top",Math.round((r.w-110)/2),110));
@@ -860,7 +924,8 @@ function fixRoom(r){
   if(r.lat==null||r.lon==null){r.lat=null;r.lon=null}
   r.wd=numOk(r.wd,20,80,49.5);r.follow=!!r.follow;
   if(typeof r.origin!=="string"||!r.origin)r.origin=r.id;
-  r.copy=!!r.copy;
+  delete r.copy;r.kind=r.kind==="friend"?"friend":"mine";
+  r.aka=Array.isArray(r.aka)?r.aka.filter(function(x){return typeof x==="string"}).slice(0,20):[];
   r.windows=Array.isArray(r.windows)?r.windows:[];r.doors=Array.isArray(r.doors)?r.doors:[];r.outs=Array.isArray(r.outs)?r.outs:[];
   r.views=Array.isArray(r.views)&&r.views.length?r.views:[{id:uid("v"),name:"View 1",objs:[]}];
   r.views.forEach(function(v){
@@ -951,9 +1016,9 @@ function stashBad(raw){
 }
 function load(){
   try{localStorage.setItem("rp-test","1");localStorage.removeItem("rp-test")}catch(e){canStore=false}
-  var st={v:7,rooms:[],cur:{r:"",v:""},snap:5,nat:true,art:true};
+  var st={v:7,rooms:[],cur:{r:"",v:""},snap:5,nat:true,art:true,sent:[]};
   if(canStore){
-    try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&Array.isArray(s.rooms)&&s.rooms.length){s.rooms.forEach(fixRoom);if(!s.snap)s.snap=5;if(s.nat===undefined)s.nat=true;if(s.art===undefined)s.art=true;s.cur=s.cur||{r:"",v:""};return s}}}catch(e){if(raw)stashBad(raw)}
+    try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&Array.isArray(s.rooms)&&s.rooms.length){s.rooms.forEach(fixRoom);if(!s.snap)s.snap=5;if(!Array.isArray(s.sent))s.sent=[];if(s.nat===undefined)s.nat=true;if(s.art===undefined)s.art=true;s.cur=s.cur||{r:"",v:""};return s}}}catch(e){if(raw)stashBad(raw)}
     try{var o=localStorage.getItem(OLD6);if(o){var p=JSON.parse(o);if(p&&Array.isArray(p.objs)&&p.setupDone!==false){
       var saved=[];try{saved=JSON.parse(localStorage.getItem(OLDV)||"[]")}catch(e2){}
       vPut("pre-migration-v6",{v6:o,views:localStorage.getItem(OLDV)});
@@ -971,7 +1036,7 @@ function save(){
   store.saved=Date.now();
   if(canStore){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
   clearTimeout(mirTimer);mirTimer=setTimeout(mirror,700);
-  updateShareBtn();
+  scheduleAutoVer();updateShareBtn();
 }
 function bind(){
   var src=shared||store;
@@ -983,12 +1048,13 @@ function bind(){
   W=room.w;H=room.h;
   NG={top:0,right:0,bottom:0,left:0};
   room.windows.forEach(function(w){if(w.d>NG[w.wall])NG[w.wall]=w.d});
-  OUT=H+NG.bottom+MARG;
+  OUT=H+NG.bottom+MG.b;
 }
 
 /* ---------- undo ---------- */
 function mark(){
   if(shared||!store.rooms.length)return;
+  forkIfRef();
   hist.u.push(JSON.stringify({room:room,v:view.id}));if(hist.u.length>60)hist.u.shift();hist.r=[];updateUndo();
 }
 function updateUndo(){$("undoBtn").disabled=!hist.u.length||!!shared;$("redoBtn").disabled=!hist.r.length||!!shared}
@@ -1065,14 +1131,30 @@ var gGrid=mk("g",{"class":"grid"}),gStatic=mk("g",{}),gSwing=mk("g",{}),gPath=mk
 var gNat=mk("g",{style:"pointer-events:none"}),gArt=mk("g",{style:"pointer-events:none"}),gOuts=mk("g",{}),gSel=mk("g",{});
 var route=mk("polyline",{id:"route",points:""},gPath),routeEnd=mk("circle",{id:"routeEnd",r:4,cx:-80,cy:-80},gPath);
 
+function base0(){return {x:-(NG.left+MG.l),y:-(NG.top+MG.t),w:W+NG.left+NG.right+MG.l+MG.r,h:H+NG.top+NG.bottom+MG.t+MG.b}}
 function baseBox(){
-  var x0=-(NG.left+MARG),x1=W+NG.right+MARG,y0=-(NG.top+70),y1=OUT;
+  var b=base0();if(!extraBox)return b;
+  var x0=Math.min(b.x,extraBox.x0),y0=Math.min(b.y,extraBox.y0),x1=Math.max(b.x+b.w,extraBox.x1),y1=Math.max(b.y+b.h,extraBox.y1);
   return {x:x0,y:y0,w:x1-x0,h:y1-y0};
 }
+function calcExtra(){
+  var b=base0(),x0=b.x,y0=b.y,x1=b.x+b.w,y1=b.y+b.h,ch=false;
+  view.objs.forEach(function(o){var q=aabb(poly(o));
+    if(q.x<x0+2){x0=q.x-8;ch=true}if(q.y<y0+2){y0=q.y-8;ch=true}if(q.x+q.w>x1-2){x1=q.x+q.w+8;ch=true}if(q.y+q.h>y1-2){y1=q.y+q.h+8;ch=true}});
+  extraBox=ch?{x0:x0,y0:y0,x1:x1,y1:y1}:null;
+}
+function fitBox(){
+  var b=baseBox(),cw=svg.clientWidth,ch=svg.clientHeight;
+  if(!(cw>20&&ch>20))return b;
+  var sc=Math.min(cw/b.w,ch/b.h),w=cw/sc,h=ch/sc,cx=b.x+b.w/2,cy=b.y+b.h/2;
+  return {x:cx-w/2,y:cy-h/2,w:w,h:h};
+}
 function applyVB(){
-  var b=baseBox(),z=zoom.z;
+  var b=baseBox(),z=zoom.z,cw=svg.clientWidth,ch=svg.clientHeight;
+  if(!(cw>20&&ch>20)){cw=b.w;ch=b.h}
+  var sc=Math.min(cw/b.w,ch/b.h),w=cw/(sc*z),h=ch/(sc*z);
   zoom.cx=clampN(zoom.cx,b.x,b.x+b.w);zoom.cy=clampN(zoom.cy,b.y,b.y+b.h);
-  var w=b.w/z,h=b.h/z;
+  curVB={w:w,h:h};
   svg.setAttribute("viewBox",r1(zoom.cx-w/2)+" "+r1(zoom.cy-h/2)+" "+r1(w)+" "+r1(h));
 }
 function fitView(){var b=baseBox();zoom.z=1;zoom.cx=b.x+b.w/2;zoom.cy=b.y+b.h/2;applyVB();drawOverlay()}
@@ -1120,7 +1202,7 @@ function drawRoom(){
     D.shut.forEach(function(L){mk("line",{x1:L.h[0],y1:L.h[1],x2:L.closed[0],y2:L.closed[1],"class":"leaf"},g)});
     txt(f.mid[0]+f.n[0]*9,f.mid[1]+f.n[1]*9,d.main?"door (entrance)":"door","tiny",g);
   });
-  var nv=planVec(0),cx=W+NG.right+MARG-34,cy=H+NG.bottom+MARG-34;
+  var nv=planVec(0),cx=W+NG.right+MG.r-30,cy=H+NG.bottom+MG.b-26;
   mk("circle",{cx:cx,cy:cy,r:13,fill:"none",stroke:"var(--line)"},gStatic);
   mk("line",{x1:cx-nv[0]*9,y1:cy-nv[1]*9,x2:cx+nv[0]*9,y2:cy+nv[1]*9,stroke:"var(--ink2)","stroke-width":1.5},gStatic);
   mk("circle",{cx:cx+nv[0]*9,cy:cy+nv[1]*9,r:2.5,fill:"var(--bad)"},gStatic);
@@ -1251,11 +1333,12 @@ function isLocked(s){var x=selObj(s);return !!(x&&x.locked)}
 function snapv(v){var s=store.snap||5;return Math.round(v/s)*s}
 
 function buildAll(){
-  bind();
+  bind();calcExtra();
   if(sel){
     var ok=(sel.t==="room")||(sel.t==="obj"&&findObj(sel.id))||(sel.t==="out"&&findOut(sel.id))||(sel.t==="win"&&findWin(sel.id))||(sel.t==="door"&&findDoor(sel.id));
     if(!ok){sel=null;closeSheet()}
   }
+  if(!shared&&store.rooms.length&&room.kind==="friend")store.curFriend={r:room.id,v:view.id};else if(!shared&&store.rooms.length)store.curMine={r:room.id,v:view.id};
   rebuildItems();$("snap").value=store.snap||5;
   applyLocks();
   $("pRoom").textContent=room.name;$("pView").textContent="› "+view.name;
@@ -1311,7 +1394,7 @@ function updateLockBtn(){
   var ob=!!(sel&&sel.t==="obj");$("rl").disabled=$("rr").disabled=!ob||lk;$("rl").classList.toggle("off",!ob);$("rr").classList.toggle("off",!ob);
 }
 function setLock(s,v){
-  var x=selObj(s);if(!x)return;mark();x.locked=!!v;if(drag){drag=null;document.body.classList.remove("dragging")}
+  forkIfRef();var x=selObj(s);if(!x)return;mark();x.locked=!!v;if(drag){drag=null;document.body.classList.remove("dragging")}
   if(s.t==="win"||s.t==="door"){drawRoom();drawOverlay()}
   applyLocks();updateLockBtn();updateMeasure();if(sheetOpen)renderSheet();save();
 }
@@ -1320,7 +1403,7 @@ function setAllLocks(v){
   mark();[view.objs,room.outs,room.windows,room.doors].forEach(function(a){a.forEach(function(x){x.locked=v})});
   drawRoom();applyLocks();drawOverlay();updateLockBtn();updateMeasure();if(sheetOpen)renderSheet();save();
 }
-function openSheet(){if(!sel)return;sheetOpen=true;renderSheet()}
+function openSheet(){if(!sel)return;if(sel.t==="obj")forkIfRef();sheetOpen=true;renderSheet()}
 function closeSheet(){sheetOpen=false;$("sheet").hidden=true;$("sheetIn").innerHTML="";document.body.classList.remove("sheet-open")}
 $("editBtn").onclick=openSheet;
 
@@ -1462,7 +1545,7 @@ function geoFill(cb,msgEl){
 
 /* ---------- editing operations ---------- */
 function clampObj(o){
-  var b=aabb(poly(o)),bb=baseBox(),minX=bb.x+4,maxX=bb.x+bb.w-4,minY=bb.y+4,maxY=bb.y+bb.h-4;
+  var b=aabb(poly(o)),b1=baseBox(),b2=fitBox(),x0=Math.min(b1.x,b2.x),y0=Math.min(b1.y,b2.y),x1=Math.max(b1.x+b1.w,b2.x+b2.w),y1=Math.max(b1.y+b1.h,b2.y+b2.h),minX=x0+4,maxX=x1-4,minY=y0+4,maxY=y1-4;
   if(b.x<minX)o.cx+=minX-b.x;else if(b.x+b.w>maxX)o.cx-=b.x+b.w-maxX;
   if(b.y<minY)o.cy+=minY-b.y;else if(b.y+b.h>maxY)o.cy-=b.y+b.h-maxY;
 }
@@ -1475,13 +1558,13 @@ function nudgeSel(dx,dy){
   save();schedule();
 }
 function rotateBy(d){
-  if(!sel||sel.t!=="obj")return;var o=findObj(sel.id);if(!o||o.locked)return;mark();
+  if(!sel||sel.t!=="obj")return;forkIfRef();var o=findObj(sel.id);if(!o||o.locked)return;mark();
   o.r=((o.r+d)%360+360)%360;snapObj(o);clampObj(o);placeObj(o);if(o.on){var pr=findObj(o.on);if(pr)stickTo(o,pr)}
   var f=$("fR");if(f)f.value=o.r;
   updateMeasure();save();schedule();
 }
 function deleteObj(id){
-  var ob=findObj(id);if(!ob||ob.locked)return;mark();
+  forkIfRef();var ob=findObj(id);if(!ob||ob.locked)return;mark();
   view.objs.forEach(function(k){if(k.on===id)unstick(k)});
   view.objs=view.objs.filter(function(x){return x.id!==id});sel=null;closeSheet();buildAll();save();
 }
@@ -1568,7 +1651,7 @@ function endResize(){resizing=null;buildAll();fitView();save()}
 /* ---------- pointer interaction, zoom, pan ---------- */
 function toSvg(e){var pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(svg.getScreenCTM().inverse())}
 function nptr(){return Object.keys(ptrs).length}
-function unitsPerPx(){var r=svg.getBoundingClientRect(),b=baseBox(),z=zoom.z||1;return {x:r.width?(b.w/z)/r.width:1,y:r.height?(b.h/z)/r.height:1}}
+function unitsPerPx(){var r=svg.getBoundingClientRect(),v=curVB||{w:400,h:600};return {x:r.width?v.w/r.width:1,y:r.height?v.h/r.height:1}}
 function startPinch(){
   var k=Object.keys(ptrs),a=ptrs[k[0]],b=ptrs[k[1]];
   pinch={d:Math.hypot(a.x-b.x,a.y-b.y)||1,mx:(a.x+b.x)/2,my:(a.y+b.y)/2};
@@ -1700,6 +1783,11 @@ document.addEventListener("keydown",function(e){
   else if(e.key==="Enter"&&sel){openSheet()}
   else if(e.key==="Escape"){if(sheetOpen)closeSheet();else select(null)}
 });
+
+function onResize(){applyVB();layoutSliders()}
+try{if(window.ResizeObserver)new ResizeObserver(onResize).observe(svg)}catch(e){}
+window.addEventListener("resize",onResize);
+window.addEventListener("orientationchange",function(){setTimeout(onResize,250)});
 
 /* ---------- sun ---------- */
 function dayOfYear(y,m,d){return Math.round((Date.UTC(y,m,d)-Date.UTC(y,0,1))/864e5)+1}
@@ -1995,33 +2083,43 @@ $("mOk").onclick=function(){var v=$("mIn").value.trim();if(!$("mIn").hidden&&!v)
 $("mNo").onclick=function(){$("modal").hidden=true;modalCb=null;var n=modalNo;modalNo=null;if(n)n()};
 $("mIn").addEventListener("keydown",function(e){if(e.key==="Enter")$("mOk").click();if(e.key==="Escape")$("mNo").click()});
 
-/* ---------- rooms and views ---------- */
+/* ---------- two containers: My rooms and Help a friend ---------- */
 function reid(r){
   var c=clone(r);c.id=uid("r");delete c.by;
   c.windows.forEach(function(x){x.id=uid("w")});c.doors.forEach(function(x){x.id=uid("d")});c.outs.forEach(function(x){x.id=uid("o")});
   c.views.forEach(function(v){v.id=uid("v")});return c;
 }
 function uniqueName(n,list){var base=n,i=2;while(list.some(function(x){return x.name===n}))n=base+" "+(i++);return n}
+function mineRooms(){return store.rooms.filter(function(r){return r.kind!=="friend"})}
+function friendRooms(){return store.rooms.filter(function(r){return r.kind==="friend"})}
 function goTo(rid,vid){
   var r=store.rooms.filter(function(x){return x.id===rid})[0];if(!r)return;
   store.cur.r=rid;store.cur.v=vid||r.views[0].id;hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll();fitView();save();
 }
-function openDrawer(){renderTree();renderVault();$("opErr").textContent="";$("shareBox").hidden=true;$("drawer").hidden=false;$("drawer").scrollTop=0}
+function openDrawer(){renderTree();renderVault();$("opErr").textContent="";$("drawer").hidden=false;$("drawer").scrollTop=0}
 function closeDrawer(){$("drawer").hidden=true}
 function renderTree(){
-  var h="";
-  store.rooms.forEach(function(r){
+  var h="",ms=mineRooms();
+  ms.forEach(function(r){
     var curR=r.id===store.cur.r&&!shared;
     h+='<div class="rm'+(curR?' cur':'')+'" data-r="'+esc(r.id)+'"><div class="rm-h"><button class="rm-name" data-act="openroom">'+esc(r.name)+'</button><span class="rm-meta">'+fmtM(r.w)+' × '+fmtM(r.h)+'</span></div>'+
-      '<div class="acts">'+(r.copy?'<button class="b sm primary" data-act="sendb">Send back</button>':'<button class="b sm" data-act="setr">Size & settings</button><button class="b sm" data-act="rnroom">Rename</button><button class="b sm" data-act="dupr">Duplicate</button><button class="b sm" data-act="shr">Share room</button><button class="b sm danger" data-act="delr">Delete</button>')+'</div><ul class="vw">';
+      '<div class="acts"><button class="b sm" data-act="setr">Size & settings</button><button class="b sm" data-act="rnroom">Rename</button><button class="b sm" data-act="dupr">Duplicate</button><button class="b sm primary" data-act="shr">Share</button><button class="b sm" data-act="tofr">Move to Help a friend</button><button class="b sm danger" data-act="delr">Delete</button></div><ul class="vw">';
     r.views.forEach(function(v){
       var cv=curR&&v.id===store.cur.v;
-      h+='<li class="vwi'+(cv?' cur':'')+'" data-v="'+esc(v.id)+'"><button class="vname" data-act="openview"><span class="dot"></span>'+esc(v.name)+'<small style="color:var(--ink2);font-weight:400">'+v.objs.length+' items</small></button>'+
+      h+='<li class="vwi'+(cv?' cur':'')+'" data-v="'+esc(v.id)+'"><button class="vname" data-act="openview"><span class="dot"></span>'+esc(v.name)+'<small style="color:var(--ink2);font-weight:400">'+v.objs.length+' items'+(v.recv?' · from '+esc(v.by||"a friend"):"")+'</small></button>'+
         '<div class="acts"><button class="b sm" data-act="rnview">Rename</button><button class="b sm" data-act="dupv">Duplicate</button><button class="b sm" data-act="shv">Share view</button><button class="b sm danger" data-act="delv">Delete</button></div></li>';
     });
-    h+='</ul><div class="acts"><button class="b sm" data-act="newv">New blank view</button></div></div>';
+    h+='</ul><div class="acts"><button class="b sm" data-act="newv">New blank view</button><button class="b sm" data-act="addcode">Add view from code</button></div></div>';
   });
   $("tree").innerHTML=h||'<p class="cap">No rooms yet. Create one below.</p>';
+}
+function moveRoom(r,kind){
+  vSnap("before moving a room");r.kind=kind;
+  r.views.forEach(function(v){
+    if(kind==="mine"){delete v.ref;delete v.edit;delete v.recv;delete v.from}
+    else if(!v.edit)v.ref=true;
+  });
+  save();
 }
 $("tree").addEventListener("click",function(e){
   var b=e.target.closest("[data-act]");if(!b)return;
@@ -2033,9 +2131,9 @@ $("tree").addEventListener("click",function(e){
   else if(act==="openview"){goTo(rid,vid);closeDrawer()}
   else if(act==="rnroom")showModal({title:"Rename room",input:true,val:r.name,ok:"Rename",cb:function(n){r.name=str(n,60,r.name);if(room&&room.id===r.id)$("pRoom").textContent=r.name;save();renderTree()}});
   else if(act==="rnview")showModal({title:"Rename view",input:true,val:v.name,ok:"Rename",cb:function(n){v.name=str(n,60,v.name);if(view&&view.id===v.id)$("pView").textContent="› "+v.name;save();renderTree();renderTabs()}});
-  else if(act==="dupr"){var c=reid(r);if(!r.copy)c.origin=c.id;c.name=uniqueName(r.name+" copy",store.rooms);store.rooms.splice(store.rooms.indexOf(r)+1,0,c);save();renderTree()}
-  else if(act==="dupv"){var cv=clone(v);cv.id=uid("v");cv.name=uniqueName(v.name+" copy",r.views);r.views.splice(r.views.indexOf(v)+1,0,cv);save();renderTree();renderTabs()}
-  else if(act==="newv"){var nv={id:uid("v"),name:uniqueName("View "+(r.views.length+1),r.views),objs:[],lights:[]};r.views.push(nv);save();goTo(rid,nv.id);closeDrawer()}
+  else if(act==="dupr"){var c=reid(r);c.origin=c.id;c.aka=[];c.name=uniqueName(r.name+" copy",store.rooms);store.rooms.splice(store.rooms.indexOf(r)+1,0,c);save();renderTree()}
+  else if(act==="dupv"){var cv=clone(v);cv.id=uid("v");delete cv.sid;delete cv.ver;delete cv.verSig;delete cv.sharedVer;delete cv.recv;delete cv.by;cv.name=uniqueName(v.name+" copy",r.views);r.views.splice(r.views.indexOf(v)+1,0,cv);save();renderTree();renderTabs()}
+  else if(act==="newv"){var nv={id:uid("v"),name:uniqueName("View "+(r.views.length+1),r.views),objs:[]};r.views.push(nv);save();goTo(rid,nv.id);closeDrawer()}
   else if(act==="delv"){
     if(r.views.length<2){showModal({title:"Can't delete",msg:"A room needs at least one view. Duplicate it or add a new one first.",ok:"OK",cb:null});return}
     showModal({title:"Delete view “"+v.name+"”?",msg:"A snapshot is kept in the vault, just in case.",ok:"Delete",danger:true,cb:function(){
@@ -2046,20 +2144,26 @@ $("tree").addEventListener("click",function(e){
   else if(act==="delr"){
     showModal({title:"Delete room “"+r.name+"”?",msg:"All "+r.views.length+" view"+(r.views.length>1?"s":"")+" in it will be deleted. A snapshot stays in the vault.",ok:"Delete",danger:true,cb:function(){
       vSnap("before deleting a room");store.rooms=store.rooms.filter(function(x){return x!==r});
-      if(store.cur.r===r.id){var n=store.rooms[0];store.cur={r:n?n.id:"",v:n?n.views[0].id:""};hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll();fitView()}
-      save();renderTree();if(!store.rooms.length){closeDrawer();showLanding()}}});
+      if(store.cur.r===r.id){var n=mineRooms()[0]||store.rooms[0];store.cur={r:n?n.id:"",v:n?n.views[0].id:""};hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll();fitView()}
+      save();renderTree();if(!mineRooms().length){closeDrawer();showLanding()}}});
   }
-  else if(act==="shr")openShareBox(r.name,{t:"room",room:r});
+  else if(act==="tofr"){
+    showModal({title:"Move “"+r.name+"” to Help a friend?",msg:"It leaves My rooms and appears under Help a friend, where its views become view-only references and your changes go into separate edits. Nothing is lost, and a snapshot is kept.",ok:"Move it",cb:function(){
+      var wasCur=store.cur.r===r.id;moveRoom(r,"friend");
+      if(wasCur){var n=mineRooms()[0];if(n){store.cur={r:n.id,v:n.views[0].id}}}
+      bind();buildAll();renderTree();if(!mineRooms().length){closeDrawer();showLanding()}}});
+  }
+  else if(act==="shr")openShareDialog(r,r.views,r.views.map(function(x){return x.id}),"Share “"+r.name+"”","Pick the views to send. Friends open it under Help a friend.");
+  else if(act==="shv")openShareDialog(r,r.views,[vid],"Share “"+v.name+"”","Friends open it under Help a friend. You can also tick more views.");
   else if(act==="setr"){goTo(rid,store.cur.r===rid?store.cur.v:null);closeDrawer();select({t:"room",id:"room"},true);openSheet()}
-  else if(act==="sendb"){goTo(rid,store.cur.r===rid?store.cur.v:null);closeDrawer();shareIdeasFlow()}
-  else if(act==="shv"){goTo(rid,vid);closeDrawer();shareIdeasFlow()}
+  else if(act==="addcode"){openAddCode(rid)}
 });
 
 /* ---------- view tabs (above the plan) ---------- */
 function renderTabs(){
   var el=$("vtabs");if(!el||!room)return;
   var h="";
-  room.views.forEach(function(v){h+='<button class="vt" role="tab" data-v="'+esc(v.id)+'" aria-selected="'+(v.id===view.id)+'" title="'+esc(v.name)+'">'+esc(v.name)+'</button>'});
+  room.views.forEach(function(v){h+='<button class="vt'+(v.ref?" ref":"")+(v.edit?" edit":"")+(v.recv?" recv":"")+'" role="tab" data-v="'+esc(v.id)+'" aria-selected="'+(v.id===view.id)+'" title="'+esc(v.name)+(v.ref?" (their view, view only)":"")+'">'+esc(v.name)+'</button>'});
   if(!shared)h+='<button class="vt add" id="vtAdd" aria-label="New blank view" title="New blank view">+</button>';
   el.innerHTML=h;
   var a=el.querySelector('[aria-selected="true"]');
@@ -2068,9 +2172,9 @@ function renderTabs(){
 var lastTab={id:null,t:0};
 $("vtabs").addEventListener("click",function(e){
   var b=e.target.closest("button");if(!b)return;
-  if(b.id==="vtShare"){shareIdeasFlow();return}
   if(b.id==="vtAdd"){
-    mark();var nv={id:uid("v"),name:uniqueName("View "+(room.views.length+1),room.views),objs:[]};
+    mark();var nv={id:uid("v"),name:FR?uniqueName("My idea",room.views):uniqueName("View "+(room.views.length+1),room.views),objs:[]};
+    if(FR){nv.edit=true;nv.sid=uid("s");nv.ver=0;nv.verSig=csig(nv)}
     room.views.push(nv);store.cur.v=nv.id;sel=null;closeSheet();bind();buildAll();save();return;
   }
   var vid=b.getAttribute("data-v");if(!vid)return;
@@ -2078,13 +2182,15 @@ $("vtabs").addEventListener("click",function(e){
   if(vid!==view.id){
     (shared||store).cur.v=vid;sel=null;closeSheet();bind();buildAll();if(!shared)save();return;
   }
-  if(dbl&&!shared){
+  if(dbl&&!shared&&!view.ref){
     lastTab.t=0;
     showModal({title:"Rename view",input:true,val:view.name,ok:"Rename",cb:function(n){view.name=str(n,60,view.name);$("pView").textContent="› "+view.name;save();renderTabs();if(!$("drawer").hidden)renderTree()}});
   }
 });
-$("projBtn").onclick=openDrawer;$("mRooms").onclick=openDrawer;$("drDone").onclick=closeDrawer;
-$("mShare").onclick=function(){if(shared||!store.rooms.length)return;openDrawer();openShareBox(room.name,{t:"room",room:room})};
+$("projBtn").onclick=function(){if(FR)showFriendHub(true);else openDrawer()};
+$("drDone").onclick=closeDrawer;
+$("mRooms").onclick=openDrawer;
+$("mShare").onclick=function(){if(!shared&&!FR)shareMineViews()};
 $("mVault").onclick=function(){openDrawer();var v=$("vault");if(v&&v.scrollIntoView)v.scrollIntoView()};
 $("mRoom").onclick=function(){select({t:"room",id:"room"},true);openSheet();showPlan()};
 
@@ -2097,7 +2203,7 @@ function openNewRoom(first){
   $("nrDlg").hidden=false;$("nrDlg").scrollTop=0;
 }
 $("nrGeo").onclick=function(){geoFill(function(la,lo){$("nrLat").value=la;$("nrLon").value=lo},$("nrGeoMsg"))};
-$("nrNo").onclick=function(){$("nrDlg").hidden=true;if(!store.rooms.length&&!shared)showLanding()};
+$("nrNo").onclick=function(){$("nrDlg").hidden=true;if(!mineRooms().length)showLanding()};
 $("nrOk").onclick=function(){
   function v(id){return parseFloat($(id).value)}
   var w=v("nrW"),h=v("nrH"),n=v("nrN"),lat=$("nrLat").value.trim()===""?null:v("nrLat"),lon=$("nrLon").value.trim()===""?null:v("nrLon"),err="";
@@ -2107,12 +2213,11 @@ $("nrOk").onclick=function(){
   if(err){$("nrErr").textContent=err;return}
   if(shared)leaveShared();
   var r=makeRoom({name:str($("nrName").value,60,"My room"),w:Math.round(w),h:Math.round(h),north:Math.round(n),lat:lat,lon:lon,defaults:$("nrDef").checked});
-  r.name=uniqueName(r.name,store.rooms);
+  r.name=uniqueName(r.name,mineRooms());
   store.rooms.push(r);store.cur={r:r.id,v:r.views[0].id};hist={u:[],r:[]};sel=null;
   $("nrDlg").hidden=true;closeDrawer();closeSheet();bind();buildAll();fitView();save();
 };
 $("newRoom").onclick=function(){openNewRoom(false)};
-
 /* ---------- sharing ---------- */
 function b64u(bytes){var s="";for(var i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
 function unb64u(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";var bin=atob(s),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u}
@@ -2147,11 +2252,12 @@ function cleanLights(arr,objs){
   return (Array.isArray(arr)?arr:[]).slice(0,100).map(function(l,i){l=l||{};var o={id:str(l.id,40,"l"+i),name:str(l.name,60,"Light"),rad:numOk(l.rad,10,600,120),locked:!!l.locked,cx:numOk(l.cx,-300,4000,0),cy:numOk(l.cy,-300,4000,0),parent:null};
     if(l.parent&&ids[l.parent]){o.parent=l.parent;o.ox=numOk(l.ox,-500,500,0);o.oy=numOk(l.oy,-500,500,0);o.withObj=!!l.withObj}return o});
 }
-function cleanRoom2(r){
+function cleanRoom2(r,meta){
   r=r||{};
   var w=numOk(r.w,100,2000,350),h=numOk(r.h,100,2000,400);
   var out={id:uid("r"),origin:typeof r.origin==="string"?r.origin.slice(0,60):"",by:str(r.by,40,""),name:str(r.name,60,"Shared room"),w:w,h:h,north:numOk(r.north,0,359.9,0),lat:r.lat==null?null:numOk(r.lat,-90,90,null),lon:r.lon==null?null:numOk(r.lon,-180,180,null),wd:numOk(r.wd,20,80,49.5),follow:false,windows:[],doors:[],outs:[],views:[]};
   if(out.lat==null||out.lon==null){out.lat=null;out.lon=null}
+  if(meta){out.kind=r.kind==="friend"?"friend":"mine";if(Array.isArray(r.aka))out.aka=r.aka.filter(function(x){return typeof x==="string"}).slice(0,20)}
   (Array.isArray(r.windows)?r.windows:[]).slice(0,20).forEach(function(x){x=x||{};var wall=WALLS.indexOf(x.wall)>=0?x.wall:"top",L=(wall==="top"||wall==="bottom")?w:h,ww=numOk(x.w,10,L,100),sill=numOk(x.sill,0,400,90),top=numOk(x.top,10,400,220);if(top<=sill)top=sill+10;
     out.windows.push({id:uid("w"),wall:wall,pos:numOk(x.pos,0,Math.max(0,L-ww),0),w:ww,d:numOk(x.d,0,60,30),sill:sill,top:top,cut:numOk(x.cut,0,80,0),rad:!!x.rad})});
   var modes=["single-start","single-end","both","left","right"];
@@ -2159,7 +2265,21 @@ function cleanRoom2(r){
     out.doors.push({id:uid("d"),wall:wall,pos:numOk(x.pos,0,Math.max(0,L-dw),0),w:dw,mode:modes.indexOf(x.mode)>=0?x.mode:"single-end",main:!!x.main})});
   (Array.isArray(r.outs)?r.outs:[]).slice(0,100).forEach(function(x){x=x||{};var wall=WALLS.indexOf(x.wall)>=0?x.wall:"left",L=(wall==="top"||wall==="bottom")?w:h;
     out.outs.push({id:uid("o"),wall:wall,pos:numOk(x.pos,0,L,0),locked:!!x.locked})});
-  (Array.isArray(r.views)?r.views:[]).slice(0,40).forEach(function(v){v=v||{};var objs=cleanObjs(v.objs),nv={id:uid("v"),name:str(v.name,60,"View"),objs:objs};if(Array.isArray(v.lights))nv.lights=cleanLights(v.lights,objs);out.views.push(nv)});
+  (Array.isArray(r.views)?r.views:[]).slice(0,60).forEach(function(v){
+    v=v||{};var objs=cleanObjs(v.objs),nv={id:uid("v"),name:str(v.name,60,"View"),objs:objs};
+    if(Array.isArray(v.lights))nv.lights=cleanLights(v.lights,objs);
+    if(typeof v.sid==="string"&&v.sid)nv.sid=v.sid.slice(0,60);
+    if(+v.ver>0)nv.ver=Math.min(9999,Math.floor(+v.ver));
+    if(typeof v.by==="string"&&v.by.trim())nv.by=v.by.trim().slice(0,40);
+    if(meta){
+      ["ref","edit","recv"].forEach(function(k){if(v[k])nv[k]=true});
+      if(+v.sharedVer>0)nv.sharedVer=Math.floor(+v.sharedVer);
+      if(typeof v.sharedT==="number")nv.sharedT=v.sharedT;if(typeof v.verT==="number")nv.verT=v.verT;
+      if(typeof v.from==="string")nv.from=v.from.slice(0,60);
+      if(nv.sid)nv.verSig=csig(nv);
+    }
+    out.views.push(nv);
+  });
   return fixRoom(out);
 }
 function cleanLegacy(d){
@@ -2175,115 +2295,235 @@ function parsePayload(d){
   if(d.t==="room"||d.t==="view"||d.t==="all"){
     var rs=d.t==="all"?d.rooms:[d.room];
     if(!Array.isArray(rs)||!rs.length)throw new Error("bad");
-    return {t:d.t,rooms:rs.slice(0,30).map(cleanRoom2)};
+    return {t:d.t,rooms:rs.slice(0,30).map(function(x){return cleanRoom2(x,d.t==="all")})};
   }
   if(d.t==="one"&&d.room&&d.view){
-    var rr=clone(d.room);rr.views=[d.view];var cr=cleanRoom2(rr);cr.views[0].name=str(d.view.name,60,"Idea");
-    return {t:"one",rooms:[cr],sid:typeof d.id==="string"?d.id.slice(0,60):""};
+    var rr=clone(d.room);rr.views=[d.view];var cr=cleanRoom2(rr,false);cr.views[0].name=str(d.view.name,60,"Idea");
+    if(typeof d.id==="string"&&d.id&&!cr.views[0].sid){cr.views[0].sid=d.id.slice(0,60);cr.views[0].ver=cr.views[0].ver||1}
+    return {t:"one",rooms:[cr]};
   }
   if(d.room&&Array.isArray(d.objs)){var c=cleanLegacy(d);return {t:"room",rooms:[fixRoom(fromOld(c))]}}
   throw new Error("bad");
 }
-var shareCtx=null;
+function asShare(p){
+  if(p.t==="all")p={t:"room",rooms:p.rooms.slice(0,1)};
+  p.rooms.forEach(function(r){delete r.kind;delete r.aka;r.views.forEach(function(v){delete v.ref;delete v.edit;delete v.recv;delete v.verSig;delete v.sharedVer;delete v.sharedT;delete v.verT;delete v.from})});
+  return p;
+}
+/* ---------- sharing: versioned views, one share dialog ---------- */
 function sig(v){var t=JSON.stringify(v.objs),h=5381;for(var i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;return h}
-function openSendBox(r){
-  var rows=r.views.map(function(v){return {v:v,changed:v.sig0===undefined||v.sig0!==sig(v)}});
-  shareCtx={title:r.name,build:function(){
-    var name=str($("sbName").value,40,"");
-    if(!name){$("shNote").textContent="Add your name so they know who it's from.";$("sbName").focus();return null}
-    var idx=[];$("sbViews").querySelectorAll("input:checked").forEach(function(c){idx.push(+c.getAttribute("data-vi"))});
-    if(!idx.length){$("shNote").textContent="Pick at least one view to send.";return null}
-    store.me=name;save();
-    var rc=clone(r);rc.by=name;rc.views=idx.map(function(i){var v=clone(r.views[i]);delete v.sig0;return v});
-    return {t:"room",room:rc};
-  }};
-  $("sbT").textContent="Send back “"+r.name+"”";$("shOut").hidden=true;$("sbSend").hidden=false;
-  $("sbName").value=store.me||"";
-  $("sbViews").innerHTML=rows.map(function(x,i){return '<label class="tog"><input type="checkbox" data-vi="'+i+'"'+(x.changed?" checked":"")+'> '+esc(x.v.name)+(x.changed?"":' <small>(unchanged)</small>')+'</label>'}).join("");
-  $("shLink").hidden=EMBED;$("shFile").hidden=EMBED;
-  $("shNote").textContent="They open it and can add your views to their room. It never replaces theirs.";
-  $("shareBox").hidden=false;$("drawer").scrollTop=0;
+function csig(v){
+  var a=v.objs.map(function(o){return [String(o.id),o.name,o.shape,Math.round(o.cx),Math.round(o.cy),Math.round(o.w*2),Math.round(o.h*2),Math.round(o.r),!!o.top,Math.round(+o.light||0)]});
+  a.sort(function(x,y){return x[0]<y[0]?-1:x[0]>y[0]?1:0});
+  var t=JSON.stringify(a),h=5381;for(var i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;return h;
 }
-function openShareBox(title,payload){
-  shareCtx={title:title,payload:payload};$("sbSend").hidden=true;
-  $("sbT").textContent="Share “"+title+"”";$("shOut").hidden=true;
-  $("shLink").hidden=EMBED;$("shFile").hidden=EMBED;
-  $("shNote").textContent=EMBED?"Inside Claude, share the code. Share links and files work on the hosted website.":"Whoever opens it sees a copy. Nothing syncs back to you.";
-  $("shareBox").hidden=false;$("drawer").scrollTop=0;
+function ensureSid(v,me){
+  var c=csig(v);
+  if(v.recv&&c!==v.verSig){delete v.recv;v.sid=uid("s");v.ver=0;v.by=me;v.verSig=null}
+  if(!v.sid){v.sid=uid("s");v.ver=1;v.verSig=c;v.verT=Date.now();return}
+  if(c!==v.verSig){v.ver=(v.ver||0)+1;v.verSig=c;v.verT=Date.now()}
+  else if(!v.ver){v.ver=1}
 }
-$("sbX").onclick=function(){$("shareBox").hidden=true;shareCtx=null};
-function showOut(t){var o=$("shOut");o.hidden=false;o.value=t;o.focus();o.select();try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t)}catch(e){}}
-function payloadData(){var p=shareCtx.build?shareCtx.build():clone(shareCtx.payload);if(!p)return null;p.v=2;return p}
+function geom(r,by){return {name:r.name,origin:r.origin,by:by,w:r.w,h:r.h,north:r.north,lat:r.lat,lon:r.lon,wd:r.wd,windows:clone(r.windows),doors:clone(r.doors),outs:clone(r.outs)}}
+function sharePayload(r,views,by){
+  var g=geom(r,by);
+  g.views=views.map(function(v){ensureSid(v,by);return {name:v.name,objs:clone(v.objs),sid:v.sid,ver:v.ver,by:v.by||by}});
+  return {t:"room",v:4,room:g};
+}
 function downloadJSON(name,obj){
   var blob=new Blob([JSON.stringify(obj,null,1)],{type:"application/json"}),a=document.createElement("a");
   a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
 }
-$("shLink").onclick=function(){
-  if(!shareCtx)return;var pd=payloadData();if(!pd)return;
-  encodePayload(pd).then(function(code){
-    var url=location.href.split("#")[0]+"#r="+code;
-    if(navigator.share){navigator.share({title:shareCtx.title,text:"Room plan",url:url}).catch(function(){showOut(url)})}
-    else{showOut(url);$("shNote").textContent="Link copied. Paste it in a message."+(url.length>8000?" It's very long, so a code or file may work better.":"")}
+function urlFor(code){return location.href.split("#")[0]+"#r="+code}
+function copyText(t){try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t)}catch(e){}}
+var shareCtx2=null;
+function openShareDialog(r,views,pre,title,intro){
+  shareCtx2={room:r,views:views};
+  $("sentT").textContent=title;$("sentP").textContent=intro||"";
+  $("sdName").value=store.me||"";
+  $("sdViews").innerHTML=views.map(function(v,i){
+    var tag=v.recv?" · from "+esc(v.by||"a friend"):(v.edit&&v.ver?" · v"+v.ver:"");
+    return '<label class="tog"><input type="checkbox" data-i="'+i+'"'+(pre.indexOf(v.id)>=0?" checked":"")+'> '+esc(v.name)+'<small style="color:var(--ink2)">'+tag+'</small></label>';
+  }).join("");
+  $("snOut").hidden=true;$("snNote").textContent="";$("snLink").hidden=EMBED||!navigator.share;$("snFile").hidden=EMBED;
+  $("sentDlg").hidden=false;
+}
+function collectShare(){
+  if(!shareCtx2)return null;
+  var name=str($("sdName").value,40,"");
+  if(!name){$("snNote").textContent="Add your name so they know who it's from.";$("sdName").focus();return null}
+  var chosen=[];$("sdViews").querySelectorAll("input:checked").forEach(function(c){chosen.push(shareCtx2.views[+c.getAttribute("data-i")])});
+  if(!chosen.length){$("snNote").textContent="Tick at least one view.";return null}
+  store.me=name;
+  var p=sharePayload(shareCtx2.room,chosen,name);
+  chosen.forEach(function(v){v.sharedVer=v.ver;v.sharedT=Date.now()});
+  save();resetBase();updateShareBtn();if(!$("friendScr").hidden)renderHub();
+  return p;
+}
+$("snLink").onclick=function(){
+  var p=collectShare();if(!p)return;
+  encodePayload(p).then(function(code){var url=urlFor(code);
+    if(navigator.share)navigator.share({title:"Roomie: "+p.room.name,text:"Open this in Roomie",url:url}).catch(function(){var o=$("snOut");o.hidden=false;o.value=url;o.select()});
+    else{var o=$("snOut");o.hidden=false;o.value=url;o.select();copyText(url);$("snNote").textContent="Link copied."}});
+};
+$("snCode").onclick=function(){
+  var p=collectShare();if(!p)return;
+  encodePayload(p).then(function(code){var o=$("snOut");o.hidden=false;o.value=code;o.focus();o.select();copyText(code);$("snNote").textContent="Code copied."});
+};
+$("snFile").onclick=function(){var p=collectShare();if(!p)return;downloadJSON(((shareCtx2.room.name||"room").replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"-").toLowerCase()||"room")+".room.json",p)};
+$("snDone").onclick=function(){$("sentDlg").hidden=true};
+function shareMineViews(){if(!room||FR)return;openShareDialog(room,room.views,[view.id],"Share views","Pick the views to send. Friends open it under Help a friend.")}
+function pendingEdits(){return room.views.filter(function(v){return v.edit&&((v.ver||0)>(v.sharedVer||0)||csig(v)!==v.verSig)})}
+function shareMyEdits(){
+  var edits=room.views.filter(function(v){return v.edit});
+  if(!edits.length){showInfo("Nothing to share yet","Move something first. Your changes go into an edit, and you can share it from here.");return}
+  var pend=pendingEdits().map(function(v){return v.id});
+  openShareDialog(room,edits,pend.length?pend:[view.edit?view.id:edits[0].id],"Share my edits","They get your edits as views in their room. Each change you make becomes a new version of the same link.");
+}
+$("ideasBtn").onclick=function(){if(FR)shareMyEdits();else shareMineViews()};
+$("shareIdeas").onclick=$("ideasBtn").onclick;
+
+/* ---------- receiving a code ---------- */
+function showInfo(t,m){showModal({title:t,msg:m,ok:"OK",noCancel:true,cb:null})}
+function sameOrigin(x,r){return x.origin===r.origin||(Array.isArray(x.aka)&&x.aka.indexOf(r.origin)>=0)}
+function linkOrigin(t,r){if(!r.origin||r.origin===t.origin)return;t.aka=Array.isArray(t.aka)?t.aka:[];if(t.aka.indexOf(r.origin)<0){t.aka.push(r.origin);if(t.aka.length>20)t.aka.shift()}}
+function baseName(n){return String(n).replace(/\s+\d+$/,"").trim().toLowerCase()}
+function mergeViews(target,views,friendSide){
+  var res={added:[],updated:[],same:[]},seen={};
+  target.views.forEach(function(v){seen[csig(v)]=v});
+  views.forEach(function(iv){
+    var ex=iv.sid?target.views.filter(function(x){return x.sid===iv.sid})[0]:null;
+    var label=friendSide?iv.name:((iv.by&&iv.by!==store.me)?iv.by+" – "+iv.name:iv.name);
+    var iver=iv.ver||1;
+    if(ex&&friendSide&&ex.edit){res.same.push(ex);return}
+    if(ex){
+      var local=csig(ex)!==ex.verSig;
+      if(iver>(ex.ver||0)&&!local){ex.objs=clone(iv.objs);ex.ver=iver;ex.verSig=csig(ex);ex.verT=Date.now();res.updated.push(ex);return}
+      if(iver>(ex.ver||0)&&local){label=label+" v"+iver;ex=null}
+      else{res.same.push(ex);return}
+    }
+    if(!iv.sid){var dup=seen[csig(iv)];if(dup){res.same.push(dup);return}}
+    var nv={id:uid("v"),name:uniqueName(label,target.views),objs:clone(iv.objs)};
+    if(iv.sid){nv.sid=iv.sid;nv.ver=iver;nv.verSig=csig(nv)}
+    if(iv.by)nv.by=iv.by;
+    if(friendSide)nv.ref=true;else nv.recv=true;
+    target.views.push(nv);res.added.push(nv);seen[csig(nv)]=nv;
   });
-};
-$("shCode").onclick=function(){if(!shareCtx)return;var pd=payloadData();if(!pd)return;encodePayload(pd).then(function(code){showOut(code);$("shNote").textContent=shareCtx.build?"Code copied. They paste it under Rooms and views → Open someone's room.":"Code copied. Your friend opens Roomie, taps Help a friend, and pastes it."})};
-$("shFile").onclick=function(){
-  if(!shareCtx)return;var pd=payloadData();if(!pd)return;
-  downloadJSON(((shareCtx.title||"room").replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"-").toLowerCase()||"room")+".room.json",pd);
-};
-function importRooms(rooms,vi,copy){
-  var last=null;vSnap("before import");
-  rooms.forEach(function(r){var c=reid(r);c.name=uniqueName(c.name,store.rooms);c.copy=!!copy;
-    if(copy)c.views.forEach(function(v){v.sig0=sig(v)});store.rooms.push(c);last=c});
-  if(last){store.cur={r:last.id,v:(last.views[vi||0]||last.views[0]).id};hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll();fitView();save()}
+  return res;
 }
-function enterShared(p){
-  if(p.t==="all"){
-    showModal({title:"Import "+p.rooms.length+" room"+(p.rooms.length>1?"s":"")+"?",msg:p.rooms.map(function(r){return r.name}).join(", "),ok:"Import",cb:function(){if(shared)exitSharedQuiet();importRooms(p.rooms);closeDrawer()}});
-    return;
+function summary(res,target,note){
+  var parts=[];
+  if(res.added.length)parts.push("Added "+res.added.map(function(v){return "“"+v.name+"”"}).join(", "));
+  if(res.updated.length)parts.push("Updated "+res.updated.map(function(v){return "“"+v.name+"” to v"+v.ver}).join(", "));
+  if(res.same.length)parts.push(res.same.length+(res.same.length>1?" views were":" view was")+" already there");
+  var title=(res.added.length||res.updated.length)?(res.added.length&&!res.updated.length?"Added to “"+target.name+"”":"Updated “"+target.name+"”"):"Already added";
+  return {title:title,msg:parts.join(". ")+"."+(note?" "+note:"")};
+}
+function applyIntoMine(target,p,link){
+  var r=p.rooms[0];if(link)linkOrigin(target,r);
+  vSnap("before adding views");
+  var res=mergeViews(target,r.views,false);
+  var first=res.added[0]||res.updated[0]||res.same[0];
+  goTo(target.id,first&&first.id);
+  var note=(r.w!==target.w||r.h!==target.h)?"Their room is "+fmtM(r.w)+" × "+fmtM(r.h)+" and this one is "+fmtM(target.w)+" × "+fmtM(target.h)+", so pieces may not fit.":"";
+  var s=summary(res,target,note);showInfo(s.title,s.msg);
+}
+function pickRoom(list,r,cb){
+  $("pkP").textContent="This code is for “"+r.name+"”. Pick the room of yours to add its views to. Nothing else changes.";
+  $("pkList").innerHTML=list.map(function(x,i){var like=baseName(x.name)===baseName(r.name)&&Math.round(x.w)===Math.round(r.w)&&Math.round(x.h)===Math.round(r.h);return '<button class="b" data-pi="'+i+'" style="width:100%;margin-top:6px;text-align:left">'+esc(x.name)+(like?' <small>(same name and size)</small>':'')+'</button>'}).join("");
+  $("pkList").onclick=function(e){var b=e.target.closest("[data-pi]");if(!b)return;$("pickDlg").hidden=true;cb(list[+b.getAttribute("data-pi")])};
+  $("pickDlg").hidden=false;
+}
+$("pkNo").onclick=function(){$("pickDlg").hidden=true};
+function receiveMine(p){
+  if(shared)exitSharedQuiet();hideLanding();
+  var ms=mineRooms();
+  if(p.t==="all"&&(p.rooms.length>1||!ms.length)){restoreAll(p);return}
+  p=asShare(p);var r=p.rooms[0];
+  if(!ms.length){showInfo("No room to add it to","Create a room first. A friend's code never creates a room in My rooms. To open a friend's room, use Help a friend.");showLanding();return}
+  var target=ms.filter(function(x){return sameOrigin(x,r)})[0];
+  if(target){applyIntoMine(target,p,false);return}
+  var like=ms.filter(function(x){return baseName(x.name)===baseName(r.name)&&Math.round(x.w)===Math.round(r.w)&&Math.round(x.h)===Math.round(r.h)});
+  if(ms.length===1&&like.length===1){applyIntoMine(like[0],p,true);return}
+  pickRoom(ms,r,function(t){applyIntoMine(t,p,true)});
+}
+function openFriendRoom(rid,vid){
+  hideLanding();
+  var r=store.rooms.filter(function(x){return x.id===rid})[0];if(!r)return;
+  var vv=vid||((store.curFriend&&store.curFriend.r===rid)?store.curFriend.v:null)||(r.views.filter(function(v){return v.edit})[0]||r.views[0]).id;
+  goTo(rid,vv);
+}
+function receiveFriend(p){
+  if(shared)exitSharedQuiet();hideLanding();
+  if(p.t==="all"&&p.rooms.length>1){showInfo("That's a backup","It holds several rooms. Restore it from My rooms → Vault. To help a friend, paste the code they sent you.");showFriendHub(false);return}
+  p=asShare(p);var r=p.rooms[0];
+  var ex=friendRooms().filter(function(x){return sameOrigin(x,r)})[0];
+  if(ex){
+    vSnap("before refreshing a friend's room");
+    ex.w=r.w;ex.h=r.h;ex.north=r.north;ex.lat=r.lat;ex.lon=r.lon;ex.wd=r.wd;ex.windows=r.windows;ex.doors=r.doors;ex.outs=r.outs;
+    var res=mergeViews(ex,r.views,true);
+    var f=res.added[0]||res.updated[0]||null;
+    openFriendRoom(ex.id,f&&f.id);
+    var s=summary(res,ex,"Your own edits were kept.");showInfo(s.title,s.msg);
+  }else{
+    var c=reid(r);c.kind="friend";c.name=uniqueName(c.name,friendRooms());c.aka=[];
+    c.views.forEach(function(v){v.ref=true;if(v.sid){v.ver=v.ver||1;v.verSig=csig(v)}});
+    store.rooms.push(c);save();openFriendRoom(c.id,c.views[0].id);
+    showInfo("Opened “"+c.name+"”",(c.views.length>1?c.views.length+" views are in the tabs, view only. ":"Their view is view only. ")+"Move something and your changes go into your own edit. It's saved here, so you won't need the link again.");
   }
-  shared={rooms:p.rooms,cur:{r:p.rooms[0].id,v:p.rooms[0].views[0].id},kind:p.t};
-  sel=null;closeSheet();closeDrawer();hist={u:[],r:[]};
-  var r=p.rooms[0],match=store.rooms.filter(function(x){return x.origin===r.origin})[0]||null;
-  shared.match=match?match.id:null;
-  var nv=r.views.length+" view"+(r.views.length>1?"s":"");
-  $("bName").textContent=match&&r.by?r.by+"'s version of "+match.name:r.name;
-  $("bSub").textContent=match?nv+" · adding them never replaces your room"+((match.w!==r.w||match.h!==r.h)?" · their room size differs from yours":""):(p.t==="view"?"Shared view":"Shared room · "+nv)+" · make a copy to edit and keep your changes";
-  $("bAdd").hidden=!match;
-  $("bViewsRow").hidden=true;
-  $("bViews").innerHTML=r.views.map(function(v){return '<option value="'+esc(v.id)+'">'+esc(v.name)+'</option>'}).join("");
-  $("bSave").disabled=false;$("bSave").textContent=match?"Save as new room":"Make my copy";$("bSave").classList.toggle("primary",!match);
-  $("bClose").textContent=store.rooms.length?"Close":"Build my own room";
-  $("banner").hidden=false;bind();buildAll();fitView();window.scrollTo(0,0);
 }
-$("bViews").onchange=function(){if(!shared)return;shared.cur.v=this.value;sel=null;closeSheet();bind();buildAll()};
-function leaveShared(){exitSharedQuiet();sel=null;closeSheet();buildAll();fitView()}
-function exitSharedQuiet(){shared=null;$("banner").hidden=true;try{if(location.hash)history.replaceState(null,"",location.pathname+location.search)}catch(e){}bind()}
-$("bClose").onclick=function(){exitSharedQuiet();sel=null;closeSheet();buildAll();fitView();if(!store.rooms.length)showLanding()};
-$("bAdd").onclick=function(){
-  if(!shared||!shared.match)return;
-  var p=shared.rooms[0],target=store.rooms.filter(function(x){return x.id===shared.match})[0];if(!target)return;
-  var by=p.by||"Friend",first=null;
-  vSnap("before adding views");exitSharedQuiet();
-  p.views.forEach(function(v){var c=clone(v);c.id=uid("v");delete c.sig0;c.name=uniqueName(by,target.views);target.views.push(c);if(!first)first=c});
-  store.cur={r:target.id,v:first.id};hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll();fitView();save();
-};
-$("bSave").onclick=function(){
-  if(!shared)return;var rooms=shared.rooms,vi=Math.max(0,rooms[0].views.findIndex(function(v){return v.id===shared.cur.v}));
-  var wasMatched=!!shared.match;exitSharedQuiet();importRooms(rooms,vi,!wasMatched);
-};
-function openShared(code){
-  $("opErr").textContent="";
-  decodePayload(code).then(function(p){closeDrawer();hideLanding();routeIncoming(p,false)}).catch(function(e){$("opErr").textContent=e&&e.message==="old"?"This browser is too old to open compressed rooms. Try another browser.":"That doesn't look like a room link or code."});
+function autoCtx(p){
+  if(p.t==="all"&&p.rooms.length>1)return "restore";
+  var r=p.rooms[0];
+  if(mineRooms().some(function(x){return sameOrigin(x,r)}))return "mine";
+  if(friendRooms().some(function(x){return sameOrigin(x,r)}))return "friend";
+  return "friend";
 }
-$("opGo").onclick=function(){var v=$("opCode").value;if(v.trim())openShared(v)};
-function readFileInput(inp){var f=inp.files&&inp.files[0];if(!f)return;if(f.size>8e6){$("opErr").textContent="File is too large.";return}var rd=new FileReader();rd.onload=function(){openShared(String(rd.result))};rd.readAsText(f);inp.value=""}
-$("opFile").onchange=function(){readFileInput(this)};
-$("vFile").onchange=function(){readFileInput(this)};
-function checkHash(){var m=location.hash.match(/[#&]r=([A-Za-z0-9_-]+)/);if(m){openShared(m[1]);return true}return false}
+function openIncoming(code,ctx,errEl){
+  if(errEl)errEl.textContent="";
+  return decodePayload(code).then(function(p){
+    var c=ctx==="auto"?autoCtx(p):ctx;closeDrawer();
+    if(c==="friend")receiveFriend(p);else if(c==="restore"){if(p.t==="all")restoreAll(p);else receiveMine(p)}else receiveMine(p);
+  }).catch(function(e){if(errEl)errEl.textContent=e&&e.message==="old"?"This browser is too old to open compressed codes. Try another browser.":"That doesn't look like a Roomie code or link. Copy the whole thing and try again."});
+}
+function importRooms(rooms){
+  vSnap("before import");var firstMine=null,nm=0,nf=0;
+  rooms.forEach(function(r){var c=reid(r);c.name=uniqueName(c.name,store.rooms);store.rooms.push(c);if(c.kind==="friend")nf++;else{nm++;if(!firstMine)firstMine=c}});
+  save();if(firstMine)goTo(firstMine.id);
+  return {nm:nm,nf:nf};
+}
+function restoreAll(p){
+  var n=p.rooms.length;
+  showModal({title:"Restore "+n+" room"+(n>1?"s":"")+"?",msg:p.rooms.map(function(r){return r.name+(r.kind==="friend"?" (Help a friend)":"")}).join(", ")+". Rooms come back where they were. Nothing you have now is replaced.",ok:"Restore",cb:function(){
+    var c=importRooms(p.rooms);closeDrawer();hideLanding();renderTree();
+    showInfo("Restored",c.nm+" room"+(c.nm===1?"":"s")+" in My rooms"+(c.nf?" and "+c.nf+" in Help a friend":"")+".");
+  }});
+}
+var addCodeRid=null;
+function openAddCode(rid){
+  var r=store.rooms.filter(function(x){return x.id===rid})[0];if(!r)return;
+  addCodeRid=rid;$("acRoom").textContent="Its views will be added as new views in “"+r.name+"”. Nothing else changes.";
+  $("acCode").value="";$("acErr").textContent="";$("addCodeDlg").hidden=false;$("acCode").focus();
+}
+function submitAddCode(text){
+  var r=store.rooms.filter(function(x){return x.id===addCodeRid})[0];if(!r)return;
+  $("acErr").textContent="";
+  decodePayload(text).then(function(p){
+    if(p.rooms.length>1){$("acErr").textContent="This code has several rooms. Use Vault → Restore for that.";return}
+    $("addCodeDlg").hidden=true;closeDrawer();applyIntoMine(r,asShare(p),true);
+  }).catch(function(e){$("acErr").textContent=e&&e.message==="old"?"This browser is too old to open it.":"That doesn't look like a Roomie code or link. Copy the whole thing and try again."});
+}
+$("acGo").onclick=function(){var v=$("acCode").value.trim();if(!v){$("acErr").textContent="Paste the code first.";return}submitAddCode(v)};
+$("acNo").onclick=function(){$("addCodeDlg").hidden=true};
+$("acFile").onchange=function(){var f=this.files&&this.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){submitAddCode(String(rd.result))};rd.readAsText(f);this.value=""};
+$("opGo").onclick=function(){var v=$("opCode").value;if(v.trim())openIncoming(v,"mine",$("opErr"))};
+function readFileInput(inp,ctx,errEl){var f=inp.files&&inp.files[0];if(!f)return;if(f.size>8e6){errEl.textContent="File is too large.";return}var rd=new FileReader();rd.onload=function(){openIncoming(String(rd.result),ctx,errEl)};rd.readAsText(f);inp.value=""}
+$("opFile").onchange=function(){readFileInput(this,"mine",$("opErr"))};
+$("vFile").onchange=function(){readFileInput(this,"restore",$("opErr"))};
+function checkHash(){var m=location.hash.match(/[#&]r=([A-Za-z0-9_-]+)/);if(m){openIncoming(m[1],"auto",null).then(function(){try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}});return true}return false}
 window.addEventListener("hashchange",checkHash);
-
-
+function leaveShared(){exitSharedQuiet();sel=null;closeSheet();buildAll();fitView()}
+function exitSharedQuiet(){shared=null;$("banner").hidden=true;bind()}
 /* ---------- vault UI ---------- */
 function ago(t){var s=Math.round((Date.now()-t)/1000);if(s<90)return "just now";var m=Math.round(s/60);if(m<90)return m+" min ago";var h=Math.round(m/60);if(h<36)return h+" h ago";return Math.round(h/24)+" days ago"}
 function fmtT(t){var d=new Date(t);return d.toLocaleDateString(undefined,{day:"numeric",month:"short"})+" "+d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"})}
@@ -2321,9 +2561,10 @@ $("vSnaps").onclick=function(){
 };
 function restoreStore(s){
   s.rooms.forEach(fixRoom);if(!s.snap)s.snap=5;if(s.nat===undefined)s.nat=true;if(s.art===undefined)s.art=true;s.cur=s.cur||{r:"",v:""};
-  store=s;hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll();fitView();save();
+  store=s;if(!Array.isArray(store.sent))store.sent=[];hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll();fitView();save();if(mineRooms().length)enterMine();else showLanding();
 }
 function firstRun(){
+  if(store.rooms.length){openNewRoom(true);return}
   Promise.race([vaultRecover(),new Promise(function(res){setTimeout(function(){res(null)},3000)})]).then(function(s){
     if(shared||store.rooms.length)return;
     if(s){
@@ -2334,84 +2575,128 @@ function firstRun(){
 }
 
 
-/* ---------- landing ---------- */
+/* ---------- landing and the Help a friend hub ---------- */
+function editViews(){var out=[];friendRooms().forEach(function(r){r.views.forEach(function(v){if(v.edit)out.push({r:r,v:v})})});return out}
 function showLanding(){
-  closeSheet();closeDrawer();$("friendScr").hidden=true;
-  $("goDesignSub").textContent=store.rooms.length?"Carry on with “"+(store.rooms.filter(function(r){return r.id===store.cur.r})[0]||store.rooms[0]).name+"”.":"Measure up, drop in furniture, chase the sun.";
+  closeSheet();closeDrawer();$("friendScr").hidden=true;$("pickDlg").hidden=true;
+  var ms=mineRooms(),fr=friendRooms();
+  var cm=(store.curMine&&ms.filter(function(r){return r.id===store.curMine.r})[0])||ms[0];
+  $("goDesignSub").textContent=cm?"Carry on with “"+cm.name+"”.":"Measure up, drop in furniture, chase the sun.";
+  $("goFriendSub").textContent=fr.length?fr.length+" saved room"+(fr.length>1?"s":"")+" · "+editViews().length+" of my edits":"Paste the code they sent you.";
   $("landing").hidden=false;$("landing").scrollTop=0;
 }
 function hideLanding(){$("landing").hidden=true;$("friendScr").hidden=true}
-$("goDesign").onclick=function(){hideLanding();if(!store.rooms.length)firstRun()};
-$("goFriend").onclick=function(){$("landing").hidden=true;$("friendScr").hidden=false;$("frErr").textContent="";$("frCode").value="";$("frCode").focus()};
-$("frBack").onclick=showLanding;
-function openFriend(code){
-  $("frErr").textContent="";
-  decodePayload(code).then(function(p){hideLanding();routeIncoming(p,true)}).catch(function(e){$("frErr").textContent=e&&e.message==="old"?"This browser is too old to open it. Try another browser.":"That doesn't look like a Roomie code or link. Copy the whole thing and try again."});
+function enterMine(){
+  var ms=mineRooms();if(!ms.length){firstRun();return}
+  var cm=(store.curMine&&ms.filter(function(r){return r.id===store.curMine.r})[0])||ms[0];
+  goTo(cm.id,store.curMine&&store.curMine.r===cm.id?store.curMine.v:null);
 }
-function showInfo(t,m){showModal({title:t,msg:m,ok:"OK",noCancel:true,cb:null})}
-function csig(v){
-  var a=v.objs.map(function(o){return [String(o.id),o.name,o.shape,Math.round(o.cx),Math.round(o.cy),Math.round(o.w*2),Math.round(o.h*2),Math.round(o.r),!!o.top,Math.round(+o.light||0)]});
-  a.sort(function(x,y){return x[0]<y[0]?-1:x[0]>y[0]?1:0});
-  var t=JSON.stringify(a),h=5381;for(var i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;return h;
+$("goDesign").onclick=function(){hideLanding();enterMine()};
+$("goFriend").onclick=function(){showFriendHub(false)};
+$("homeBtn").onclick=function(){showLanding()};
+var hubFromRoom=false,editOpen=null;
+function showFriendHub(fromRoom){
+  hubFromRoom=!!fromRoom;closeSheet();closeDrawer();$("landing").hidden=true;
+  renderHub();$("friendScr").hidden=false;$("friendScr").scrollTop=0;$("frErr").textContent="";$("frCode").value="";
 }
-function matchRoom(r){return store.rooms.filter(function(x){return x.origin===r.origin&&!x.copy})[0]||store.rooms.filter(function(x){return x.origin===r.origin})[0]||null}
-function importViews(p){
-  if(shared)exitSharedQuiet();
-  var r=p.rooms[0],views=r.views,target=matchRoom(r);
-  if(target){
-    var seen={};target.views.forEach(function(v){seen[csig(v)]=v});
-    var sidHit=p.sid?target.views.filter(function(x){return x.sid===p.sid})[0]:null;
-    var plan=[],dup=[];
-    views.forEach(function(v){var ex=sidHit||seen[csig(v)];if(ex){dup.push(ex);return}plan.push(v)});
-    if(!plan.length){
-      goTo(target.id,dup[0].id);
-      showInfo("Already added",views.length>1?"You already have all "+views.length+" views from this code in “"+target.name+"”. Nothing was changed.":"“"+dup[0].name+"” is already a view in “"+target.name+"”. Nothing was changed.");
-      return;
-    }
-    vSnap("before adding views");
-    var added=[];
-    plan.forEach(function(v){var nv={id:uid("v"),name:uniqueName(v.name,target.views),objs:clone(v.objs),sid:p.sid||undefined};target.views.push(nv);added.push(nv)});
-    goTo(target.id,added[0].id);
-    showInfo(added.length===1?"Added “"+added[0].name+"”":"Added "+added.length+" views",added.length===1?"It's now a view in “"+target.name+"”. Nothing else changed.":added.map(function(x){return x.name}).join(", ")+" are now views in “"+target.name+"”."+(dup.length?" "+dup.length+" you already had "+(dup.length>1?"were":"was")+" skipped.":""));
-  }else{
-    var c=reid(r);c.copy=true;c.name=uniqueName(c.name,store.rooms);
-    c.views.forEach(function(v){v.sid=p.sid||undefined;v.sig0=sig(v)});
-    store.rooms.push(c);store.cur={r:c.id,v:c.views[0].id};hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll();fitView();save();
-    showInfo("Opened “"+c.name+"”",(c.views.length>1?c.views.length+" views are in the tabs. ":"")+"Move things around, then tap Share ideas to send yours back.");
+$("frBack").onclick=function(){if(hubFromRoom&&FR&&!shared)$("friendScr").hidden=true;else showLanding()};
+function vlabel(v){
+  if(!v.ver)return csig(v)!==v.verSig?"saving…":"no changes yet";
+  return "v"+v.ver+" · "+((v.sharedVer||0)>=v.ver?"shared":"not shared yet");
+}
+function renderHub(){
+  var rs=friendRooms(),h="";
+  rs.forEach(function(r){
+    var refs=r.views.filter(function(v){return v.ref}).length,eds=r.views.filter(function(v){return v.edit}).length;
+    h+='<div class="rm" data-fr="'+esc(r.id)+'"><div class="rm-h"><button class="rm-name" data-fa="open">'+esc(r.name)+'</button><span class="rm-meta">'+fmtM(r.w)+' × '+fmtM(r.h)+'</span></div>'+
+      '<p class="cap" style="margin:0">'+refs+' of their view'+(refs===1?"":"s")+' · '+eds+' of my edit'+(eds===1?"":"s")+'</p>'+
+      '<div class="acts"><button class="b sm primary" data-fa="open">Open</button><button class="b sm" data-fa="tomine">Move to My rooms</button><button class="b sm danger" data-fa="del">Remove</button></div></div>';
+  });
+  $("frRooms").innerHTML=h;$("frRoomsWrap").hidden=!rs.length;
+  var ev=editViews(),eh="";
+  ev.forEach(function(e){
+    var open=editOpen===e.v.id;
+    eh+='<div class="rm sent" data-ev="'+esc(e.v.id)+'" data-er="'+esc(e.r.id)+'"><button class="rm-name" data-ea="toggle">'+esc(e.v.name)+' <small style="font-weight:500;color:var(--ink2)">'+esc(e.r.name)+' · '+vlabel(e.v)+'</small></button>'+
+      (open?'<input type="text" readonly aria-label="Link" style="margin-top:6px"><div class="acts" style="margin-top:6px"><button class="b sm primary" data-ea="link">Copy link</button><button class="b sm" data-ea="code">Copy code</button><button class="b sm" data-ea="open">Open</button></div><p class="cap sn" style="margin:0"></p>':'')+'</div>';
+  });
+  $("frEdits").innerHTML=eh||'<p class="cap" style="margin:0">Move something in a friend\'s room and your edit appears here, with a link you can copy.</p>';
+  $("frEditsWrap").hidden=!rs.length;
+  $("frAddHead").textContent=rs.length?"Add another friend's room":"Add a friend's room";
+}
+$("frRooms").addEventListener("click",function(e){
+  var b=e.target.closest("[data-fa]");if(!b)return;
+  var row=b.closest("[data-fr]"),r=store.rooms.filter(function(x){return x.id===row.getAttribute("data-fr")})[0];if(!r)return;
+  var a=b.getAttribute("data-fa");
+  if(a==="open"){hideHub0();openFriendRoom(r.id)}
+  else if(a==="tomine")showModal({title:"Move “"+r.name+"” to My rooms?",msg:"It leaves Help a friend and becomes one of your own rooms, where you can change anything. The views stop being view-only. A snapshot is kept.",ok:"Move it",cb:function(){
+    var wasCur=store.cur.r===r.id;moveRoom(r,"mine");if(wasCur){bind();buildAll()}renderHub()}});
+  else if(a==="del")showModal({title:"Remove “"+r.name+"”?",msg:"Their room and your "+r.views.filter(function(v){return v.edit}).length+" edit(s) in it will be removed from this device. A snapshot stays in the vault.",ok:"Remove",danger:true,cb:function(){
+    vSnap("before removing a friend's room");store.rooms=store.rooms.filter(function(x){return x!==r});
+    if(store.cur.r===r.id){var n=mineRooms()[0]||store.rooms[0];store.cur={r:n?n.id:"",v:n?n.views[0].id:""};hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll();fitView()}
+    save();renderHub();if(!friendRooms().length&&hubFromRoom){hubFromRoom=false}}});
+});
+function hideHub0(){$("friendScr").hidden=true}
+$("frEdits").addEventListener("click",function(e){
+  var b=e.target.closest("[data-ea]");if(!b)return;
+  var row=b.closest("[data-ev]"),vid=row.getAttribute("data-ev"),r=store.rooms.filter(function(x){return x.id===row.getAttribute("data-er")})[0];if(!r)return;
+  var v=r.views.filter(function(x){return x.id===vid})[0];if(!v)return;
+  var a=b.getAttribute("data-ea");
+  if(a==="toggle"){editOpen=editOpen===vid?null:vid;renderHub()}
+  else if(a==="open"){hideHub0();openFriendRoom(r.id,v.id)}
+  else{
+    if(!store.me){openShareDialog(r,r.views.filter(function(x){return x.edit}),[v.id],"Share “"+v.name+"”","Add your name first. After that, copying a link is one tap.");return}
+    var p=sharePayload(r,[v],store.me);v.sharedVer=v.ver;v.sharedT=Date.now();save();
+    encodePayload(p).then(function(code){
+      var text=a==="code"?code:urlFor(code);copyText(text);
+      var inp=row.querySelector("input"),n=row.querySelector(".sn");if(inp){inp.value=text;inp.focus();inp.select()}
+      if(n)n.textContent=(a==="code"?"Code":"Link")+" copied · v"+v.ver;
+      updateShareBtn();
+    });
   }
-}
-function routeIncoming(p,fromFriend){
-  if(p.t==="all"&&p.rooms.length===1&&(fromFriend||matchRoom(p.rooms[0])))p={t:"room",rooms:p.rooms};
-  if(p.t==="all"){enterShared(p);return}
-  importViews(p);
-}
-$("frGo").onclick=function(){var v=$("frCode").value.trim();if(!v){$("frErr").textContent="Paste the code first.";return}openFriend(v)};
-$("frFile").onchange=function(){var f=this.files&&this.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){openFriend(String(rd.result))};rd.readAsText(f);this.value=""};
-$("homeBtn").onclick=function(){if(shared){exitSharedQuiet();sel=null;closeSheet();buildAll();fitView()}showLanding()};
+});
+$("frGo").onclick=function(){var v=$("frCode").value.trim();if(!v){$("frErr").textContent="Paste the code first.";return}openIncoming(v,"friend",$("frErr"))};
+$("frFile").onchange=function(){readFileInput(this,"friend",$("frErr"))};
 
-
-/* ---------- friend mode: store peeps ---------- */
+/* ---------- friend mode ---------- */
 function updateMode(){
-  FR=!shared&&!!(room&&room.copy)&&!!store.rooms.length;
+  FR=!shared&&!!room&&room.kind==="friend"&&!!store.rooms.length;
   if(FR&&sel&&sel.t!=="obj"){sel=null;closeSheet()}
   document.body.classList.toggle("friend",FR);
   $("npcs").hidden=true;
   updateShareBtn();
 }
-function friendChanged(){return room.views.some(function(v){return v.sig0===undefined?v.objs.length>0:v.sig0!==sig(v)})}
-var sessBase={},lastIdeas=null;
+function forkIfRef(){
+  if(!FR||shared||!view||!view.ref)return false;
+  var base=view,nv={id:uid("v"),name:uniqueName("My edit of "+base.name,room.views),objs:clone(base.objs),edit:true,sid:uid("s"),ver:0,from:base.id};
+  nv.verSig=csig(nv);
+  room.views.push(nv);store.cur.v=nv.id;buildAll();save();
+  return true;
+}
+var verTimer=null;
+function scheduleAutoVer(){clearTimeout(verTimer);verTimer=setTimeout(autoVer,3000)}
+function autoVer(){
+  if(shared||!room)return;var ch=false;
+  room.views.forEach(function(v){if(v.sid&&!v.recv&&!v.ref&&csig(v)!==v.verSig){v.ver=(v.ver||0)+1;v.verSig=csig(v);v.verT=Date.now();ch=true}});
+  if(ch){save();updateShareBtn();if(!$("friendScr").hidden)renderHub()}
+}
+var sessBase={};
 function baseKey(v){return room.id+"|"+v.id}
 function captureBase(){if(!room||shared)return;room.views.forEach(function(v){var k=baseKey(v);if(!(k in sessBase))sessBase[k]=sig(v)})}
-function resetBase(){room.views.forEach(function(v){sessBase[baseKey(v)]=sig(v)})}
+function resetBase(){if(!room)return;room.views.forEach(function(v){sessBase[baseKey(v)]=sig(v)})}
 function hasIdeas(){
   if(shared||!room||!store.rooms.length)return false;
+  if(FR)return pendingEdits().length>0;
   captureBase();return room.views.some(function(v){return sessBase[baseKey(v)]!==sig(v)});
 }
 function updateShareBtn(){var b=$("shareIdeas");if(b)b.hidden=true;var bar=$("ideasBar");if(!bar||!room)return;bar.hidden=!hasIdeas()}
+function layoutSliders(){
+  var p=$("wpanel");if(!p||p.hidden)return;
+  p.querySelectorAll(".vslider").forEach(function(v){var i=v.querySelector("input");i.style.width=Math.max(56,v.clientHeight||120)+"px"});
+}
 function toggleLight(){
   var p=$("wpanel");p.hidden=!p.hidden;$("zLight").setAttribute("aria-pressed",!p.hidden);$("zLight").classList.toggle("on",!p.hidden);
   if(!p.hidden){if(!store.nat||!store.art){store.nat=true;store.art=true;syncToggles();save()}syncWeather();
-    p.querySelectorAll(".vslider").forEach(function(v){var i=v.querySelector("input");i.style.width=Math.max(60,v.clientHeight||120)+"px"})}
+    layoutSliders();if(window.requestAnimationFrame)requestAnimationFrame(layoutSliders)}
 }
 function syncWeather(){
   var wm=$("wMonthL");if(!wm)return;
@@ -2437,46 +2722,6 @@ function closeStore(){
   $("storeDlg").hidden=true;
 }
 $("npcStore").onclick=openStore;$("zAdd").onclick=openStore;$("storeX").onclick=closeStore;
-function friendPayload(name){
-  var rc=clone(room);rc.by=name;
-  var ch=room.views.filter(function(v){return v.sig0===undefined||v.sig0!==sig(v)});
-  rc.views=(ch.length?ch:room.views).map(function(v){v=clone(v);delete v.sig0;return v});
-  return {t:"room",room:rc,v:2};
-}
-var sentPayload=null;
-function oneViewPayload(name){
-  var r=room,g={name:r.name,origin:r.origin,w:r.w,h:r.h,north:r.north,lat:r.lat,lon:r.lon,wd:r.wd,windows:clone(r.windows),doors:clone(r.doors),outs:clone(r.outs)};
-  var v=clone(view);delete v.sig0;delete v.sid;v.name=name;
-  return {t:"one",v:3,id:uid("s"),room:g,view:v};
-}
-function shareIdeasFlow(){
-  if(shared||!store.rooms.length)return;
-  showModal({title:"Name this idea",msg:"Whoever opens it gets this layout as one new view. Nothing else in their room changes.",input:true,val:view.name,ok:"Create code",cb:function(n){
-    sentPayload=oneViewPayload(str(n,60,view.name));
-    $("sentT").textContent="“"+sentPayload.view.name+"” is ready";
-    $("sentP").textContent="Send it however you like. They open the link, or paste the code in Roomie (Help a friend, or Rooms and views → Open someone's room).";
-    $("snOut").hidden=true;$("snNote").textContent="";$("snLink").hidden=EMBED||!navigator.share;$("snFile").hidden=EMBED;
-    $("sentDlg").hidden=false;resetBase();updateShareBtn();
-  }});
-  $("mIn").placeholder="Name this idea";
-}
-$("npcTube").onclick=shareIdeasFlow;$("shareIdeas").onclick=shareIdeasFlow;$("ideasBtn").onclick=shareIdeasFlow;
-function playSend(cb){
-  var a=$("tubeAnim"),rm=false;
-  try{rm=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
-  a.hidden=false;a.className="tubeAnim"+(rm?" quick":"");
-  void a.offsetWidth;a.classList.add("go");
-  setTimeout(function(){a.classList.add("flash")},rm?150:1700);
-  setTimeout(function(){a.hidden=true;a.className="tubeAnim";cb()},rm?1100:2800);
-}
-$("snLink").onclick=function(){
-  encodePayload(sentPayload).then(function(code){var url=location.href.split("#")[0]+"#r="+code;
-    if(navigator.share)navigator.share({title:sentPayload.view?sentPayload.view.name:"Roomie",text:"Open this in Roomie",url:url}).catch(function(){var o=$("snOut");o.hidden=false;o.value=url;o.select()})});
-};
-$("snCode").onclick=function(){encodePayload(sentPayload).then(function(code){var o=$("snOut");o.hidden=false;o.value=code;o.focus();o.select();try{navigator.clipboard&&navigator.clipboard.writeText(code)}catch(e){}$("snNote").textContent="Code copied."})};
-$("snFile").onclick=function(){downloadJSON(((sentPayload.view&&sentPayload.view.name)||"idea").replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"-").toLowerCase()+".room.json",sentPayload)};
-$("snDone").onclick=function(){$("sentDlg").hidden=true};
-
 /* ---------- misc ---------- */
 var TABS=["add","light","checks","more"];
 function showTab(k){TABS.forEach(function(t){var on=t===k;$("tab-"+t).setAttribute("aria-selected",on);$("p-"+t).hidden=!on})}
