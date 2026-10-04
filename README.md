@@ -4,10 +4,10 @@ Plan a room on your phone, share it with a friend, and let them send their ideas
 
 ## Put it on GitHub Pages (free)
 
-1. Create a GitHub account, then a **new public repository** (for example `roomie`).
+1. Create a GitHub account, then a **new public repository** (for example `Roomie`).
 2. Upload every file in this folder, including the `icons` folder and `.nojekyll`.
 3. Repository → **Settings → Pages** → Source: *Deploy from a branch* → branch `main`, folder `/ (root)` → Save.
-4. After a minute your address appears, like `https://yourname.github.io/roomie/`. Share that link.
+4. After a minute your address appears, like `https://redras01.github.io/Roomie/`. Share that link.
 
 Screens change now and then. If something looks different, check GitHub's Pages help.
 
@@ -23,6 +23,12 @@ Screens change now and then. If something looks different, check GitHub's Pages 
 - **Copy as code**: same, as text you can paste into Notes.
 - **Snapshots**: automatic restore points, kept before deleting or importing. Restoring adds rooms back and never replaces what you have.
 - If the browser loses its main storage but keeps the vault, the app offers to restore your rooms on the next visit.
+
+## Start page
+
+- **Design a room**: opens your last room, or sets up a new one.
+- **Help a friend with their room**: paste the code (or link) a friend sent you.
+- A shared link opens the room directly. The house button top-left goes back to the start page.
 
 ## Friends
 

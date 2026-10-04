@@ -1,12 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
+<meta name="color-scheme" content="light">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Roomie</title>
-<meta name="description" content="Roomie: plan a room, share it with a friend, and let them send ideas back.">
+<meta name="description" content="Roomie: plan your room, share it with a friend, and let them send ideas back.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#1D6E8A">
+<meta name="theme-color" content="#E8D6A4">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,11 +15,9 @@
 <meta name="apple-mobile-web-app-title" content="Roomie">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   box-sizing:border-box;
@@ -221,12 +220,128 @@ body.dragging .sheet{transform:translateY(105%);opacity:0;pointer-events:none}
 .vs{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line);color:var(--ink)}
 .vs small{display:block;color:var(--ink2)}
 #sbViews .tog{display:flex;margin:4px 0}
+
+/* ===== Roomie theme: comic, cel-shaded, thick ink ===== */
+:root,:root[data-theme="light"]{
+  --paper:#E8D6A4;--card:#FFF6DE;--sunk:#D8C38A;--ink:#151311;--ink2:#5A4C36;--line:#151311;--wall:#151311;
+  --accent:#FFB81C;--accent-ink:#151311;--hot:#E4572E;--bad:#C81D25;--ok:#1E7A46;--warn:#B85C00;--win:#1A9DB0;
+  --c-bed:#79B8E8;--c-arm:#F29A64;--c-desk:#9CCF65;--c-chair:#B99BEA;--c-shelf:#D6BE8E;--c-table:#F5A3C2;--c-custom:#78D3C1;--c-lamp:#FFE05C;
+  --shadow:4px 4px 0 #151311;color-scheme:light;
+}
+body,.setup,.drawer,.landing{background-color:var(--paper);background-image:radial-gradient(rgba(21,19,17,.12) 1.1px,transparent 1.5px);background-size:8px 8px}
+body{font-family:"Barlow Condensed","Arial Narrow","Roboto Condensed",system-ui,sans-serif;font-size:17px;font-weight:500;letter-spacing:.01em}
+h1,h2,.tab,.sub,.proj .pn,.logo{font-family:"Bangers",Impact,Haettenschweiler,"Arial Black",sans-serif;font-weight:400;letter-spacing:.05em}
+h2{font-size:24px;line-height:1.05}
+.sub{font-size:18px;color:var(--ink);margin:16px 0 6px}
+.cap{font-size:14px;color:var(--ink2)}
+.b,.chip{border:3px solid var(--ink);border-radius:6px;box-shadow:3px 3px 0 var(--ink);font-family:inherit;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:var(--card);color:var(--ink)}
+.b:active,.chip:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.b:disabled{box-shadow:none;opacity:.35}
+.b.primary,.chip[aria-pressed=true]{background:var(--accent);border-color:var(--ink);color:var(--ink)}
+.b.danger{background:#FFD6D0;border-color:var(--ink);color:var(--bad)}
+.b.sm{border-width:2px;box-shadow:2px 2px 0 var(--ink)}
+.b:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[role=tab]:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+input[type=text],input[type=number],input[type=search],select,textarea{border:3px solid var(--ink);border-radius:6px;background:#FFFDF5;color:var(--ink);font-family:inherit;font-weight:600}
+textarea{font:15px/1.35 ui-monospace,Menlo,monospace}
+.readout,.stage,.sun,.panel,.rm,.mbox,.banner,.res{border:3px solid var(--ink);border-radius:8px;box-shadow:var(--shadow)}
+.res{background:var(--card)}
+.res .plus{color:var(--ink);font-weight:700}
+.res .n{font-weight:700;font-size:17px}
+.tabs{background:transparent;padding:0;gap:8px}
+.tab{border:3px solid var(--ink);border-radius:6px;background:var(--card);color:var(--ink);font-size:20px;box-shadow:3px 3px 0 var(--ink)}
+.tab[aria-selected=true]{background:var(--accent);box-shadow:1px 1px 0 var(--ink);transform:translate(2px,2px)}
+.badge{background:var(--bad);border:2px solid var(--ink);font-family:"Barlow Condensed",sans-serif;font-weight:700;letter-spacing:0;line-height:15px}
+.sheet{border-top:4px solid var(--ink);box-shadow:0 -6px 0 rgba(21,19,17,.25)}
+.grab{background:var(--ink)}
+.proj .pn{font-size:21px}
+.readout .t{font-weight:700}
+.k,.vwi,.vs{border-top:2px dashed rgba(21,19,17,.3)}
+.rm.cur{box-shadow:4px 4px 0 var(--hot)}
+.banner{background:var(--accent)}
+.banner .bt,.banner .bt b{color:var(--ink)}
+.setup h1{font-family:"Bangers",Impact,sans-serif;font-size:42px;font-weight:400;letter-spacing:.05em;color:var(--accent);-webkit-text-stroke:2px var(--ink);text-shadow:4px 4px 0 var(--ink);line-height:1.05}
+.zc .b.on{background:var(--accent)}
+.home svg{display:block;margin:auto}
+/* plan */
+.grid line{stroke:rgba(21,19,17,.1);stroke-width:.8}
+.wallbox{fill:#FFFAEA;stroke:var(--ink);stroke-width:5;stroke-linejoin:round}
+.wallbox.selwall,.selroom{stroke:var(--hot)}
+.shape{fill-opacity:1;stroke:var(--ink);stroke-width:2}
+.item.top .shape{stroke-dasharray:4 2}
+.item.locked .shape{stroke-width:2.8}
+.item.sel .shape{stroke:var(--hot);stroke-width:3.5;stroke-dasharray:none}
+.item.bad .shape{stroke:var(--bad);stroke-width:3.5;stroke-dasharray:none}
+.lbl{font-size:12px;font-weight:700;fill:var(--ink)}
+.tiny,.dimtxt{font-weight:600}
+.park{fill:url(#hatch);stroke:var(--ink);stroke-width:1.5;stroke-dasharray:none}
+.nichebox{fill:#FFFAEA;stroke:var(--ink);stroke-width:4}
+.doorgap,.cut{stroke:#FFFAEA;stroke-width:7}
+.glass{stroke:var(--win);stroke-width:6}
+.wing.sel .glass{stroke:var(--hot)}
+.swing{fill:#FFB81C;fill-opacity:.2;stroke:var(--ink);stroke-width:1.2}
+.leaf{stroke:var(--ink)}
+.wsw path{fill:var(--hot);fill-opacity:.12;stroke:var(--ink);stroke-width:1}
+#route{stroke:var(--hot);stroke-width:3}
+#routeEnd{fill:var(--hot)}
+.handle{fill:var(--accent);stroke:var(--ink);stroke-width:2}
+.out circle.dot{fill:var(--accent);stroke:var(--ink);stroke-width:2}
+.out text{fill:var(--ink);font-weight:700}
+.sunpatch{fill:#FFD23F;fill-opacity:.55;stroke:#C98A00;stroke-width:1.2}
+/* landing */
+.landing{position:fixed;inset:0;z-index:45;overflow:auto;padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(28px + env(safe-area-inset-bottom,0px))}
+.landing[hidden]{display:none}
+.lg-in{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.stripe{height:14px;border:3px solid var(--ink);background:repeating-linear-gradient(-45deg,var(--accent) 0 14px,var(--ink) 14px 28px);box-shadow:var(--shadow)}
+.logo{font-size:clamp(68px,24vw,128px);line-height:.9;margin:10px 0 0;color:var(--accent);-webkit-text-stroke:3px var(--ink);text-shadow:7px 7px 0 var(--ink);transform:rotate(-3deg);transform-origin:left center}
+.logo.sm{font-size:clamp(46px,14vw,76px);text-shadow:5px 5px 0 var(--ink)}
+.tag{font-size:21px;font-weight:700;margin:0;text-transform:uppercase;letter-spacing:.03em;color:var(--ink)}
+.bigc{display:flex;gap:14px;align-items:center;width:100%;text-align:left;padding:16px;border:4px solid var(--ink);border-radius:10px;background:var(--card);box-shadow:6px 6px 0 var(--ink);color:var(--ink);font:inherit;cursor:pointer}
+.bigc:active{transform:translate(3px,3px);box-shadow:3px 3px 0 var(--ink)}
+.bigc:focus-visible{outline:3px solid var(--hot);outline-offset:3px}
+.bigc.alt{background:var(--accent)}
+.bigc b{display:block;font-family:"Bangers",Impact,sans-serif;font-weight:400;font-size:31px;letter-spacing:.05em;line-height:1}
+.bigc small{display:block;font-size:17px;font-weight:600;color:var(--ink2);margin-top:5px}
+.bigc.alt small{color:var(--ink)}
+.bigc svg{flex-shrink:0}
+.lg-foot{text-align:center;margin:0}
+#frCode{min-height:130px;margin:0}
+@media (prefers-reduced-motion:reduce){.bigc:active,.tab[aria-selected=true]{transform:none}}
 </style>
 </head>
 <body>
+<section class="landing" id="landing" aria-labelledby="lgT" hidden>
+  <div class="lg-in">
+    <div class="stripe" aria-hidden="true"></div>
+    <h1 id="lgT" class="logo">Roomie</h1>
+    <p class="tag">Plan your room. Or barge into a friend's.</p>
+    <button class="bigc" id="goDesign">
+      <svg width="58" height="58" viewBox="0 0 58 58" aria-hidden="true"><rect x="5" y="5" width="48" height="48" rx="3" fill="#FFFAEA" stroke="#151311" stroke-width="4"/><rect x="11" y="11" width="20" height="16" rx="2" fill="#79B8E8" stroke="#151311" stroke-width="3"/><rect x="36" y="11" width="11" height="22" rx="2" fill="#9CCF65" stroke="#151311" stroke-width="3"/><path d="M33 53 A14 14 0 0 1 47 39" fill="none" stroke="#151311" stroke-width="3" stroke-dasharray="4 3"/></svg>
+      <span><b>Design a room</b><small id="goDesignSub">Measure up, drop in furniture, chase the sun.</small></span>
+    </button>
+    <button class="bigc alt" id="goFriend">
+      <svg width="58" height="58" viewBox="0 0 58 58" aria-hidden="true"><rect x="12" y="9" width="34" height="44" rx="3" fill="#FFF6DE" stroke="#151311" stroke-width="4"/><rect x="21" y="4" width="16" height="10" rx="2" fill="#E4572E" stroke="#151311" stroke-width="3"/><path d="M19 27h20M19 35h20M19 43h12" stroke="#151311" stroke-width="3.5" stroke-linecap="round"/></svg>
+      <span><b>Help a friend with their room</b><small>Paste the code they sent you.</small></span>
+    </button>
+    <p class="cap lg-foot">Your rooms stay on this device. Back them up in More → Vault.</p>
+  </div>
+</section>
+
+<section class="landing" id="friendScr" aria-labelledby="frT" hidden>
+  <div class="lg-in">
+    <div><button class="b sm" id="frBack">← Back</button></div>
+    <h1 id="frT" class="logo sm">Help a friend</h1>
+    <p class="tag">Paste the code or link your friend sent you.</p>
+    <textarea id="frCode" placeholder="Paste it here" aria-label="Your friend's room code or link"></textarea>
+    <div class="row" style="margin:0"><button class="b primary" id="frGo">Open their room</button><label class="b" for="frFile" style="display:inline-flex;align-items:center">Open a file</label><input type="file" id="frFile" accept=".json,.room,application/json,text/plain" hidden></div>
+    <p class="cap bad" id="frErr" role="alert" style="margin:0"></p>
+    <p class="cap" style="margin:0">No code yet? Ask them to open Roomie, tap their room name at the top, then Share room → Copy code.</p>
+  </div>
+</section>
+
 <main>
   <header class="hdr">
   <div class="projbar">
+    <button class="b sq home" id="homeBtn" aria-label="Home"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10 L10 3 L17 10 M5 8.5 V17 H15 V8.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg></button>
     <button class="b proj" id="projBtn" aria-haspopup="dialog" aria-label="Rooms and views"><span class="pn" id="pRoom"></span><span class="pv" id="pView"></span><span class="car" aria-hidden="true">▾</span></button>
     <button class="b sq" id="undoBtn" aria-label="Undo" disabled>↶</button>
     <button class="b sq" id="redoBtn" aria-label="Redo" disabled>↷</button>
@@ -575,7 +690,7 @@ var vdb=null,lastSnapT=0,lastAutoT=0,mirTimer=null,persistTried=false;
 var vready=new Promise(function(res){
   try{
     if(!window.indexedDB){res(null);return}
-    var rq=indexedDB.open("Roomie",1);
+    var rq=indexedDB.open("dreamland",1);
     rq.onupgradeneeded=function(){var db=rq.result;if(!db.objectStoreNames.contains("kv"))db.createObjectStore("kv");if(!db.objectStoreNames.contains("snaps"))db.createObjectStore("snaps",{keyPath:"t"})};
     rq.onsuccess=function(){vdb=rq.result;vdb.onversionchange=function(){try{vdb.close()}catch(e){}vdb=null};res(vdb)};
     rq.onerror=function(){res(null)};rq.onblocked=function(){res(null)};
@@ -737,6 +852,8 @@ var gl=mk("radialGradient",{id:"glow"},defs);
 mk("stop",{offset:"0%","stop-color":"#FFD27A","stop-opacity":".55"},gl);
 mk("stop",{offset:"60%","stop-color":"#FFD27A","stop-opacity":".18"},gl);
 mk("stop",{offset:"100%","stop-color":"#FFD27A","stop-opacity":"0"},gl);
+var hpat=mk("pattern",{id:"hatch",width:8,height:8,patternUnits:"userSpaceOnUse",patternTransform:"rotate(45)"},defs);
+mk("line",{x1:0,y1:0,x2:0,y2:8,stroke:"#151311","stroke-width":1.4,"stroke-opacity":".22"},hpat);
 var dynDefs=mk("defs",{});
 var gGrid=mk("g",{"class":"grid"}),gStatic=mk("g",{}),gSwing=mk("g",{}),gPath=mk("g",{}),gItems=mk("g",{});
 var gNat=mk("g",{style:"pointer-events:none"}),gArt=mk("g",{style:"pointer-events:none"}),gOuts=mk("g",{}),gSel=mk("g",{});
@@ -1665,7 +1782,7 @@ $("tree").addEventListener("click",function(e){
   else if(act==="newv"){var nv={id:uid("v"),name:uniqueName("View "+(r.views.length+1),r.views),objs:[],lights:[]};r.views.push(nv);save();goTo(rid,nv.id);closeDrawer()}
   else if(act==="delv"){
     if(r.views.length<2){showModal({title:"Can't delete",msg:"A room needs at least one view. Duplicate it or add a new one first.",ok:"OK",cb:null});return}
-    showModal({title:"Delete view “"+v.name+"”?",msg:"This can't be undone from inside Roomie. A snapshot is kept in the vault.",ok:"Delete",danger:true,cb:function(){
+    showModal({title:"Delete view “"+v.name+"”?",msg:"A snapshot is kept in the vault, just in case.",ok:"Delete",danger:true,cb:function(){
       vSnap("before deleting a view");r.views=r.views.filter(function(x){return x!==v});
       if(store.cur.r===r.id&&store.cur.v===v.id){store.cur.v=r.views[0].id;hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll()}
       save();renderTree()}});
@@ -1674,7 +1791,7 @@ $("tree").addEventListener("click",function(e){
     showModal({title:"Delete room “"+r.name+"”?",msg:"All "+r.views.length+" view"+(r.views.length>1?"s":"")+" in it will be deleted. A snapshot stays in the vault.",ok:"Delete",danger:true,cb:function(){
       vSnap("before deleting a room");store.rooms=store.rooms.filter(function(x){return x!==r});
       if(store.cur.r===r.id){var n=store.rooms[0];store.cur={r:n?n.id:"",v:n?n.views[0].id:""};hist={u:[],r:[]};sel=null;closeSheet();bind();buildAll();fitView()}
-      save();renderTree();if(!store.rooms.length){closeDrawer();openNewRoom(true)}}});
+      save();renderTree();if(!store.rooms.length){closeDrawer();showLanding()}}});
   }
   else if(act==="shr")openShareBox(r.name,{t:"room",room:r});
   else if(act==="sendb")openSendBox(r);
@@ -1690,11 +1807,11 @@ function openNewRoom(first){
   $("nrName").value=first?"My room":"New room";$("nrW").value=350;$("nrH").value=400;$("nrN").value=0;
   var src=(!shared&&store.rooms.length)?room:null;
   $("nrLat").value=src&&src.lat!=null?src.lat:"";$("nrLon").value=src&&src.lon!=null?src.lon:"";
-  $("nrErr").textContent="";$("nrGeoMsg").textContent="";$("nrNo").hidden=!!first;$("nrDef").checked=true;
+  $("nrErr").textContent="";$("nrGeoMsg").textContent="";$("nrNo").hidden=false;$("nrNo").textContent=first?"Back":"Cancel";$("nrDef").checked=true;
   $("nrDlg").hidden=false;$("nrDlg").scrollTop=0;
 }
 $("nrGeo").onclick=function(){geoFill(function(la,lo){$("nrLat").value=la;$("nrLon").value=lo},$("nrGeoMsg"))};
-$("nrNo").onclick=function(){$("nrDlg").hidden=true};
+$("nrNo").onclick=function(){$("nrDlg").hidden=true;if(!store.rooms.length&&!shared)showLanding()};
 $("nrOk").onclick=function(){
   function v(id){return parseFloat($(id).value)}
   var w=v("nrW"),h=v("nrH"),n=v("nrN"),lat=$("nrLat").value.trim()===""?null:v("nrLat"),lon=$("nrLon").value.trim()===""?null:v("nrLon"),err="";
@@ -1819,7 +1936,7 @@ $("shLink").onclick=function(){
     else{showOut(url);$("shNote").textContent="Link copied. Paste it in a message."+(url.length>8000?" It's very long, so a code or file may work better.":"")}
   });
 };
-$("shCode").onclick=function(){if(!shareCtx)return;var pd=payloadData();if(!pd)return;encodePayload(pd).then(function(code){showOut(code);$("shNote").textContent="Code copied. The other person pastes it under “Open someone's room”."})};
+$("shCode").onclick=function(){if(!shareCtx)return;var pd=payloadData();if(!pd)return;encodePayload(pd).then(function(code){showOut(code);$("shNote").textContent=shareCtx.build?"Code copied. They paste it under Rooms and views → Open someone's room.":"Code copied. Your friend opens Roomie, taps Help a friend, and pastes it."})};
 $("shFile").onclick=function(){
   if(!shareCtx)return;var pd=payloadData();if(!pd)return;
   downloadJSON(((shareCtx.title||"room").replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"-").toLowerCase()||"room")+".room.json",pd);
@@ -1852,7 +1969,7 @@ function enterShared(p){
 $("bViews").onchange=function(){if(!shared)return;shared.cur.v=this.value;sel=null;closeSheet();bind();buildAll()};
 function leaveShared(){exitSharedQuiet();sel=null;closeSheet();buildAll();fitView()}
 function exitSharedQuiet(){shared=null;$("banner").hidden=true;try{if(location.hash)history.replaceState(null,"",location.pathname+location.search)}catch(e){}bind()}
-$("bClose").onclick=function(){exitSharedQuiet();sel=null;closeSheet();buildAll();fitView();if(!store.rooms.length)firstRun()};
+$("bClose").onclick=function(){exitSharedQuiet();sel=null;closeSheet();buildAll();fitView();if(!store.rooms.length)showLanding()};
 $("bAdd").onclick=function(){
   if(!shared||!shared.match)return;
   var p=shared.rooms[0],target=store.rooms.filter(function(x){return x.id===shared.match})[0];if(!target)return;
@@ -1890,7 +2007,7 @@ function renderVault(){
 function vaultPayload(){return {t:"all",v:2,rooms:store.rooms}}
 $("vSave").hidden=EMBED;
 $("vSave").onclick=function(){
-  var d=new Date(),n="Roomie-vault-"+d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)+".json";
+  var d=new Date(),n="roomie-vault-"+d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)+".json";
   downloadJSON(n,vaultPayload());store.lastBackup=Date.now();save();renderVault();
 };
 $("vCode").onclick=function(){
@@ -1926,6 +2043,25 @@ function firstRun(){
   });
 }
 
+
+/* ---------- landing ---------- */
+function showLanding(){
+  closeSheet();closeDrawer();$("friendScr").hidden=true;
+  $("goDesignSub").textContent=store.rooms.length?"Carry on with “"+(store.rooms.filter(function(r){return r.id===store.cur.r})[0]||store.rooms[0]).name+"”.":"Measure up, drop in furniture, chase the sun.";
+  $("landing").hidden=false;$("landing").scrollTop=0;
+}
+function hideLanding(){$("landing").hidden=true;$("friendScr").hidden=true}
+$("goDesign").onclick=function(){hideLanding();if(!store.rooms.length)firstRun()};
+$("goFriend").onclick=function(){$("landing").hidden=true;$("friendScr").hidden=false;$("frErr").textContent="";$("frCode").value="";$("frCode").focus()};
+$("frBack").onclick=showLanding;
+function openFriend(code){
+  $("frErr").textContent="";
+  decodePayload(code).then(function(p){hideLanding();enterShared(p)}).catch(function(e){$("frErr").textContent=e&&e.message==="old"?"This browser is too old to open it. Try another browser.":"That doesn't look like a Roomie code or link. Copy the whole thing and try again."});
+}
+$("frGo").onclick=function(){var v=$("frCode").value.trim();if(!v){$("frErr").textContent="Paste the code first.";return}openFriend(v)};
+$("frFile").onchange=function(){var f=this.files&&this.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){openFriend(String(rd.result))};rd.readAsText(f);this.value=""};
+$("homeBtn").onclick=function(){if(shared){exitSharedQuiet();sel=null;closeSheet();buildAll();fitView()}showLanding()};
+
 /* ---------- misc ---------- */
 var TABS=["add","light","checks","more"];
 function showTab(k){TABS.forEach(function(t){var on=t===k;$("tab-"+t).setAttribute("aria-selected",on);$("p-"+t).hidden=!on})}
@@ -1953,7 +2089,7 @@ $("copy").onclick=function(){
   store=load();
   bind();buildAll();fitView();renderResults();
   if(canStore&&store.rooms.length)save();
-  if(!checkHash()&&!store.rooms.length)firstRun();
+  if(!checkHash())showLanding();
 })();
 })();
 
