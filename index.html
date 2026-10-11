@@ -34,6 +34,8 @@
 
 
 
+
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Condensed:wght@500;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
@@ -704,6 +706,23 @@ body.bp.sheet-tall main{padding-bottom:calc(80vh + 8px)}
 .mag::before,.mag::after{content:"";position:absolute;background:rgba(21,19,17,.35);pointer-events:none}
 .mag::before{left:50%;top:0;bottom:0;width:1px}
 .mag::after{top:50%;left:0;right:0;height:1px}
+
+/* ===== v13: magnifier, lens settings, scrolling dialogs, free canvas ===== */
+.mag{width:84px;height:84px}
+.maglab{position:absolute;left:0;right:0;bottom:9px;text-align:center;font-weight:700;font-size:13px;color:var(--hot);text-shadow:-1px 0 #FFF6DE,1px 0 #FFF6DE,0 -1px #FFF6DE,0 1px #FFF6DE;pointer-events:none}
+.mag::before,.mag::after{background:rgba(21,19,17,.28)}
+.zc .lensbtn{margin-top:auto;min-height:46px}
+.zc .lensbtn svg{width:24px;height:24px}
+.lens{position:absolute;right:76px;bottom:6px;z-index:13;width:min(230px,calc(100% - 90px));padding:10px;background:var(--card);border:3px solid var(--ink);border-radius:10px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.lens[hidden]{display:none}
+.lens .lrow{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:700}
+.lens .lrow output{display:inline;color:var(--hot)}
+.lens input[type=range]{width:100%;margin:0;accent-color:var(--accent)}
+.lens .tog{font-weight:700}
+.modal{align-items:flex-start;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.mbox{margin:auto;max-height:none}
+.mbox.store{max-height:none;overflow:visible}
+#sdViews{max-height:34vh;overflow-y:auto;overscroll-behavior:contain}
 </style>
 </head>
 <body>
@@ -728,7 +747,7 @@ body.bp.sheet-tall main{padding-bottom:calc(80vh + 8px)}
         <button class="b sm" id="goFriend" hidden>Saved rooms</button>
       </div>
     </div>
-    <p class="cap lg-foot">Your rooms stay on this device. Back them up in My rooms → Rooms and views → Vault.<br><span class="ver">Build 11 Oct 2026 · sun with heights, magnifier</span></p>
+    <p class="cap lg-foot">Your rooms stay on this device. Back them up in My rooms → Rooms and views → Vault.<br><span class="ver">Build 11 Oct 2026 · no Share ideas button</span></p>
   </div>
 </section>
 
@@ -779,8 +798,13 @@ body.bp.sheet-tall main{padding-bottom:calc(80vh + 8px)}
     <div class="zone zr" id="zoneR" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M5 15H4V4h11v1" fill="none" stroke="currentColor" stroke-width="2.4"/></svg><small>Duplicate</small></div>
     <button class="holdlock" id="holdLock" hidden aria-label="Lock"></button>
     <div class="toast" id="toast" hidden role="status"><span class="tm"></span><button hidden></button></div>
-    <div class="ideasbar" id="ideasBar" hidden><button class="b bigshare" id="ideasBtn">Share ideas</button></div>
-    <div class="mag" id="mag" hidden aria-hidden="true"><svg id="magSvg" viewBox="0 0 100 100"></svg></div>
+    <div class="mag" id="mag" hidden aria-hidden="true"><svg id="magSvg" viewBox="0 0 100 100"></svg><span class="maglab" id="magLab"></span></div>
+    <div class="lens" id="lensPanel" hidden role="dialog" aria-label="Magnifier and gaps">
+      <label class="tog"><input type="checkbox" id="lensOn"> Magnifier</label>
+      <label class="lrow">Show when closer than <output id="lensTolL"></output><input type="range" id="lensTol" min="5" max="40" step="1"></label>
+      <label class="lrow">Ignore pieces lower than <output id="gapMinL"></output><input type="range" id="gapMin" min="0" max="30" step="1"></label>
+      <p class="cap" style="margin:2px 0 0">Gap lines stop at the nearest piece taller than this, or at the wall. Pieces without a height always count.</p>
+    </div>
     <div class="vmenu" id="vmenu" hidden role="menu" aria-label="View options"></div>
     <div class="seltools" id="seltools" hidden>
       <button class="b rbtn" id="rl" aria-label="Rotate left: tap for 90 degrees, hold for 15 degree steps" disabled>↺</button>
@@ -802,6 +826,7 @@ body.bp.sheet-tall main{padding-bottom:calc(80vh + 8px)}
       <button class="b sm" id="wClose" hidden>Close</button>
     </div>
 
+      <button class="b zbig lensbtn on" id="zMag" aria-label="Magnifier and gap settings" aria-pressed="true"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M7.5 10h5M10 7.5v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
       <button class="b sq" id="zIn" hidden aria-label="Zoom in">+</button>
       <button class="b sq" id="zOut" hidden aria-label="Zoom out">−</button>
       <button class="b sq" id="zFit" hidden aria-label="Fit to screen">Fit</button>
@@ -898,7 +923,6 @@ body.bp.sheet-tall main{padding-bottom:calc(80vh + 8px)}
   </section>
 </main>
 
-<button class="b primary shareIdeas" id="shareIdeas" hidden>Share ideas</button>
 
 <div class="sheet" id="sheet" hidden><div class="grab"></div><div class="inner" id="sheetIn"></div></div>
 
@@ -936,7 +960,7 @@ body.bp.sheet-tall main{padding-bottom:calc(80vh + 8px)}
     </div>
     <p class="cap">Restoring adds rooms back. It never replaces what you have now.</p>
     </div>
-    <p class="cap ver">Roomie build 11 Oct 2026 · sun with heights, magnifier</p>
+    <p class="cap ver">Roomie build 11 Oct 2026 · no Share ideas button</p>
   </div>
 </div>
 
@@ -1467,6 +1491,24 @@ function baseBox(){
   var x0=Math.min(b.x,extraBox.x0),y0=Math.min(b.y,extraBox.y0),x1=Math.max(b.x+b.w,extraBox.x1),y1=Math.max(b.y+b.h,extraBox.y1);
   return {x:x0,y:y0,w:x1-x0,h:y1-y0};
 }
+function canvasBox(){var b=baseBox(),m=300;return {x:b.x-m,y:b.y-m,w:b.w+2*m,h:b.h+2*m}}
+function lens(){var l=store.lens;if(!l||typeof l!=="object")l=store.lens={on:true,tol:15,gapMin:10};if(!(l.tol>=5))l.tol=15;if(!(l.gapMin>=0))l.gapMin=10;if(l.on===undefined)l.on=true;return l}
+function stoppers(o){var m=lens().gapMin;return view.objs.filter(function(x){return x.id!==o.id&&!x.top&&!x.under&&!(x.ht>0&&x.ht<m)&&inside(x)}).map(function(x){return poly(x)})}
+function clearances(o){
+  var b=aabb(poly(o)),st=stoppers(o),res={},dirs={l:[-1,0],r:[1,0],u:[0,-1],d:[0,1]};
+  Object.keys(dirs).forEach(function(k){
+    var dx=dirs[k][0],dy=dirs[k][1],best={d:1e9,x:0,y:0};
+    for(var s=0;s<5;s++){
+      var f=0.1+0.2*s,x0,y0;
+      if(dx!==0){x0=dx<0?b.x:b.x+b.w;y0=b.y+b.h*f}else{y0=dy<0?b.y:b.y+b.h;x0=b.x+b.w*f}
+      var d=rayDist(x0,y0,dx,dy);
+      for(var i=0;i<st.length;i++){var t=rayEntry(st[i],x0,y0,dx,dy,1e9);if(t>=0&&t<d)d=t}
+      if(d<best.d)best={d:d,x:x0,y:y0};
+    }
+    best.x2=best.x+dx*best.d;best.y2=best.y+dy*best.d;res[k]=best;
+  });
+  return res;
+}
 function calcExtra(){
   var b=base0(),x0=b.x,y0=b.y,x1=b.x+b.w,y1=b.y+b.h,ch=false;
   view.objs.forEach(function(o){var q=aabb(poly(o));
@@ -1483,13 +1525,13 @@ function applyVB(){
   var b=baseBox(),z=zoom.z,cw=svg.clientWidth,ch=svg.clientHeight;
   if(!(cw>20&&ch>20)){cw=b.w;ch=b.h}
   var sc=Math.min(cw/b.w,ch/b.h),w=cw/(sc*z),h=ch/(sc*z);
-  zoom.cx=clampN(zoom.cx,b.x,b.x+b.w);zoom.cy=clampN(zoom.cy,b.y,b.y+b.h);
+  var cb=canvasBox();zoom.cx=clampN(zoom.cx,cb.x,cb.x+cb.w);zoom.cy=clampN(zoom.cy,cb.y,cb.y+cb.h);
   curVB={w:w,h:h};
   svg.setAttribute("viewBox",r1(zoom.cx-w/2)+" "+r1(zoom.cy-h/2)+" "+r1(w)+" "+r1(h));
 }
 function fitView(){var b=baseBox();zoom.z=1;zoom.cx=b.x+b.w/2;zoom.cy=b.y+b.h/2;applyVB();drawOverlay()}
 function zoomAt(f,px,py){
-  var nz=clampN(zoom.z*f,1,8);if(nz===zoom.z)return;
+  var nz=clampN(zoom.z*f,0.5,8);if(nz===zoom.z)return;
   zoom.cx=px-(px-zoom.cx)*(zoom.z/nz);zoom.cy=py-(py-zoom.cy)*(zoom.z/nz);zoom.z=nz;applyVB();drawOverlay();
 }
 function dimH(x0,x1,y,label){
@@ -1665,13 +1707,12 @@ function drawObjDims(o){
     T(x+sx*fs*.85,0,r1(o.h)+" cm",nrmA(o.r+90)-o.r);
   }
   if(!inside(o))return;
-  var b=aabb(poly(o)),gg=mk("g",{"class":"selgap"},gSel),cy=b.y+b.h/2,cx=b.x+b.w/2;
-  var gl=[rayDist(b.x,cy,-1,0),rayDist(b.x+b.w,cy,1,0)],gt=[rayDist(cx,b.y,0,-1),rayDist(cx,b.y+b.h,0,1)];
-  function G(x1,y1,x2,y2,lab,lx,ly,rot){mk("line",{x1:r1(x1),y1:r1(y1),x2:r1(x2),y2:r1(y2)},gg);if(!lab)return;var t=txt(lx,ly,lab,"sgt",gg);t.setAttribute("font-size",fs);t.setAttribute("stroke-width",halo);if(rot)t.setAttribute("transform","rotate(-90 "+r1(lx)+" "+r1(ly)+")")}
-  if(gl[0]<=gl[1]){if(gl[0]>0.5&&gl[0]<900)G(b.x-gl[0],cy,b.x,cy,Math.round(gl[0])+" cm",b.x-gl[0]/2,cy-fs*.8)}
-  else if(gl[1]>0.5&&gl[1]<900)G(b.x+b.w,cy,b.x+b.w+gl[1],cy,Math.round(gl[1])+" cm",b.x+b.w+gl[1]/2,cy-fs*.8);
-  if(gt[0]<=gt[1]){if(gt[0]>0.5&&gt[0]<900){G(cx,b.y-gt[0],cx,b.y,"",0,0);var ty=b.y-gt[0]/2;var t1=txt(cx+fs*.9,ty,Math.round(gt[0])+" cm","sgt",gg);t1.setAttribute("font-size",fs);t1.setAttribute("stroke-width",halo);t1.setAttribute("transform","rotate(-90 "+r1(cx+fs*.9)+" "+r1(ty)+")")}}
-  else if(gt[1]>0.5&&gt[1]<900){var my=b.y+b.h+gt[1]/2;G(cx,b.y+b.h,cx,b.y+b.h+gt[1],"",0,0);var t2=txt(cx+fs*.9,my,Math.round(gt[1])+" cm","sgt",gg);t2.setAttribute("font-size",fs);t2.setAttribute("stroke-width",halo);t2.setAttribute("transform","rotate(-90 "+r1(cx+fs*.9)+" "+r1(my)+")")}
+  var b=aabb(poly(o)),gg=mk("g",{"class":"selgap"},gSel),cl=clearances(o);
+  function G(x1,y1,x2,y2){mk("line",{x1:r1(x1),y1:r1(y1),x2:r1(x2),y2:r1(y2)},gg)}
+  function lab(x,y,txt0,rot){var t=txt(r1(x),r1(y),txt0,"sgt",gg);t.setAttribute("font-size",fs);t.setAttribute("stroke-width",halo);if(rot)t.setAttribute("transform","rotate(-90 "+r1(x)+" "+r1(y)+")")}
+  var hp=cl.l.d<=cl.r.d?cl.l:cl.r,vp=cl.u.d<=cl.d.d?cl.u:cl.d;
+  if(hp.d>0.5&&hp.d<900){G(hp.x,hp.y,hp.x2,hp.y2);lab((hp.x+hp.x2)/2,hp.y-fs*.8,Math.round(hp.d)+" cm",false)}
+  if(vp.d>0.5&&vp.d<900){G(vp.x,vp.y,vp.x2,vp.y2);lab(vp.x+fs*.9,(vp.y+vp.y2)/2,Math.round(vp.d)+" cm",true)}
 }
 function poly(o){
   var c=Math.cos(o.r*D2R),s=Math.sin(o.r*D2R),hw=o.w/2,hh=o.h/2,pts;
@@ -1772,7 +1813,7 @@ function rebuildItems(){
   view.objs.filter(function(o){return o.under&&!o.top}).concat(view.objs.filter(function(o){return !o.top&&!o.under}),view.objs.filter(function(o){return o.top})).forEach(buildObj);
   syncToggles();
 }
-function syncToggles(){
+function syncToggles(){if(typeof syncLens==="function")syncLens();
   $("tNat").setAttribute("aria-pressed",store.nat);$("tArt").setAttribute("aria-pressed",store.art);
   gNat.style.display=store.nat?"":"none";gArt.style.display=store.art?"":"none";
 }
@@ -2023,7 +2064,7 @@ function geoFill(cb,msgEl){
 
 /* ---------- editing operations ---------- */
 function clampObj(o){
-  var b=aabb(poly(o)),b1=baseBox(),b2=fitBox(),x0=Math.min(b1.x,b2.x),y0=Math.min(b1.y,b2.y),x1=Math.max(b1.x+b1.w,b2.x+b2.w),y1=Math.max(b1.y+b1.h,b2.y+b2.h),minX=x0+4,maxX=x1-4,minY=y0+4,maxY=y1-4;
+  var b=aabb(poly(o)),b1=canvasBox(),b2=fitBox(),x0=Math.min(b1.x,b2.x),y0=Math.min(b1.y,b2.y),x1=Math.max(b1.x+b1.w,b2.x+b2.w),y1=Math.max(b1.y+b1.h,b2.y+b2.h),minX=x0+4,maxX=x1-4,minY=y0+4,maxY=y1-4;
   if(b.x<minX)o.cx+=minX-b.x;else if(b.x+b.w>maxX)o.cx-=b.x+b.w-maxX;
   if(b.y<minY)o.cy+=minY-b.y;else if(b.y+b.h>maxY)o.cy-=b.y+b.h-maxY;
 }
@@ -2279,7 +2320,7 @@ svg.addEventListener("pointermove",function(e){
   if(pan&&e.pointerId===pan.pid){
     if(!pan.moved&&Math.abs(e.clientX-pan.sx)+Math.abs(e.clientY-pan.sy)<5)return;
     pan.moved=true;
-    if(zoom.z>1){var u=unitsPerPx();zoom.cx-=(e.clientX-pan.lx)*u.x;zoom.cy-=(e.clientY-pan.ly)*u.y;applyVB()}
+    var u=unitsPerPx();zoom.cx-=(e.clientX-pan.lx)*u.x;zoom.cy-=(e.clientY-pan.ly)*u.y;applyVB();drawOverlay()
     pan.lx=e.clientX;pan.ly=e.clientY;return;
   }
   if(arm&&e.pointerId===arm.pid){e.preventDefault();moveArm(e);return}
@@ -2480,25 +2521,47 @@ function magSetup(){
   magInit=true;
 }
 function magHide(){var m=$("mag");if(m&&!m.hidden)m.hidden=true}
-function magShow(wx,wy,cx,cy){
+function magShow(wx,wy,cx,cy,label){
   var m=$("mag");if(!m)return;magSetup();
-  var u=unitsPerPx(),vw=110*u.x/2.5,r=wrapRect(),px=cx-r.left,py=cy-r.top;
+  var u=unitsPerPx(),vw=84*u.x/2,r=wrapRect(),px=cx-r.left,py=cy-r.top;
   $("magSvg").setAttribute("viewBox",r1(wx-vw/2)+" "+r1(wy-vw/2)+" "+r1(vw)+" "+r1(vw));
-  var left=clampN(px-55,6,Math.max(6,r.width-116)),top=py-110-28;if(top<6)top=py+36;top=clampN(top,6,Math.max(6,r.height-116));
+  $("magLab").textContent=label||"";
+  var left=clampN(px-42,6,Math.max(6,r.width-90)),top=py-84-26;if(top<6)top=py+34;top=clampN(top,6,Math.max(6,r.height-90));
   m.style.left=Math.round(left)+"px";m.style.top=Math.round(top)+"px";m.hidden=false;
 }
 function magFor(d,e,p){
-  if(!d||!d.moved||arm)return;var c=null,k=d.k;
-  if(k==="obj"){var o=findObj(d.id);if(o)c=[o.cx,o.cy]}
-  else if(k==="clight"){var cl=findCL(d.id);if(cl)c=[cl.x,cl.y]}
-  else if(k==="out"){var q=findOut(d.id);if(q)c=opos(q)}
+  if(!d||!d.moved||arm)return;
+  var L=lens();if(!L.on){magHide();return}
+  var c=null,k=d.k;
+  if(k==="obj"){
+    var o=findObj(d.id);if(!o||!inside(o)){magHide();return}
+    var cl=clearances(o),best=null;["l","r","u","d"].forEach(function(q){if(!best||cl[q].d<best.d)best=cl[q]});
+    if(!best||best.d>=900){d.magOn=false;magHide();return}
+    if(best.d<=L.tol)d.magOn=true;else if(best.d>L.tol+5)d.magOn=false;
+    if(d.magOn)magShow((best.x+best.x2)/2,(best.y+best.y2)/2,e.clientX,e.clientY,Math.round(best.d)+" cm");else magHide();
+    return;
+  }
+  if(k==="clight"){var cc0=findCL(d.id);if(cc0)c=[cc0.x,cc0.y]}
+  else if(k==="out"){var q0=findOut(d.id);if(q0)c=opos(q0)}
   else if(k==="win"||k==="door"){var it=k==="win"?findWin(d.id):findDoor(d.id);if(it)c=wf(it.wall,it.pos,it.w).mid}
   else if(k==="wh"){var i3=d.kind==="win"?findWin(d.id):findDoor(d.id);if(i3){var f3=wf(i3.wall,i3.pos,i3.w);c=d.end?f3.p1:f3.p0}}
   else if(k==="pt"){var pp=PTS[d.id];if(pp)c=pp}
-  else if(k==="opt"){var oo=findObj(d.oid);if(oo&&oo.pts&&oo.pts[d.id]){var cc=Math.cos(oo.r*D2R),ss=Math.sin(oo.r*D2R),lq=oo.pts[d.id];c=[oo.cx+lq[0]*cc-lq[1]*ss,oo.cy+lq[0]*ss+lq[1]*cc]}}
+  else if(k==="opt"){var oo=findObj(d.oid);if(oo&&oo.pts&&oo.pts[d.id]){var cs=Math.cos(oo.r*D2R),sn=Math.sin(oo.r*D2R),lq=oo.pts[d.id];c=[oo.cx+lq[0]*cs-lq[1]*sn,oo.cy+lq[0]*sn+lq[1]*cs]}}
   else if(k==="wl")c=[p.x,p.y];
-  if(c)magShow(c[0],c[1],e.clientX,e.clientY);
+  if(c)magShow(c[0],c[1],e.clientX,e.clientY,"");
 }
+
+/* ---------- magnifier and gap settings ---------- */
+function syncLens(){
+  var l=lens();if(!$("lensOn"))return;
+  $("lensOn").checked=!!l.on;$("lensTol").value=l.tol;$("lensTolL").textContent=l.tol+" cm";$("gapMin").value=l.gapMin;$("gapMinL").textContent=l.gapMin+" cm";
+  $("zMag").classList.toggle("on",!!l.on);$("zMag").setAttribute("aria-pressed",!!l.on);
+}
+$("zMag").onclick=function(){var p=$("lensPanel");p.hidden=!p.hidden;if(!p.hidden)syncLens()};
+$("lensOn").onchange=function(){lens().on=this.checked;syncLens();if(!this.checked)magHide();save()};
+$("lensTol").oninput=function(){lens().tol=parseInt(this.value,10);syncLens()};$("lensTol").onchange=save;
+$("gapMin").oninput=function(){lens().gapMin=parseInt(this.value,10);syncLens();drawOverlay()};$("gapMin").onchange=save;
+document.addEventListener("pointerdown",function(e){var p=$("lensPanel");if(p&&!p.hidden&&!e.target.closest("#lensPanel")&&!e.target.closest("#zMag"))p.hidden=true},true);
 
 /* ---------- sun ---------- */
 function dayOfYear(y,m,d){return Math.round((Date.UTC(y,m,d)-Date.UTC(y,0,1))/864e5)+1}
@@ -2709,14 +2772,7 @@ function wallRuns(objs,P){
   }
   return res;
 }
-function gapsOf(o,objs,P){
-  var b=aabb(poly(o)),cy0=b.y+b.h/2,cx0=b.x+b.w/2,L=rayDist(b.x,cy0,-1,0),R=rayDist(b.x+b.w,cy0,1,0),T=rayDist(cx0,b.y,0,-1),B=rayDist(cx0,b.y+b.h,0,1);
-  objs.forEach(function(q){if(q===o)return;var c=aabb(P[q.id]);
-    var vo=b.y<c.y+c.h&&b.y+b.h>c.y,ho=b.x<c.x+c.w&&b.x+b.w>c.x;
-    if(vo){if(c.x+c.w<=b.x+.01)L=Math.min(L,b.x-(c.x+c.w));if(c.x>=b.x+b.w-.01)R=Math.min(R,c.x-(b.x+b.w))}
-    if(ho){if(c.y+c.h<=b.y+.01)T=Math.min(T,b.y-(c.y+c.h));if(c.y>=b.y+b.h-.01)B=Math.min(B,c.y-(b.y+b.h))}});
-  return [L,R,T,B].map(function(v){return Math.round(Math.max(0,v))});
-}
+function gapsOf(o,objs,P){var c=clearances(o);return [c.l.d,c.r.d,c.u.d,c.d.d].map(function(v){return Math.round(Math.max(0,Math.min(v,9999)))})}
 function schedule(){if(!raf)raf=requestAnimationFrame(function(){raf=0;analyze()})}
 function analyze(){
   var objs=view.objs.filter(solid),P={},bad={},probs=[];
@@ -3198,8 +3254,6 @@ function shareMyEdits(){
   var pend=pendingEdits().map(function(v){return v.id});
   openShareDialog(room,edits,pend.length?pend:[view.edit?view.id:edits[0].id],"Share my edits","They get your edits as views in their room. Each change you make becomes a new version of the same link.");
 }
-$("ideasBtn").onclick=function(){if(FR)shareMyEdits();else shareMineViews()};
-$("shareIdeas").onclick=$("ideasBtn").onclick;
 
 /* ---------- receiving a code ---------- */
 function showInfo(t,m){showModal({title:t,msg:m,ok:"OK",noCancel:true,cb:null})}
@@ -3529,7 +3583,7 @@ function hasIdeas(){
   if(FR)return pendingEdits().length>0;
   captureBase();return room.views.some(function(v){return sessBase[baseKey(v)]!==sig(v)});
 }
-function updateShareBtn(){var b=$("shareIdeas");if(b)b.hidden=true;var bar=$("ideasBar");if(!bar||!room)return;bar.hidden=!hasIdeas()}
+function updateShareBtn(){}
 
 /* ---------- import my rooms (file, link or code) ---------- */
 function importAsMine(p){
