@@ -32,9 +32,11 @@
 
 
 
+
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Condensed:wght@500;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   box-sizing:border-box;
@@ -590,12 +592,12 @@ body.sheet-tall main,body.friend.sheet-tall main{padding-bottom:calc(80vh + 8px)
 .ltog small{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.02em}
 .ltog.on{background:var(--accent);color:var(--ink)}
 .ltog:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(21,19,17,.35)}
-.vs{position:relative;flex:1 1 auto;min-height:56px;width:34px;margin:0 auto;touch-action:none;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
-.vs::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:8px;margin-left:-4px;border-radius:4px;background:#3b3a36}
-.vs-fill{position:absolute;left:50%;bottom:0;width:8px;margin-left:-4px;border-radius:4px;background:var(--accent);pointer-events:none}
-.vs-thumb{position:absolute;left:50%;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:var(--accent);border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink);pointer-events:none}
-.vs:focus-visible{outline:none}
-.vs:focus-visible .vs-thumb{box-shadow:0 0 0 3px rgba(21,19,17,.35)}
+.vslide{position:relative;flex:1 1 auto;min-height:56px;width:34px;margin:0 auto;touch-action:none;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+.vslide::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:8px;margin-left:-4px;border-radius:4px;background:#3b3a36}
+.vslide-fill{position:absolute;left:50%;bottom:0;width:8px;margin-left:-4px;border-radius:4px;background:var(--accent);pointer-events:none}
+.vslide-thumb{position:absolute;left:50%;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:var(--accent);border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink);pointer-events:none}
+.vslide:focus-visible{outline:none}
+.vs:focus-visible .vslide-thumb{box-shadow:0 0 0 3px rgba(21,19,17,.35)}
 .zc .wcol{flex:1 1 0;min-height:0}
 /* ===== v10: landing stacked ===== */
 .cards2{display:flex;flex-direction:column;gap:14px}
@@ -607,6 +609,101 @@ body.sheet-tall main,body.friend.sheet-tall main{padding-bottom:calc(80vh + 8px)
 .lcard.friend textarea{height:128px;font-size:14px}
 .lcard.friend .b.primary{min-height:46px;font-size:17px}
 @media (min-width:600px){.lg-in{max-width:560px}}
+
+/* ===== v11 ===== */
+body:not(.kbd) button:focus-visible,body:not(.kbd) [role=tab]:focus-visible,body:not(.kbd) .lcard:focus-visible,body:not(.kbd) .bigc:focus-visible,body:not(.kbd) .icb:focus-visible,body:not(.kbd) .ibt:focus-visible{outline:none}
+
+.rm-h2{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px 8px}
+.rm-title{flex:1 1 140px;min-width:0;display:flex;flex-direction:column}
+.rm-title .rm-name{white-space:normal;text-align:left;padding:2px 0}
+.rm-acts{display:flex;gap:6px;margin-left:auto;flex:0 0 auto;flex-wrap:nowrap}
+.ibt{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border:3px solid var(--ink);border-radius:10px;background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink);padding:0;cursor:pointer;font:inherit}
+.ibt:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.ibt.primary{background:var(--accent)}
+.ibt.dup{color:#2F6FB0}
+.ibt.del{color:#C81D25}
+.ibt.more.on{background:var(--ink);color:#FFF6DE}
+.vrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.vrow .vname{flex:1 1 130px;min-width:0}
+.icb{min-width:46px;padding:8px}
+.icb small,.ib small{display:none}
+.vmenu{gap:8px}
+
+/* ===== v11: Room settings mode (top strip, tool tray) ===== */
+.bpstrip{display:flex;align-items:center;gap:8px;padding:0 0 6px}
+.bpstrip[hidden]{display:none}
+.bpstrip .bpt{flex:1;font-family:"Bangers",Impact,sans-serif;font-size:26px;letter-spacing:.06em;line-height:1}
+.bpstrip .b{min-height:42px}
+body.bp .projbar,body.bp .vtabs,body.bp .zc,body.bp .seltools,body.bp .ideasbar,body.bp .vmenu{display:none!important}
+.bptray{flex:0 0 auto;display:flex;gap:6px;justify-content:space-between;padding:8px;border-top:3px solid var(--ink);background:var(--sunk)}
+.bptray[hidden]{display:none}
+.tbtn{flex:1 1 0;min-width:0;height:48px;display:flex;align-items:center;justify-content:center;border:3px solid var(--ink);border-radius:10px;background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink);cursor:pointer;padding:0}
+.tbtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.tbtn.on{background:var(--accent)}
+body.bp .sheet{max-height:38vh}
+body.bp.sheet-open main,body.bp.friend.sheet-open main{padding-bottom:calc(38vh + 8px)}
+body.bp.sheet-tall main{padding-bottom:calc(80vh + 8px)}
+.impbox{margin:0 0 14px;padding:10px;border:3px dashed var(--ink);border-radius:10px;background:rgba(255,250,234,.6)}
+.ibtlabel{display:inline-flex;align-items:center;justify-content:center;padding:0 12px}
+
+/* ===== v11: the map in pencil (blueprint layer). Furniture keeps its colours. ===== */
+:root{--pen:#3a3835;--paper:#FCFAF4}
+.stage{background:#FCFAF4}
+.grid line{stroke:transparent}
+.wallbox{fill:#FCFAF4;stroke:var(--pen);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.wallsk{fill:none;stroke:var(--pen);stroke-opacity:.28;stroke-width:1.4;stroke-linejoin:round;transform:translate(.9px,.7px)}
+.wallbox.selwall,.selroom{stroke:var(--hot)}
+.xmark{fill:none;stroke:var(--pen);stroke-width:1.2;stroke-linecap:round;pointer-events:none}
+.nichebox{fill:#FCFAF4;stroke:var(--pen);stroke-width:1.8}
+.cut{stroke:#FCFAF4;stroke-width:6}
+.winbar{fill:#FFFFFF;stroke:var(--pen);stroke-width:1.2;stroke-linejoin:round}
+.glass{stroke:var(--pen);stroke-width:.9}
+.wing.sel .glass,.wing.sel .winbar{stroke:var(--hot)}
+.doorgap{stroke:#FCFAF4;stroke-width:7}
+.swing{fill:rgba(58,56,53,.05);stroke:var(--pen);stroke-width:1;stroke-dasharray:none}
+.leaf{stroke:var(--pen);stroke-width:1.2}
+.doorg.sel .swing{stroke:var(--hot);fill:rgba(228,87,46,.12)}
+.rad{fill:#E9E5DA;stroke:var(--pen);stroke-width:.8}
+.out circle.dot{fill:#FCFAF4;stroke:var(--pen);stroke-width:1.8}
+.out text{fill:var(--pen);font-weight:700}
+.cl .clb{fill:#FCFAF4;stroke:var(--pen)}
+.cl .clr{stroke:var(--pen)}
+.cl .clc{fill:var(--pen)}
+.dimline{stroke:var(--pen);stroke-width:.8}
+.dimext{stroke:var(--pen);stroke-width:.5;stroke-opacity:.45;stroke-dasharray:3 3}
+.dimtxt,.tiny,.wlen{font-family:"Caveat","Patrick Hand","Comic Sans MS",cursive;font-size:15px;font-weight:700;fill:var(--pen)}
+.wlen{fill:var(--hot)}
+.tiny{font-size:14px;fill:#6b665c}
+
+/* ===== v11: Add furniture, shapes first ===== */
+.mbox.store{max-width:460px}
+.shapegrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.shapebtn{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border:3px solid var(--ink);border-radius:12px;background:var(--card);box-shadow:3px 3px 0 var(--ink);padding:6px;cursor:pointer}
+.shapebtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.shapebtn svg{width:100%;height:100%}
+.addhead{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.addicon{width:38px;height:38px;display:inline-block}
+.addicon svg{width:100%;height:100%}
+.addname{font-family:"Bangers",Impact,sans-serif;font-weight:400;font-size:24px;letter-spacing:.05em}
+.chips2{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.chip2{border:2.5px solid var(--ink);border-radius:999px;background:var(--card);color:var(--ink);padding:5px 11px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+.chip2:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
+
+/* ===== v12: light panel fits, sun with heights, magnifier ===== */
+.ltogs{gap:4px;margin:0 0 4px}
+.ltog{flex:0 0 28px;width:28px;height:28px;padding:0;border-radius:8px;border-width:2.5px}
+.ltog svg{width:16px;height:16px}
+.vslide{width:28px;margin:10px auto}
+.vslide::before,.vslide-fill{width:6px;margin-left:-3px}
+.vslide-thumb{width:18px;height:18px;margin-left:-9px;border-width:2.5px;box-shadow:1px 1px 0 var(--ink)}
+.sunlit{fill:#FFD23F;fill-opacity:.36;pointer-events:none}
+.sunshade{fill:#5A4C36;fill-opacity:.17;pointer-events:none}
+.mag{position:absolute;z-index:11;width:110px;height:110px;border:3px solid var(--ink);border-radius:50%;overflow:hidden;background:var(--card);box-shadow:3px 3px 0 var(--ink);pointer-events:none}
+.mag[hidden]{display:none}
+.mag svg{display:block;width:100%;height:100%}
+.mag::before,.mag::after{content:"";position:absolute;background:rgba(21,19,17,.35);pointer-events:none}
+.mag::before{left:50%;top:0;bottom:0;width:1px}
+.mag::after{top:50%;left:0;right:0;height:1px}
 </style>
 </head>
 <body>
@@ -631,7 +728,7 @@ body.sheet-tall main,body.friend.sheet-tall main{padding-bottom:calc(80vh + 8px)
         <button class="b sm" id="goFriend" hidden>Saved rooms</button>
       </div>
     </div>
-    <p class="cap lg-foot">Your rooms stay on this device. Back them up in My rooms → Rooms and views → Vault.<br><span class="ver">Build 10 Oct 2026 · pen-tool walls, icon menus, light</span></p>
+    <p class="cap lg-foot">Your rooms stay on this device. Back them up in My rooms → Rooms and views → Vault.<br><span class="ver">Build 11 Oct 2026 · sun with heights, magnifier</span></p>
   </div>
 </section>
 
@@ -659,6 +756,7 @@ body.sheet-tall main,body.friend.sheet-tall main{padding-bottom:calc(80vh + 8px)
     <button class="b sq" id="redoBtn" aria-label="Redo" disabled>↷</button>
   </div>
 
+  <div class="bpstrip" id="bpStrip" hidden><span class="bpt">Room settings</span><button class="ibt" id="bpUndo" aria-label="Undo" disabled><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3 4 8l5 5M4 8h10a6 6 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="ibt" id="bpRedo" aria-label="Redo" disabled><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 3 5 5-5 5M20 8H10a6 6 0 0 0 0 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="b primary" id="bpDone">Done</button></div>
   <span class="sr" id="measure" aria-live="polite"></span>
 
   </header>
@@ -677,12 +775,12 @@ body.sheet-tall main,body.friend.sheet-tall main{padding-bottom:calc(80vh + 8px)
       <title id="pt">Floor plan of the room</title>
       <desc id="pd">Top-down plan with draggable furniture, windows, doors, outlets and lights. Drag a wall handle to resize the room.</desc>
     </svg>
-    <div class="bpbar" id="bpBar" hidden><span>Room settings</span><button class="b sm" id="bpEdit">Edit room</button><button class="b sm primary" id="bpDone">Done</button></div>
     <div class="zone zl" id="zoneL" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg><small>Delete</small></div>
     <div class="zone zr" id="zoneR" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M5 15H4V4h11v1" fill="none" stroke="currentColor" stroke-width="2.4"/></svg><small>Duplicate</small></div>
     <button class="holdlock" id="holdLock" hidden aria-label="Lock"></button>
     <div class="toast" id="toast" hidden role="status"><span class="tm"></span><button hidden></button></div>
     <div class="ideasbar" id="ideasBar" hidden><button class="b bigshare" id="ideasBtn">Share ideas</button></div>
+    <div class="mag" id="mag" hidden aria-hidden="true"><svg id="magSvg" viewBox="0 0 100 100"></svg></div>
     <div class="vmenu" id="vmenu" hidden role="menu" aria-label="View options"></div>
     <div class="seltools" id="seltools" hidden>
       <button class="b rbtn" id="rl" aria-label="Rotate left: tap for 90 degrees, hold for 15 degree steps" disabled>↺</button>
@@ -695,11 +793,11 @@ body.sheet-tall main,body.friend.sheet-tall main{padding-bottom:calc(80vh + 8px)
       <button class="b zbig" id="zLight" aria-label="Lighting: month and time of day" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="4.5" fill="#FFB81C" stroke="currentColor" stroke-width="2.2"/><path d="M11 1.5v3M11 17.5v3M1.5 11h3M17.5 11h3M4.3 4.3l2.1 2.1M15.6 15.6l2.1 2.1M17.7 4.3l-2.1 2.1M6.4 15.6l-2.1 2.1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Light</button>
     <div class="wpanel" id="wpanel" hidden>
       <div class="ltogs">
-        <button class="ltog on" id="lNat" aria-pressed="true" aria-label="Natural light on or off"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="4.5" fill="#FFB81C" stroke="currentColor" stroke-width="2"/><path d="M11 1.5v3M11 17.5v3M1.5 11h3M17.5 11h3M4.3 4.3l2.1 2.1M15.6 15.6l2.1 2.1M17.7 4.3l-2.1 2.1M6.4 15.6l-2.1 2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><small>Sun</small></button>
-        <button class="ltog on" id="lArt" aria-pressed="true" aria-label="Artificial light on or off"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M7 14.5C4.5 12.5 4.5 7 11 5.5c6.500 1.500 6.500 7 4 9H7z" fill="#FFE05C" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 18h6M9 20.5h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><small>Lamps</small></button>
+        <button class="ltog on" id="lNat" aria-pressed="true" aria-label="Natural light on or off"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="4.5" fill="#FFB81C" stroke="currentColor" stroke-width="2"/><path d="M11 1.5v3M11 17.5v3M1.5 11h3M17.5 11h3M4.3 4.3l2.1 2.1M15.6 15.6l2.1 2.1M17.7 4.3l-2.1 2.1M6.4 15.6l-2.1 2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <button class="ltog on" id="lArt" aria-pressed="true" aria-label="Artificial light on or off"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M7 14.5C4.5 12.5 4.5 7 11 5.5c6.500 1.500 6.500 7 4 9H7z" fill="#FFE05C" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 18h6M9 20.5h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
       </div>
-      <div class="wcol"><output class="wl" id="wMonthL"></output><div class="vs" id="wMonth" role="slider" tabindex="0" aria-label="Month" aria-valuemin="1" aria-valuemax="12"><div class="vs-fill"></div><div class="vs-thumb"></div></div><span class="wl">Month</span></div>
-      <div class="wcol"><output class="wl" id="wHourL"></output><div class="vs" id="wHour" role="slider" tabindex="0" aria-label="Time of day" aria-valuemin="5" aria-valuemax="21"><div class="vs-fill"></div><div class="vs-thumb"></div></div><span class="wl">Time</span></div>
+      <div class="wcol"><output class="wl" id="wMonthL"></output><div class="vslide" id="wMonth" role="slider" tabindex="0" aria-label="Month" aria-valuemin="1" aria-valuemax="12"><div class="vslide-fill"></div><div class="vslide-thumb"></div></div><span class="wl">Month</span></div>
+      <div class="wcol"><output class="wl" id="wHourL"></output><div class="vslide" id="wHour" role="slider" tabindex="0" aria-label="Time of day" aria-valuemin="5" aria-valuemax="21"><div class="vslide-fill"></div><div class="vslide-thumb"></div></div><span class="wl">Time</span></div>
       <div class="wsun" id="wSun"></div>
       <button class="b sm" id="wClose" hidden>Close</button>
     </div>
@@ -742,6 +840,14 @@ body.sheet-tall main,body.friend.sheet-tall main{padding-bottom:calc(80vh + 8px)
         </svg><small>Send</small>
       </button>
     </div>
+    </div>
+    <div class="bptray" id="bpTray" hidden role="toolbar" aria-label="Room tools">
+      <button class="tbtn on" data-tool="walls" aria-label="Walls" aria-pressed="true"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M5 5h13l4 6v10H5z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><rect x="2.500" y="2.500" width="5" height="5" fill="currentColor"/><rect x="15.500" y="2.500" width="5" height="5" fill="currentColor"/><rect x="2.500" y="18.500" width="5" height="5" fill="currentColor"/><rect x="19.500" y="18.500" width="5" height="5" fill="currentColor"/></svg></button>
+      <button class="tbtn" data-tool="window" aria-label="Add a window"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="3" y="4" width="20" height="18" rx="1.500" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M13 4v18M3 13h20" stroke="currentColor" stroke-width="2.2"/></svg></button>
+      <button class="tbtn" data-tool="door" aria-label="Add a door"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M4 22V4h12M4 22h18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M4 4a18 18 0 0 1 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-dasharray="3 3"/></svg></button>
+      <button class="tbtn" data-tool="outlet" aria-label="Add an outlet"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="4" y="4" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M10 10v4M16 10v4M10 18h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+      <button class="tbtn" data-tool="light" aria-label="Add a ceiling light"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M13 2v5M7 14a6 6 0 0 1 12 0v2H7z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M8 20l-2 3M13 20v4M18 20l2 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+      <button class="tbtn" data-tool="details" aria-label="Room details"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M4 7h18M4 13h18M4 19h18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="9" cy="7" r="2.8" fill="#FFF6DE" stroke="currentColor" stroke-width="2.2"/><circle cx="17" cy="13" r="2.8" fill="#FFF6DE" stroke="currentColor" stroke-width="2.2"/><circle cx="11" cy="19" r="2.8" fill="#FFF6DE" stroke="currentColor" stroke-width="2.2"/></svg></button>
     </div>
   </div>
 
@@ -811,7 +917,7 @@ body.sheet-tall main,body.friend.sheet-tall main{padding-bottom:calc(80vh + 8px)
       <p class="cap" id="shNote"></p>
     </div>
     <div id="tree"></div>
-    <div class="row" id="nrRow"><button class="b primary" id="newRoom">New room</button></div>
+    <div class="row" id="nrRow"><button class="b primary" id="newRoom">New room</button><button class="b" id="importRoom">Import</button></div>
     <div class="sub" id="opHead">Add a friend's views</div>
     <div class="row" style="margin-top:0"><input type="text" id="opCode" placeholder="Paste a friend's link or code" style="flex:1;min-width:150px"><button class="b" id="opGo">Open</button></div>
     <div class="row"><label class="b" for="opFile" style="display:inline-flex;align-items:center">Open file</label><input type="file" id="opFile" accept=".json,.room,application/json,text/plain" hidden></div>
@@ -830,8 +936,15 @@ body.sheet-tall main,body.friend.sheet-tall main{padding-bottom:calc(80vh + 8px)
     </div>
     <p class="cap">Restoring adds rooms back. It never replaces what you have now.</p>
     </div>
-    <p class="cap ver">Roomie build 10 Oct 2026 · pen-tool walls, icon menus, light</p>
+    <p class="cap ver">Roomie build 11 Oct 2026 · sun with heights, magnifier</p>
   </div>
+</div>
+
+<div class="modal" id="impDlg" hidden role="dialog" aria-modal="true" aria-labelledby="impT">
+  <div class="mbox"><h2 id="impT">Import a room</h2><p class="cap" style="margin:6px 0 0">Paste your room link or code, or open a file. Backups bring all your rooms back.</p>
+    <textarea id="impCode" placeholder="Paste here" aria-label="Link or code" style="min-height:110px;width:100%;box-sizing:border-box;margin-top:10px"></textarea>
+    <p class="cap bad" id="impErr" role="alert" style="margin:6px 0 0"></p>
+    <div class="row"><button class="b primary" id="impGo">Import</button><label class="b ibtlabel" for="impFile" aria-label="Open a room file"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v11H3z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg></label><input type="file" id="impFile" accept=".json,.room,application/json,text/plain" hidden><button class="b" id="impNo">Cancel</button></div></div>
 </div>
 
 <div class="modal" id="pickDlg" hidden role="dialog" aria-modal="true" aria-labelledby="pkT">
@@ -846,9 +959,7 @@ body.sheet-tall main,body.friend.sheet-tall main{padding-bottom:calc(80vh + 8px)
 </div>
 
 <div class="modal" id="storeDlg" hidden role="dialog" aria-modal="true" aria-labelledby="storeT">
-  <div class="mbox store"><div class="sh-head"><h2 id="storeT">Add furniture</h2><button class="b primary" id="storeX">Done</button></div><div id="storeBody"></div>
-    <div id="roomParts"><div class="sub">Room parts</div><div class="row" style="margin-top:0"><button class="b sm" id="addWin">Window</button><button class="b sm" id="addDoor">Door</button><button class="b sm" id="addOut">Outlet</button></div></div>
-    <p class="cap">Tap a piece to add it, then drag it where you want. Anything outside the walls is storage.</p></div>
+  <div class="mbox store"><div class="sh-head"><h2 id="storeT">Add furniture</h2><button class="b primary" id="storeX">Done</button></div><div id="storeBody"></div></div>
 </div>
 
 <div class="modal" id="sentDlg" hidden role="dialog" aria-modal="true" aria-labelledby="sentT">
@@ -884,7 +995,12 @@ body.sheet-tall main,body.friend.sheet-tall main{padding-bottom:calc(80vh + 8px)
   <div class="setup-in">
     <h1 id="nrT">New room</h1>
     <p class="cap" style="margin-top:4px">Stand facing your main window. That wall becomes the top of the plan. Start with the overall floor space in cm; you can add corners and bays right after.</p>
-    <div class="sub">Room</div>
+    <div class="impbox" id="impBox">
+      <div class="sub" style="margin-top:0">Already have a room?</div>
+      <div class="row" style="margin:0"><input type="text" id="nrImp" placeholder="Paste a link or code" aria-label="Paste a link or code" style="flex:1;min-width:140px"><button class="b primary" id="nrImpGo">Import</button><label class="b ibtlabel" for="nrImpFile" aria-label="Open a room file"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v11H3z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg></label><input type="file" id="nrImpFile" accept=".json,.room,application/json,text/plain" hidden></div>
+      <p class="cap bad" id="nrImpErr" role="alert" style="margin:4px 0 0"></p>
+    </div>
+    <div class="sub">New room</div>
     <div class="f">
       <label class="full">Room name<input type="text" id="nrName" maxlength="60" placeholder="e.g. Bedroom"></label>
       <label>Width, left to right<input type="number" id="nrW" min="100" max="2000" step="1" inputmode="decimal"></label>
@@ -977,7 +1093,7 @@ var sel=null,drag=null,raf=0,seq=0,canStore=true,sheetOpen=false,lastTap={id:nul
 var nodes={},onodes={},glows={},swn={};
 var NOW=new Date(),YEAR=NOW.getFullYear();
 var zoom={z:1,cx:0,cy:0},ptrs={},pinch=null,pan=null,hist={u:[],r:[]},resizing=null;
-var MG={l:48,r:80,t:36,b:96},FR=false,BP=false,extraBox=null,curVB=null;
+var MG={l:48,r:80,t:52,b:96},FR=false,BP=false,extraBox=null,curVB=null;
 var EMBED=(function(){try{return window.top!==window}catch(e){return true}})();
 
 function $(id){return document.getElementById(id)}
@@ -1242,7 +1358,7 @@ function mark(){
   forkIfRef();
   hist.u.push(JSON.stringify({room:room,v:view.id}));if(hist.u.length>60)hist.u.shift();hist.r=[];updateUndo();
 }
-function updateUndo(){$("undoBtn").disabled=!hist.u.length||!!shared;$("redoBtn").disabled=!hist.r.length||!!shared}
+function updateUndo(){var du=!hist.u.length||!!shared,dr=!hist.r.length||!!shared;$("undoBtn").disabled=du;$("redoBtn").disabled=dr;if($("bpUndo")){$("bpUndo").disabled=du;$("bpRedo").disabled=dr}}
 function restore(s){
   var d=JSON.parse(s),i=store.rooms.findIndex(function(r){return r.id===d.room.id});if(i<0)return;
   store.rooms[i]=fixRoom(d.room);store.cur.r=d.room.id;store.cur.v=d.v;bind();sel=null;closeSheet();buildAll();save();updateUndo();
@@ -1342,6 +1458,7 @@ var rclip=mk("clipPath",{id:"roomclip"},defs);
 var dynDefs=mk("defs",{});
 var gGrid=mk("g",{"class":"grid"}),gStatic=mk("g",{}),gSwing=mk("g",{}),gPath=mk("g",{}),gItems=mk("g",{});
 var gNat=mk("g",{style:"pointer-events:none"}),gArt=mk("g",{style:"pointer-events:none"}),gOuts=mk("g",{}),gCeil=mk("g",{}),gSel=mk("g",{}),gGhost=mk("g",{style:"pointer-events:none"});
+var MAGL=[gGrid,gStatic,gSwing,gPath,gItems,gNat,gArt,gOuts,gCeil,gSel,gGhost];
 var route=mk("polyline",{id:"route",points:""},gPath),routeEnd=mk("circle",{id:"routeEnd",r:4,cx:-80,cy:-80},gPath);
 
 function base0(){return {x:-(NG.left+MG.l),y:-(NG.top+MG.t),w:W+NG.left+NG.right+MG.l+MG.r,h:H+NG.top+NG.bottom+MG.t+MG.b}}
@@ -1394,6 +1511,22 @@ function dimSeg(a,b,off,label,o){
   var mx=(A[0]+B[0])/2+o[0]*11,my=(A[1]+B[1])/2+o[1]*11,ang=nrmA(Math.atan2(dy,dx)/D2R);
   var tx=txt(r1(mx),r1(my),label,"dimtxt",gStatic);tx.setAttribute("transform","rotate("+r1(ang)+" "+r1(mx)+" "+r1(my)+")");
 }
+function dimChain(i){
+  var f=wf(i,0,0),L=f.L,items=room.windows.concat(room.doors).filter(function(x){return x.wall===i}),br=[0,L],nd=0;
+  items.forEach(function(x){br.push(clampN(x.pos,0,L));br.push(clampN(x.pos+x.w,0,L))});
+  room.windows.forEach(function(w){if(w.wall===i)nd=Math.max(nd,w.d||0)});
+  br.sort(function(a,b){return a-b});var u=[];br.forEach(function(v){if(!u.length||v-u[u.length-1]>0.5)u.push(v)});
+  var off=20+nd,A=wA(i);
+  function P(t,o2){return [A[0]+f.t[0]*t+f.o[0]*(o2==null?off:o2),A[1]+f.t[1]*t+f.o[1]*(o2==null?off:o2)]}
+  var a0=P(0),a1=P(L);mk("line",{x1:r1(a0[0]),y1:r1(a0[1]),x2:r1(a1[0]),y2:r1(a1[1]),"class":"dimline"},gStatic);
+  var z=Math.max(1,zoom.z),ang=nrmA(Math.atan2(f.t[1],f.t[0])/D2R);
+  u.forEach(function(t,k){
+    var p=P(t),q=P(t,0);
+    mk("line",{x1:r1(p[0]-f.n[0]*4),y1:r1(p[1]-f.n[1]*4),x2:r1(p[0]+f.n[0]*4),y2:r1(p[1]+f.n[1]*4),"class":"dimline"},gStatic);
+    if(k>0&&k<u.length-1||true){var e1=P(t,2);mk("line",{x1:r1(q[0]),y1:r1(q[1]),x2:r1(p[0]),y2:r1(p[1]),"class":"dimext"},gStatic)}
+    if(k<u.length-1){var seg=u[k+1]-t;if(seg>=14){var m=P(t+seg/2,off+11),tx=txt(r1(m[0]),r1(m[1]),String(Math.round(seg)),"dimtxt",gStatic);tx.setAttribute("transform","rotate("+r1(ang)+" "+r1(m[0])+" "+r1(m[1])+")")}}
+  });
+}
 function drawRoom(){
   gStatic.innerHTML="";gGrid.innerHTML="";rclip.innerHTML="";
   mk("polygon",{points:pts(PTS)},rclip);
@@ -1402,9 +1535,12 @@ function drawRoom(){
   for(var j=50;j<H;j+=50)mk("line",{x1:0,y1:j,x2:W,y2:j},gGrid);
   gGrid.setAttribute("clip-path","url(#roomclip)");gNat.setAttribute("clip-path","url(#roomclip)");
   var pk=H+NG.bottom+38;
-  if(isRect()){if(!BP){dimH(0,W,H+NG.bottom+14,fmtM(W));dimV(0,H,-(NG.left+14),fmtM(H))}}
-  else if(!BP)for(var wi=0;wi<nW();wi++){var wff=wf(wi,0,0);dimSeg(wA(wi),wB(wi),16,fmtM(wff.L),wff.o)}
+  if(BP){for(var wc=0;wc<nW();wc++)dimChain(wc)}
+  else if(isRect()){dimH(0,W,H+NG.bottom+14,fmtM(W));dimV(0,H,-(NG.left+14),fmtM(H))}
+  else for(var wi=0;wi<nW();wi++){var wff=wf(wi,0,0);dimSeg(wA(wi),wB(wi),16,fmtM(wff.L),wff.o)}
+  mk("polygon",{points:pts(PTS),"class":"wallsk"},gStatic);
   mk("polygon",{points:pts(PTS),"class":"wallbox"+(sel&&sel.t==="room"?" selwall":"")},gStatic);
+  if(!BP)PTS.forEach(function(p){mk("path",{d:"M"+r1(p[0]-4)+" "+r1(p[1]-4)+"l8 8M"+r1(p[0]+4)+" "+r1(p[1]-4)+"l-8 8","class":"xmark"},gStatic)});
   mk("polygon",{points:pts(PTS),"class":"wall-hit","data-t":"room","data-id":"room"},gStatic);
   room.windows.forEach(function(w){
     var f=wf(w.wall,w.pos,w.w),o=f.o,n=nichePoly(w),g=mk("g",{"class":"wing"+(sel&&sel.t==="win"&&sel.id===w.id?" sel":""),"data-t":"win","data-id":w.id},gStatic);
@@ -1414,6 +1550,8 @@ function drawRoom(){
     if(n)mk("polygon",{points:pts(n),"class":"nichebox"},g);
     mk("line",{x1:f.p0[0],y1:f.p0[1],x2:f.p1[0],y2:f.p1[1],"class":"cut"},g);
     var rp=radPoly(w);if(rp)mk("polygon",{points:pts(rp),"class":"rad"},g);
+    var gb=[[f.p0[0]+o[0]*(w.d+3),f.p0[1]+o[1]*(w.d+3)],[f.p1[0]+o[0]*(w.d+3),f.p1[1]+o[1]*(w.d+3)],[f.p1[0]+o[0]*(w.d-3),f.p1[1]+o[1]*(w.d-3)],[f.p0[0]+o[0]*(w.d-3),f.p0[1]+o[1]*(w.d-3)]];
+    mk("polygon",{points:pts(gb),"class":"winbar"},g);
     mk("line",{x1:f.p0[0]+o[0]*w.d,y1:f.p0[1]+o[1]*w.d,x2:f.p1[0]+o[0]*w.d,y2:f.p1[1]+o[1]*w.d,"class":"glass"},g);
     txt(f.mid[0]+f.n[0]*12,f.mid[1]+f.n[1]*12,"window","tiny",g);
   });
@@ -1425,7 +1563,7 @@ function drawRoom(){
     D.shut.forEach(function(L){mk("line",{x1:L.h[0],y1:L.h[1],x2:L.closed[0],y2:L.closed[1],"class":"leaf"},g)});
     txt(f.mid[0]+f.n[0]*9,f.mid[1]+f.n[1]*9,d.main?"door (entrance)":"door","tiny",g);
   });
-  var nv=planVec(0),cx=W+NG.right+MG.r-30,cy=H+NG.bottom+MG.b-26;
+  var nv=planVec(0),cx=-(NG.left+MG.l)+26,cy=-(NG.top+MG.t)+26;
   mk("circle",{cx:cx,cy:cy,r:13,fill:"none",stroke:"var(--line)"},gStatic);
   mk("line",{x1:cx-nv[0]*9,y1:cy-nv[1]*9,x2:cx+nv[0]*9,y2:cy+nv[1]*9,stroke:"var(--ink2)","stroke-width":1.5},gStatic);
   mk("circle",{cx:cx+nv[0]*9,cy:cy+nv[1]*9,r:2.5,fill:"var(--bad)"},gStatic);
@@ -1464,8 +1602,7 @@ function drawPen(){
   mk("polygon",{points:pts(PTS),"class":"selroom"},gSel);
   for(var i=0;i<n;i++){var f=wf(i,0,0),a=wA(i),b=wB(i);
     mk("line",{x1:r1(a[0]),y1:r1(a[1]),x2:r1(b[0]),y2:r1(b[1]),"class":"wallgrab","data-t":"wl","data-id":i},gSel);
-    var mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,ang=nrmA(Math.atan2(b[1]-a[1],b[0]-a[0])/D2R);
-    var lt=txt(r1(mx-f.o[0]*(14/zoom.z+6)),r1(my-f.o[1]*(14/zoom.z+6)),Math.round(f.L)+" cm","dimtxt wlen",gSel);lt.setAttribute("font-size",11/zoom.z);lt.setAttribute("transform","rotate("+r1(ang)+" "+r1(mx-f.o[0]*(14/zoom.z+6))+" "+r1(my-f.o[1]*(14/zoom.z+6))+")");
+
   }
   for(var k=0;k<n;k++){var q=wf(k,0,0),a2=wA(k),b2=wB(k),px=(a2[0]+b2[0])/2,py=(a2[1]+b2[1])/2;
     if(q.L<14/zoom.z)continue;
@@ -1485,7 +1622,7 @@ function drawOverlay(){
   if(!sel)return;
   var hs=Math.max(3.5,9/zoom.z);
   if(sel.t==="obj"){
-    var so=findObj(sel.id);if(!so)return;drawObjDims(so);return;
+    var so=findObj(sel.id);if(!so)return;drawObjDims(so);if(so.shape==="poly"&&so.pts&&!so.locked)drawObjPts(so);return;
   }
   if(sel.t==="room"||sel.t==="pt"){return}
   else if(sel.t==="win"||sel.t==="door"){
@@ -1496,6 +1633,18 @@ function drawOverlay(){
       mk("circle",{cx:p[0],cy:p[1],r:hs*1.1,"class":"handle hdl","data-t":"wh","data-id":sel.id,"data-k":sel.t,"data-e":end},gSel);
     });
     txt(f.mid[0]+f.n[0]*24,f.mid[1]+f.n[1]*24,Math.round(it.pos)+" | "+Math.round(it.w)+" | "+Math.round(wlen(it.wall)-it.pos-it.w),"dimtxt",gSel);
+  }
+}
+function drawObjPts(o){
+  var z=zoom.z,hs=Math.max(3.5,8/z),n=o.pts.length,g=mk("g",{transform:"translate("+r1(o.cx)+" "+r1(o.cy)+") rotate("+o.r+")"},gSel);
+  for(var k=0;k<n;k++){var a=o.pts[k],b=o.pts[(k+1)%n],mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;if(Math.hypot(b[0]-a[0],b[1]-a[1])<16/z)continue;
+    var m=mk("g",{"data-t":"omp","data-id":k,"class":"mpt hdl"},g);
+    mk("circle",{cx:r1(mx),cy:r1(my),r:Math.max(hs*2.2,13/z),fill:"transparent"},m);mk("circle",{cx:r1(mx),cy:r1(my),r:hs*.8,"class":"mpc"},m);
+    mk("path",{d:"M"+r1(mx-hs*.45)+" "+r1(my)+"H"+r1(mx+hs*.45)+"M"+r1(mx)+" "+r1(my-hs*.45)+"V"+r1(my+hs*.45),"class":"mpp"},m);
+  }
+  for(var i=0;i<n;i++){var p=o.pts[i];
+    mk("circle",{cx:r1(p[0]),cy:r1(p[1]),r:Math.max(hs*2.3,14/z),fill:"transparent","data-t":"opt","data-id":i,"class":"hdl"},g);
+    mk("rect",{x:r1(p[0]-hs),y:r1(p[1]-hs),width:r1(hs*2),height:r1(hs*2),rx:r1(hs*.25),"class":"anchor hdl","data-t":"opt","data-id":i},g);
   }
 }
 function nrmA(a){a=((a%360)+360)%360;if(a>180)a-=360;if(a>90)a-=180;else if(a<=-90)a+=180;return a}
@@ -1524,6 +1673,26 @@ function drawObjDims(o){
   if(gt[0]<=gt[1]){if(gt[0]>0.5&&gt[0]<900){G(cx,b.y-gt[0],cx,b.y,"",0,0);var ty=b.y-gt[0]/2;var t1=txt(cx+fs*.9,ty,Math.round(gt[0])+" cm","sgt",gg);t1.setAttribute("font-size",fs);t1.setAttribute("stroke-width",halo);t1.setAttribute("transform","rotate(-90 "+r1(cx+fs*.9)+" "+r1(ty)+")")}}
   else if(gt[1]>0.5&&gt[1]<900){var my=b.y+b.h+gt[1]/2;G(cx,b.y+b.h,cx,b.y+b.h+gt[1],"",0,0);var t2=txt(cx+fs*.9,my,Math.round(gt[1])+" cm","sgt",gg);t2.setAttribute("font-size",fs);t2.setAttribute("stroke-width",halo);t2.setAttribute("transform","rotate(-90 "+r1(cx+fs*.9)+" "+r1(my)+")")}
 }
+function poly(o){
+  var c=Math.cos(o.r*D2R),s=Math.sin(o.r*D2R),hw=o.w/2,hh=o.h/2,pts;
+  if(o.shape==="round"){pts=[];for(var i=0;i<20;i++){var a=i/20*2*Math.PI;pts.push([hw*Math.cos(a),hh*Math.sin(a)])}}
+  else if(o.shape==="poly"&&o.pts&&o.pts.length>=3)pts=o.pts;
+  else pts=[[-hw,-hh],[hw,-hh],[hw,hh],[-hw,hh]];
+  return pts.map(function(p){return [o.cx+p[0]*c-p[1]*s,o.cy+p[0]*s+p[1]*c]});
+}
+function collPoly(o){var p=poly(o);return o.shape==="poly"?hull(p):p}
+function syncPoly(o){
+  var mx=1e9,my=1e9,Mx=-1e9,My=-1e9;o.pts.forEach(function(p){mx=Math.min(mx,p[0]);my=Math.min(my,p[1]);Mx=Math.max(Mx,p[0]);My=Math.max(My,p[1])});
+  var cx=(mx+Mx)/2,cy=(my+My)/2;
+  if(cx||cy){o.pts=o.pts.map(function(p){return [p[0]-cx,p[1]-cy]});var c=Math.cos(o.r*D2R),s=Math.sin(o.r*D2R);o.cx+=cx*c-cy*s;o.cy+=cx*s+cy*c}
+  o.pts=o.pts.map(function(p){return [Math.round(p[0]*2)/2,Math.round(p[1]*2)/2]});
+  o.w=Math.round((Mx-mx)*2)/2;o.h=Math.round((My-my)*2)/2;
+}
+function polyValid(p){
+  if(p.length<3)return false;if(Math.abs(polyArea2(p))<100)return false;
+  for(var i=0;i<p.length;i++){var a=p[i],b=p[(i+1)%p.length];for(var j=i+1;j<p.length;j++){if(j===i+1||(i===0&&j===p.length-1))continue;if(segsCross(a,b,p[j],p[(j+1)%p.length]))return false}}
+  return true;
+}
 function labelFor(o){
   var b=aabb(poly(o)),avail=(o.shape==="round"?b.w*0.8:b.w)-6;
   if(o.name.length*6.3<=avail)return o.name;
@@ -1533,7 +1702,7 @@ function labelFor(o){
 function colorOf(o){if(o.lamp)return "lamp";return {bed:"bed",wardrobe:"arm",desk:"desk",chair:"chair",shelf:"shelf",table:"table"}[o.role]||"custom"}
 function buildObj(o){
   var g=mk("g",{"data-id":o.id,"data-t":"obj","class":"item"+(o.top?" top":"")},gItems);
-  var shape=o.shape==="round"?mk("ellipse",{"class":"shape c-"+colorOf(o)},g):mk("rect",{rx:3,"class":"shape c-"+colorOf(o)},g);
+  var shape=o.shape==="round"?mk("ellipse",{"class":"shape c-"+colorOf(o)},g):o.shape==="poly"?mk("polygon",{"class":"shape c-"+colorOf(o),"stroke-linejoin":"round"},g):mk("rect",{rx:3,"class":"shape c-"+colorOf(o)},g);
   var t=txt(0,0,"","lbl",g);
   var ico=mk("g",{"class":"lockico",style:"display:none"},g);
   mk("path",{d:"M-3 -1 V-3.5 A3 3 0 0 1 3 -3.5 V-1",fill:"none",stroke:"var(--ink)","stroke-width":1.5},ico);
@@ -1543,7 +1712,7 @@ function buildObj(o){
   placeObj(o);
 }
 function inside(o){return inRoom(o.cx,o.cy)}
-function solid(o){return inside(o)&&!o.top}
+function solid(o){return inside(o)&&!o.top&&!o.under}
 function leafPolys(o){
   var R=room.wd,c=Math.cos(o.r*D2R),s=Math.sin(o.r*D2R),hw=o.w/2,hh=o.h/2,res=[];
   function T(p){return [o.cx+p[0]*c-p[1]*s,o.cy+p[0]*s+p[1]*c]}
@@ -1555,7 +1724,8 @@ function leafPolys(o){
 function placeObj(o){
   var n=nodes[o.id];if(!n)return;
   n.g.setAttribute("transform","translate("+o.cx+" "+o.cy+") rotate("+o.r+")");n.g.classList.toggle("out",!inside(o));
-  if(o.shape==="round"){n.shape.setAttribute("cx",0);n.shape.setAttribute("cy",0);n.shape.setAttribute("rx",Math.max(o.w/2,4));n.shape.setAttribute("ry",Math.max(o.h/2,4))}
+  if(o.shape==="poly"&&o.pts){n.shape.setAttribute("points",o.pts.map(function(p){return r1(p[0])+","+r1(p[1])}).join(" "))}
+  else if(o.shape==="round"){n.shape.setAttribute("cx",0);n.shape.setAttribute("cy",0);n.shape.setAttribute("rx",Math.max(o.w/2,4));n.shape.setAttribute("ry",Math.max(o.h/2,4))}
   else{n.shape.setAttribute("x",-o.w/2);n.shape.setAttribute("y",-o.h/2);n.shape.setAttribute("width",o.w);n.shape.setAttribute("height",o.h)}
   n.t.setAttribute("transform","rotate("+(-o.r)+")");n.t.textContent=labelFor(o);
   if(n.ico){var big=Math.min(o.w,o.h)>=24;n.ico.style.display=(o.locked&&big)?"":"none";
@@ -1599,7 +1769,7 @@ function buildAll(){
 function rebuildItems(){
   gItems.innerHTML="";gSwing.innerHTML="";gOuts.innerHTML="";gArt.innerHTML="";nodes={};onodes={};glows={};swn={};
   drawRoom();
-  view.objs.filter(function(o){return !o.top}).concat(view.objs.filter(function(o){return o.top})).forEach(buildObj);
+  view.objs.filter(function(o){return o.under&&!o.top}).concat(view.objs.filter(function(o){return !o.top&&!o.under}),view.objs.filter(function(o){return o.top})).forEach(buildObj);
   syncToggles();
 }
 function syncToggles(){
@@ -1621,7 +1791,7 @@ function refreshSel(){
 }
 function select(s,force){
   var changed=!sameSel(sel,s);sel=s;
-  if(s){var n=(s.t==="obj"?nodes:s.t==="out"?onodes:{})[s.id];if(n){n.g.parentNode.appendChild(n.g);
+  if(s){var n=(s.t==="obj"?nodes:s.t==="out"?onodes:{})[s.id];if(n){var so0=s.t==="obj"&&findObj(s.id);if(!(so0&&so0.under))n.g.parentNode.appendChild(n.g);
     var so=s.t==="obj"&&findObj(s.id);if(so&&!so.top)view.objs.forEach(function(x){if(x.top&&nodes[x.id])gItems.appendChild(nodes[x.id].g)})}}
   if(changed||force){drawRoom();applyLocks();drawOverlay()}
   refreshSel();
@@ -1693,11 +1863,11 @@ function renderSheet(){
     var o=findObj(sel.id);if(!o){closeSheet();return}
     h=head("Edit "+o.name)+iconRow(o)+'<div class="f">'+
       fld("Name",'<input type="text" id="fName" value="'+esc(o.name)+'">')+
-      fld("Shape",sel2("fShape",[["rect","Rectangle"],["round","Round"]],o.shape))+
+      (o.shape==="poly"?'':fld("Shape",sel2("fShape",[["rect","Rectangle"],["round","Round"]],o.shape)))+
       fld("Width (cm)",num("fW",o.w,1,500,0.5))+fld("Depth (cm)",num("fH",o.h,1,500,0.5))+
-      fld("Angle (°)",num("fR",o.r,0,359,1))+fld("Light radius (cm, 0 = none)",num("fL",o.light||0,0,600,5))+NUD+
-      chk("fTop","Sits on furniture (e.g. a lamp on a table)",o.top)+stickHtml(o)+
-      '</div><p class="cap" id="fGaps"></p>'+(o.role==="wardrobe"?'<div class="row"><button class="b" id="fFlip">Flip doors</button></div>':'');
+      fld("Angle (°)",num("fR",o.r,0,359,1))+fld("Light radius (cm, 0 = none)",num("fL",o.light||0,0,600,5))+fld("Height (cm, optional)",'<input type="number" id="fHt" value="'+(o.ht>0?r1(o.ht):"")+'" min="0" max="400" step="1" inputmode="decimal" placeholder="—">')+NUD+
+      chk("fTop","Sits on furniture (e.g. a lamp on a table)",o.top)+chk("fUnder","Lies on the floor under other furniture (rugs)",o.under)+stickHtml(o)+
+      '</div><p class="cap" id="fGaps"></p><p class="cap" id="fSun"></p>'+(o.role==="wardrobe"?'<div class="row"><button class="b" id="fFlip">Flip doors</button></div>':'');
   }else if(sel.t==="pt"){
     var pi=sel.id,pq=PTS[pi];if(!pq){closeSheet();return}
     var prevL=wlen((pi-1+nW())%nW()),nextL=wlen(pi);
@@ -1728,15 +1898,15 @@ function renderSheet(){
       chk("dMain","Entrance (used for the walking-route check)",d.main)+chk("fLock","Lock (can't be moved or resized)",d.locked)+
       '</div><div class="row"><button class="b danger" id="fDel">Delete door</button></div>';
   }else if(sel.t==="room"){
-    h=head("Room")+'<div class="f">'+
+    h=head("Details")+'<div class="f">'+
       fld("Name",'<input type="text" id="rName" value="'+esc(room.name)+'" maxlength="60">',true)+
       (isRect()?fld("Width (cm)",num("rW",W,100,2000,1))+fld("Length (cm)",num("rH",H,100,2000,1)):'<p class="cap full" style="margin:0">'+nW()+' corners · '+fmtM(W)+' × '+fmtM(H)+' overall. Drag corners or walls on the plan.</p>')+
       fld("Top wall faces (compass °)",num("rN",room.north,0,359,1))+fld("Wardrobe door (cm each)",num("rWd",room.wd,20,80,0.5))+
       fld("Latitude",'<input type="number" id="rLat" value="'+(room.lat==null?"":room.lat)+'" step="0.01" inputmode="decimal">')+fld("Longitude",'<input type="number" id="rLon" value="'+(room.lon==null?"":room.lon)+'" step="0.01" inputmode="decimal">')+
       chk("rFollow","Furniture touching a wall moves with it when I drag that wall",room.follow)+
-      '</div><div class="row"><button class="b sm" id="rGeo">Use my location</button><span class="cap" id="rGeoMsg" style="margin:0"></span></div>'+
-      '<div class="row"><button class="b" id="rAddW">Add window</button><button class="b" id="rAddD">Add door</button><button class="b" id="rAddO">Add outlet</button><button class="b" id="rAddC">Add ceiling light</button>'+(isRect()?'':'<button class="b" id="rRect">Make rectangular</button>')+'</div>'+
-      '<p class="cap">Tap the + on a wall to add a corner. Drag corners to reshape the room, or drag a wall to push it in or out. Windows, doors and outlets stay where they are in the real room. Changes apply to every view of this room.</p>';
+      '</div><div class="row"><button class="b sm" id="rGeo">Use my location</button><span class="cap" id="rGeoMsg" style="margin:0"></span>'+(isRect()?'':'<button class="b sm" id="rRect">Make rectangular</button>')+'</div>'+
+      '<div class="sub">Paste a room code</div><div class="row" style="margin-top:0"><input type="text" id="rPaste" placeholder="Paste a code or link" aria-label="Paste a code or link" style="flex:1;min-width:140px"><button class="b sm primary" id="rPasteGo">Apply</button></div>'+
+      '<p class="cap" id="rPasteMsg" style="margin:4px 0 0">Replaces this room\'s walls, windows, doors and outlets with the ones in the code. Your furniture stays. You can undo it.</p>';
   }
   inn.innerHTML=h;sh.hidden=false;document.body.classList.add("sheet-open");
   $("shDone").onclick=closeSheet;
@@ -1746,9 +1916,15 @@ function renderSheet(){
   if(sel.t==="obj"){
     var ob=findObj(sel.id);
     bindText("fName",function(v){ob.name=v.trim()||"Object";placeObj(ob);updateMeasure()});
-    $("fShape").onchange=function(){mark();ob.shape=this.value;var id=ob.id;buildAll();select({t:"obj",id:id},true);openSheet();save()};
-    bindNum("fW",function(v){if(v>=1&&v<=500){ob.w=v;clampObj(ob);placeObj(ob);updateMeasure();schedule()}});
-    bindNum("fH",function(v){if(v>=1&&v<=500){ob.h=v;clampObj(ob);placeObj(ob);updateMeasure();schedule()}});
+    if($("fShape"))$("fShape").onchange=function(){mark();ob.shape=this.value;var id=ob.id;buildAll();select({t:"obj",id:id},true);openSheet();save()};
+    function scalePoly(nw,nh){if(ob.shape!=="poly")return;var fx=nw/(ob.w||1),fy=nh/(ob.h||1);ob.pts=ob.pts.map(function(p){return [p[0]*fx,p[1]*fy]});syncPoly(ob);drawOverlay()}
+    bindNum("fW",function(v){if(v>=1&&v<=500){if(ob.shape==="poly")scalePoly(v,ob.h);else ob.w=v;clampObj(ob);placeObj(ob);updateMeasure();schedule()}});
+    bindNum("fH",function(v){if(v>=1&&v<=500){if(ob.shape==="poly")scalePoly(ob.w,v);else ob.h=v;clampObj(ob);placeObj(ob);updateMeasure();schedule()}});
+    (function(){var e=$("fHt"),armed=true;e.addEventListener("focus",function(){armed=true});
+      e.addEventListener("input",function(){var t=e.value.trim(),v=parseFloat(t);
+        if(t===""||(isFinite(v)&&v>=0&&v<=400)){if(armed){mark();armed=false}if(t===""||v===0)delete ob.ht;else ob.ht=v;renderNat();schedule()}});
+      e.addEventListener("change",save);updatePieceSun(ob)})();
+    $("fUnder").onchange=function(){mark();ob.under=this.checked;if(ob.under){ob.top=false;unstick(ob)}var id=ob.id;buildAll();select({t:"obj",id:id},true);openSheet();save()};
     bindNum("fR",function(v){ob.r=((Math.round(v)%360)+360)%360;clampObj(ob);placeObj(ob);updateMeasure();schedule()},function(e){e.value=ob.r});
     $("fTop").onchange=function(){mark();ob.top=this.checked;if(!ob.top)unstick(ob);else dropStick(ob);save();buildAll();openSheet()};
     bindNum("fL",function(v){if(v>=0&&v<=600){ob.light=v;setGlow(ob);if(v>0&&!store.art){store.art=true;syncToggles()}}});
@@ -1786,7 +1962,8 @@ function renderSheet(){
     bindNum("rLon",function(v){if(v>=-180&&v<=180){room.lon=v;if(room.lat==null)room.lat=0;renderNat()}});
     $("rFollow").onchange=function(){mark();room.follow=this.checked;save()};
     $("rGeo").onclick=function(){geoFill(function(la,lo){mark();room.lat=la;room.lon=lo;$("rLat").value=la;$("rLon").value=lo;save();renderNat()},$("rGeoMsg"))};
-    $("rAddW").onclick=function(){addWindow()};$("rAddD").onclick=function(){addDoor()};$("rAddO").onclick=function(){addOutlet()};$("rAddC").onclick=function(){addCeiling()};
+    $("rPasteGo").onclick=function(){var v=$("rPaste").value.trim();if(!v){$("rPasteMsg").textContent="Paste the code first.";return}
+      decodePayload(v).then(function(p){applyStructure(p)}).catch(function(e){$("rPasteMsg").textContent="That doesn't look like a Roomie code or link."})};
   }
   if(sel.t==="obj"){
     var ob2=findObj(sel.id);
@@ -1822,17 +1999,19 @@ var ICONS={
   unlock:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 7.5-2" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>',
   dup:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M5 15H4V4h11v1" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>',
   bin:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>',
+  dots:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2.4" fill="currentColor"/><circle cx="12" cy="12" r="2.4" fill="currentColor"/><circle cx="19" cy="12" r="2.4" fill="currentColor"/></svg>',
   share:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5M5 11v9h14v-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   pencil:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1-4L16 5l3 3L8 19l-4 1zM14 7l3 3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>',
   ruler:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v6H3zM3 10v10M7 10v3M11 10v3M15 10v3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><path d="M17 21l-1-3 5-5 2 2-5 5z" fill="currentColor"/></svg>',
   newv:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M12 11v6M9 14h6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
   clip:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M9 5V3h6v2M8.5 12h7M8.5 16h5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'
 };
-function icb(act,icon,label,cls){return '<button class="icb'+(cls?" "+cls:"")+'" data-act="'+act+'" aria-label="'+label+'">'+ICONS[icon]+'<small>'+label+'</small></button>'}
+function icb(act,icon,label,cls){return '<button class="icb'+(cls?" "+cls:"")+'" data-act="'+act+'" aria-label="'+label+'">'+ICONS[icon]+'</button>'}
+function ibt(act,icon,label,cls){return '<button class="ibt'+(cls?" "+cls:"")+'" data-act="'+act+'" aria-label="'+label+'">'+ICONS[icon]+'</button>'}
 function iconRow(o){
-  return '<div class="iconrow"><button class="ib'+(o.locked?" on":"")+'" id="iLock" aria-label="'+(o.locked?"Unlock":"Lock")+'" aria-pressed="'+!!o.locked+'">'+(o.locked?ICONS.lock:ICONS.unlock)+'<small>'+(o.locked?"Locked":"Lock")+'</small></button>'+
-    '<button class="ib dup" id="iDup" aria-label="Duplicate">'+ICONS.dup+'<small>Duplicate</small></button>'+
-    '<button class="ib del" id="iDel" aria-label="Delete">'+ICONS.bin+'<small>Delete</small></button></div>';
+  return '<div class="iconrow"><button class="ib'+(o.locked?" on":"")+'" id="iLock" aria-label="'+(o.locked?"Unlock":"Lock")+'" aria-pressed="'+!!o.locked+'">'+(o.locked?ICONS.lock:ICONS.unlock)+'</button>'+
+    '<button class="ib dup" id="iDup" aria-label="Duplicate">'+ICONS.dup+'</button>'+
+    '<button class="ib del" id="iDel" aria-label="Delete">'+ICONS.bin+'</button></div>';
 }
 function geoFill(cb,msgEl){
   if(!navigator.geolocation){msgEl.textContent="Not available here. Type it in.";return}
@@ -1987,6 +2166,15 @@ function applyResizeTo(nw,nh){
   var sh=applyPts(rectPts(nw,nh),null);if(!sh)return;
   refreshRoom();
 }
+function applyStructure(p){
+  var q=asShare(clone(p)),r=q.rooms[0];if(!r||FR)return;
+  mark();
+  room.pts=r.pts.map(function(x){return [x[0],x[1]]});
+  room.windows=r.windows.map(function(x){x.id=uid("w");return x});room.doors=r.doors.map(function(x){x.id=uid("d");return x});room.outs=r.outs.map(function(x){x.id=uid("o");return x});
+  room.clights=(r.clights||[]).map(function(x){x.id=uid("c");return x});room.north=r.north;room.wd=r.wd;
+  normPts(room);bind();sel=null;closeSheet();buildAll();fitView();save();
+  toast("Walls replaced","Undo",undo);
+}
 function interiorAngle(i){
   var n=nW(),p=PTS[i],a=PTS[(i-1+n)%n],b=PTS[(i+1)%n],v1=[a[0]-p[0],a[1]-p[1]],v2=[b[0]-p[0],b[1]-p[1]];
   var ang=Math.atan2(v2[0]*v1[1]-v2[1]*v1[0],v1[0]*v2[0]+v1[1]*v2[1])/D2R;
@@ -2022,7 +2210,7 @@ function wallDragTo(base,p){
 function toSvg(e){var pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(svg.getScreenCTM().inverse())}
 function nptr(){return Object.keys(ptrs).length}
 function unitsPerPx(){var r=svg.getBoundingClientRect(),v=curVB||{w:400,h:600};return {x:r.width?v.w/r.width:1,y:r.height?v.h/r.height:1}}
-function startPinch(){
+function startPinch(){magHide();
   var k=Object.keys(ptrs),a=ptrs[k[0]],b=ptrs[k[1]];
   pinch={d:Math.hypot(a.x-b.x,a.y-b.y)||1,mx:(a.x+b.x)/2,my:(a.y+b.y)/2};
 }
@@ -2048,9 +2236,17 @@ svg.addEventListener("pointerdown",function(e){
   var g=e.target.closest&&e.target.closest("[data-t]"),t=g?g.getAttribute("data-t"):null,id=g?g.getAttribute("data-id"):null;
   hideHoldLock();
   var bp=BP&&!FR;
-  if(t&&((t==="obj"&&bp)||(t!=="obj"&&!bp))){pan={pid:e.pointerId,lx:e.clientX,ly:e.clientY,sx:e.clientX,sy:e.clientY,moved:false,tap:bp?{t:"room",id:"room"}:null};return}
+  var penObj=(t==="opt"||t==="omp");
+  if(t&&((t==="obj"&&bp)||(t!=="obj"&&!bp&&!penObj)||(penObj&&bp))){pan={pid:e.pointerId,lx:e.clientX,ly:e.clientY,sx:e.clientX,sy:e.clientY,moved:false,tap:bp?{t:"room",id:"room"}:null};return}
   if(!g||t==="room"){pan={pid:e.pointerId,lx:e.clientX,ly:e.clientY,sx:e.clientX,sy:e.clientY,moved:false,tap:(g||bp)?{t:"room",id:"room"}:null};return}
   e.preventDefault();
+  if(penObj&&sel&&sel.t==="obj"){
+    var po=findObj(sel.id);if(!po||po.shape!=="poly"||po.locked)return;
+    if(t==="omp"){mark();var k0=+id,a0=po.pts[k0],b0=po.pts[(k0+1)%po.pts.length];po.pts.splice(k0+1,0,[(a0[0]+b0[0])/2,(a0[1]+b0[1])/2]);syncPoly(po);placeObj(po);drawOverlay();save();drag={k:"opt",id:k0+1,oid:po.id,pid:e.pointerId,moved:false,marked:true,sx:e.clientX,sy:e.clientY};return}
+    var ki=+id,nowo=Date.now(),dblo=lastTap.id==="op"+ki&&nowo-lastTap.t<350;lastTap={id:"op"+ki,t:nowo};
+    if(dblo){if(po.pts.length>3){mark();po.pts.splice(ki,1);syncPoly(po);placeObj(po);drawOverlay();save();toast("Corner removed","Undo",undo)}drag=null;return}
+    drag={k:"opt",id:ki,oid:po.id,pid:e.pointerId,moved:false,sx:e.clientX,sy:e.clientY};return;
+  }
   if(t==="pt"&&bp){var pi=+id,pp0=PTS[pi];if(!pp0)return;var pp=toSvg(e);select({t:"pt",id:pi});drag={k:"pt",id:pi,off:[pp0[0]-pp.x,pp0[1]-pp.y],pid:e.pointerId,moved:false,sx:e.clientX,sy:e.clientY};
     var nowp=Date.now(),dblp=lastTap.id==="pt"+pi&&nowp-lastTap.t<350;lastTap={id:"pt"+pi,t:nowp};if(dblp){openSheet();drag=null}return}
   if(t==="mp"&&bp){mark();var ni=addPointOn(+id);if(ni<0){toast("No room to add a corner there");return}select({t:"pt",id:ni},true);refreshRoom();save();drag={k:"pt",id:ni,off:[0,0],pid:e.pointerId,moved:false,marked:true,sx:e.clientX,sy:e.clientY};return}
@@ -2100,8 +2296,11 @@ svg.addEventListener("pointermove",function(e){
     document.body.classList.add("dragging");
   }
   var p=toSvg(e),k=drag.k;
-  if(k==="pt"){movePointTo(drag.id,p.x+drag.off[0],p.y+drag.off[1],false);return}
-  if(k==="wl"){if(drag.base)wallDragTo(drag.base,p);return}
+  if(k==="pt"){movePointTo(drag.id,p.x+drag.off[0],p.y+drag.off[1],false);magFor(drag,e,p);return}
+  if(k==="opt"){var oo=findObj(drag.oid);if(!oo||!oo.pts||oo.locked)return;var cc=Math.cos(oo.r*D2R),ss=Math.sin(oo.r*D2R),ddx=p.x-oo.cx,ddy=p.y-oo.cy,lp=[Math.round((ddx*cc+ddy*ss)*2)/2,Math.round((-ddx*ss+ddy*cc)*2)/2];
+    var np2=oo.pts.map(function(q){return [q[0],q[1]]});np2[drag.id]=lp;if(!polyValid(np2))return;
+    oo.pts=np2;var sx0=oo.cx,sy0=oo.cy;syncPoly(oo);placeObj(oo);drawOverlay();updateMeasure();schedule();magFor(drag,e,p);return}
+  if(k==="wl"){if(drag.base)wallDragTo(drag.base,p);magFor(drag,e,p);return}
   if(k==="obj"){var o=findObj(drag.id);if(!o||o.locked)return;o.cx=p.x-drag.dx;o.cy=p.y-drag.dy;snapObj(o);clampObj(o);placeObj(o)}
   else if(k==="clight"){var c3=findCL(drag.id);if(!c3)return;c3.x=clampN(snapv(p.x-drag.dx),0,W);c3.y=clampN(snapv(p.y-drag.dy),0,H);drawCeil();refreshSel()}
   else if(k==="out"){var q=findOut(drag.id);if(!q||q.locked)return;var nw=nearestWall(p.x,p.y);q.wall=nw.wall;q.pos=clampN(snapv(nw.along),0,wlen(nw.wall));drawOutlets();refreshSel()}
@@ -2118,11 +2317,11 @@ svg.addEventListener("pointermove",function(e){
     else{a=clampN(a,drag.pos0+minw,Math.min(L,drag.pos0+maxw));it3.w=a-drag.pos0;it3.pos=drag.pos0}
     drawRoom();drawOutlets();applyLocks();drawOverlay();
   }
-  updateMeasure();schedule();
+  updateMeasure();schedule();magFor(drag,e,p);
 });
 var lastBg=0;
 function pointerEnd(e){
-  var id=e.pointerId;delete ptrs[id];
+  var id=e.pointerId;delete ptrs[id];magHide();
   if(arm&&arm.pid===id){endArm(e.type==="pointerup");drag=null;return}
   cancelHold();
   if(drag&&drag.pid===id&&drag.k==="held"){drag=null;return}
@@ -2184,6 +2383,7 @@ function startHold(id,e,p){
 function cancelHold(){if(holdT){clearTimeout(holdT);holdT=null}}
 function wrapRect(){var w=document.querySelector(".mapwrap");return w?w.getBoundingClientRect():{left:0,top:0,width:0,height:0,right:0}}
 function armHold(info){
+  magHide();
   if(!ptrs[info.pid])return;
   var o=findObj(info.id);if(!o)return;
   drag=null;document.body.classList.remove("dragging");
@@ -2268,6 +2468,38 @@ function hideToast(){clearTimeout(toastT);var t=$("toast");if(t){t.classList.rem
   sh.addEventListener("pointerup",end);sh.addEventListener("pointercancel",end);
 })();
 
+/* keyboard focus ring only for keyboard users */
+document.addEventListener("keydown",function(e){if(e.key==="Tab"||e.key.indexOf("Arrow")===0)document.body.classList.add("kbd")},true);
+document.addEventListener("pointerdown",function(){document.body.classList.remove("kbd")},true);
+
+/* ---------- magnifying glass while you move something ---------- */
+var magInit=false;
+function magSetup(){
+  if(magInit)return;var sv=$("magSvg");
+  MAGL.forEach(function(g,i){g.setAttribute("id","ml"+i);var u=document.createElementNS(NS,"use");u.setAttribute("href","#ml"+i);u.setAttributeNS("http://www.w3.org/1999/xlink","href","#ml"+i);sv.appendChild(u)});
+  magInit=true;
+}
+function magHide(){var m=$("mag");if(m&&!m.hidden)m.hidden=true}
+function magShow(wx,wy,cx,cy){
+  var m=$("mag");if(!m)return;magSetup();
+  var u=unitsPerPx(),vw=110*u.x/2.5,r=wrapRect(),px=cx-r.left,py=cy-r.top;
+  $("magSvg").setAttribute("viewBox",r1(wx-vw/2)+" "+r1(wy-vw/2)+" "+r1(vw)+" "+r1(vw));
+  var left=clampN(px-55,6,Math.max(6,r.width-116)),top=py-110-28;if(top<6)top=py+36;top=clampN(top,6,Math.max(6,r.height-116));
+  m.style.left=Math.round(left)+"px";m.style.top=Math.round(top)+"px";m.hidden=false;
+}
+function magFor(d,e,p){
+  if(!d||!d.moved||arm)return;var c=null,k=d.k;
+  if(k==="obj"){var o=findObj(d.id);if(o)c=[o.cx,o.cy]}
+  else if(k==="clight"){var cl=findCL(d.id);if(cl)c=[cl.x,cl.y]}
+  else if(k==="out"){var q=findOut(d.id);if(q)c=opos(q)}
+  else if(k==="win"||k==="door"){var it=k==="win"?findWin(d.id):findDoor(d.id);if(it)c=wf(it.wall,it.pos,it.w).mid}
+  else if(k==="wh"){var i3=d.kind==="win"?findWin(d.id):findDoor(d.id);if(i3){var f3=wf(i3.wall,i3.pos,i3.w);c=d.end?f3.p1:f3.p0}}
+  else if(k==="pt"){var pp=PTS[d.id];if(pp)c=pp}
+  else if(k==="opt"){var oo=findObj(d.oid);if(oo&&oo.pts&&oo.pts[d.id]){var cc=Math.cos(oo.r*D2R),ss=Math.sin(oo.r*D2R),lq=oo.pts[d.id];c=[oo.cx+lq[0]*cc-lq[1]*ss,oo.cy+lq[0]*ss+lq[1]*cc]}}
+  else if(k==="wl")c=[p.x,p.y];
+  if(c)magShow(c[0],c[1],e.clientX,e.clientY);
+}
+
 /* ---------- sun ---------- */
 function dayOfYear(y,m,d){return Math.round((Date.UTC(y,m,d)-Date.UTC(y,0,1))/864e5)+1}
 function tzOff(y,doy){return -new Date(y,0,doy,12).getTimezoneOffset()/60}
@@ -2318,6 +2550,72 @@ function hull(P){
 }
 function renderNat(){renderNat0();syncWeather()}
 var NATINFO=null;
+function rayEdgeHit(x,y,dx,dy){
+  var best=null;
+  for(var i=0;i<nW();i++){var a=wA(i),b=wB(i),ex=b[0]-a[0],ey=b[1]-a[1],den=dx*ey-dy*ex;if(Math.abs(den)<1e-9)continue;
+    var t=((a[0]-x)*ey-(a[1]-y)*ex)/den,u=((a[0]-x)*dy-(a[1]-y)*dx)/den;
+    if(t>1e-6&&u>=-1e-6&&u<=1+1e-6&&(!best||t<best.t))best={t:t,i:i,u:u};
+  }
+  return best;
+}
+function rayEntry(P,x,y,dx,dy,tmax){
+  if(pdist(P,x,y)===0)return 0;
+  var best=1e9;
+  for(var i=0;i<P.length;i++){var a=P[i],b=P[(i+1)%P.length],ex=b[0]-a[0],ey=b[1]-a[1],den=dx*ey-dy*ex;if(Math.abs(den)<1e-9)continue;
+    var t=((a[0]-x)*ey-(a[1]-y)*ex)/den,u=((a[0]-x)*dy-(a[1]-y)*dx)/den;
+    if(t>1e-6&&u>=0&&u<=1&&t<best)best=t;}
+  return best<tmax?best:-1;
+}
+function heightBlockers(){
+  return view.objs.filter(function(o){return o.ht>0&&!o.top&&!o.under&&inside(o)}).map(function(o){return {id:o.id,P:collPoly(o),ht:o.ht}});
+}
+function sunReach(x,y,z,sp,blk,skip){
+  var s=planVec(sp.az),tn=Math.tan(sp.alt*D2R),hit=rayEdgeHit(x,y,s[0],s[1]);
+  if(!hit)return false;
+  var i=hit.i,L=wlen(i),f=wf(i,0,0),along=hit.u*L,t1=hit.t,z1=z+t1*tn,so=s[0]*f.o[0]+s[1]*f.o[1],ok=false,tg=t1;
+  if(so<0.035)return false;
+  for(var k=0;k<room.windows.length&&!ok;k++){
+    var w=room.windows[k];if(w.wall!==i||sp.alt<w.cut)continue;
+    if(along<w.pos||along>w.pos+w.w)continue;
+    if(w.d>0){
+      var t2=t1+w.d/so,P2=[x+s[0]*t2,y+s[1]*t2],al2=alongOf(i,P2),z2=z+t2*tn;
+      if(z1>w.top||al2<w.pos||al2>w.pos+w.w||z2<w.sill||z2>w.top)continue;tg=t2;ok=true;
+    }else{if(z1<w.sill||z1>w.top)continue;ok=true}
+  }
+  if(!ok)return false;
+  for(var b=0;b<blk.length;b++){var o=blk[b];if(o.id===skip)continue;var te=rayEntry(o.P,x,y,s[0],s[1],tg);if(te>=0&&z+te*tn<=o.ht)return false}
+  return true;
+}
+function sunCells(sp,blk){
+  var st=Math.max(5,Math.min(10,Math.round(Math.max(W,H)/60))),lit="",sh="";
+  for(var y=st/2;y<H;y+=st){
+    var rl=null,rs=null;
+    for(var x=st/2;x<=W+st;x+=st){
+      var inn=x<W&&inPoly(x,y,PTS),isL=false,isS=false;
+      if(inn){var free=sunReach(x,y,0,sp,[],null);if(free){isL=blk.length?sunReach(x,y,0,sp,blk,null):true;isS=!isL}}
+      if(isL){if(rl===null)rl=x}else if(rl!==null){lit+="M"+r1(rl-st/2)+" "+r1(y-st/2)+"h"+r1(x-rl)+"v"+st+"h"+r1(-(x-rl))+"z";rl=null}
+      if(isS){if(rs===null)rs=x}else if(rs!==null){sh+="M"+r1(rs-st/2)+" "+r1(y-st/2)+"h"+r1(x-rs)+"v"+st+"h"+r1(-(x-rs))+"z";rs=null}
+    }
+  }
+  return {lit:lit,shade:sh};
+}
+function pieceSunSegs(o){
+  var doy=curDoy(),segs=[],on=null,blk=heightBlockers().filter(function(b){return b.id!==o.id});
+  for(var i=0;i<=192;i++){
+    var h=5+i/12,sp=sunPos(YEAR,doy,h),lit=sp.alt>0&&sunReach(o.cx,o.cy,o.ht,sp,blk,o.id);
+    if(lit&&on===null)on=h;if(!lit&&on!==null){segs.push([on,h]);on=null}
+  }
+  if(on!==null)segs.push([on,21]);
+  return segs;
+}
+function updatePieceSun(o){
+  var el=$("fSun");if(!el)return;
+  if(!(o.ht>0)){el.textContent="Add a height to see when direct sun reaches it.";return}
+  if(room.lat==null||room.lon==null){el.textContent="Set a location in Room settings to see when direct sun reaches it.";return}
+  if(!inside(o)){el.textContent="";return}
+  var sg=pieceSunSegs(o),mo=MONTHS[+$("month").value-1];
+  el.textContent=sg.length?"Sun reaches the top of it "+sg.map(function(x){return timeLabel(x[0])+"–"+timeLabel(x[1])}).join(", ")+" in "+mo+". Uses your window sill and top heights.":"No direct sun reaches it in "+mo+". Uses your window sill and top heights.";
+}
 function renderNat0(){NATINFO=null;
   var doy=curDoy(),h=+$("hour").value;
   $("monthL").textContent=MONTHS[+$("month").value-1];$("hourL").textContent=timeLabel(h);
@@ -2342,6 +2640,8 @@ function renderNat0(){NATINFO=null;
       mk("polygon",{points:pts(hull([f.p0,f.p1].concat(p.poly))),"class":"sunbeam"},gNat);
     }
   });
+  if(sp.alt>0){var cells=sunCells(sp,heightBlockers());if(cells.lit)mk("path",{d:cells.lit,"class":"sunlit"},gNat);if(cells.shade)mk("path",{d:cells.shade,"class":"sunshade"},gNat)}
+  if(sheetOpen&&sel&&sel.t==="obj"){var so9=findObj(sel.id);if(so9)updatePieceSun(so9)}
   var msg=any?"sun on the floor":sp.alt<=0?"dark":states.blocked?"behind the buildings opposite":states.wall?"sun hits the recess, not the floor":"no direct sun (sun on the other side)";
   var segs=sunSegments(doy),segTxt=segs.length?segs.map(function(s){return timeLabel(s[0])+"–"+timeLabel(s[1])}).join(", "):"none";
   NATINFO={seg:segs.map(function(s){return timeLabel(s[0])+"–"+timeLabel(s[1])}),sp:sp};
@@ -2420,7 +2720,7 @@ function gapsOf(o,objs,P){
 function schedule(){if(!raf)raf=requestAnimationFrame(function(){raf=0;analyze()})}
 function analyze(){
   var objs=view.objs.filter(solid),P={},bad={},probs=[];
-  objs.forEach(function(o){P[o.id]=poly(o)});
+  objs.forEach(function(o){P[o.id]=collPoly(o)});
   function flag(id,m){bad[id]=1;if(m&&probs.indexOf(m)<0)probs.push(m)}
   for(var i=0;i<objs.length;i++)for(var j=i+1;j<objs.length;j++){
     var a=objs[i],b=objs[j];
@@ -2431,7 +2731,7 @@ function analyze(){
   room.doors.forEach(function(d){doorLeaves(d).open.forEach(function(L){sws.push(L.poly)})});
   view.objs.filter(inside).forEach(function(o){
     var Po=P[o.id]||poly(o),wb=wallBad(Po);if(wb)flag(o.id,o.name+" is "+wb);
-    if(o.top)return;
+    if(o.top||o.under)return;
     if(rads.some(function(q){return sat(Po,q)}))flag(o.id,o.name+" covers the radiator");
     if(sws.some(function(q){return sat(Po,q)}))flag(o.id,o.name+" blocks a door");
   });
@@ -2552,7 +2852,7 @@ function addEntry(e){
 }
 function obj(id,name,role,shape,cx,cy,w,h,r){return {id:id,name:name,role:role,shape:shape,cx:cx,cy:cy,w:w,h:h,r:r||0}}
 $("q").addEventListener("input",renderResults);
-$("addWin").onclick=function(){closeStore();addWindow()};$("addDoor").onclick=function(){closeStore();addDoor()};$("addOut").onclick=function(){closeStore();addOutlet();showPlan()};
+
 
 /* ---------- dialogs ---------- */
 var modalCb=null,modalNo=null;
@@ -2586,15 +2886,14 @@ function renderTree(){
   var h="",ms=mineRooms();
   ms.forEach(function(r){
     var curR=r.id===store.cur.r&&!shared,ro=moreOpen==="r:"+r.id;
-    h+='<div class="rm'+(curR?' cur':'')+'" data-r="'+esc(r.id)+'"><div class="rm-h"><button class="rm-name" data-act="openroom">'+esc(r.name)+'</button><span class="rm-meta">'+(isRectP(r.pts)?fmtM(r.w)+' × '+fmtM(r.h):r.pts.length+' corners · '+fmtM(r.w)+' × '+fmtM(r.h))+'</span></div>'+
-      '<div class="acts"><button class="b sm primary ibtn" data-act="shr">'+ICONS.share+'Share</button><button class="b sm more" data-act="more" aria-expanded="'+ro+'" aria-label="More room options">⋯</button></div>'+
-      (ro?'<div class="iconmenu">'+icb("setr","ruler","Room settings")+icb("rnroom","pencil","Rename")+icb("dupr","dup","Duplicate","dup")+icb("delr","bin","Delete","del")+'</div>':'')+
-      '<ul class="vw">';
+    h+='<div class="rm'+(curR?' cur':'')+'" data-r="'+esc(r.id)+'"><div class="rm-h2"><div class="rm-title"><button class="rm-name" data-act="openroom">'+esc(r.name)+'</button><span class="rm-meta">'+(isRectP(r.pts)?fmtM(r.w)+' × '+fmtM(r.h):r.pts.length+' corners · '+fmtM(r.w)+' × '+fmtM(r.h))+'</span></div>'+
+      '<div class="rm-acts">'+ibt("shr","share","Share","primary")+(ro?ibt("setr","ruler","Room settings")+ibt("rnroom","pencil","Rename")+ibt("dupr","dup","Duplicate","dup")+ibt("delr","bin","Delete","del"):"")+
+      '<button class="ibt more'+(ro?" on":"")+'" data-act="more" aria-expanded="'+ro+'" aria-label="'+(ro?"Close options":"More room options")+'">'+ICONS.dots+'</button></div></div><ul class="vw">';
     r.views.forEach(function(v){
       var cv=curR&&v.id===store.cur.v,vo=moreOpen==="v:"+v.id;
       h+='<li class="vwi'+(cv?' cur':'')+'" data-v="'+esc(v.id)+'"><div class="vrow"><button class="vname" data-act="openview"><span class="dot"></span>'+esc(v.name)+'<small style="color:var(--ink2);font-weight:400">'+v.objs.length+' items'+(v.recv?' · from '+esc(v.by||"a friend"):"")+'</small></button>'+
-        '<button class="b sm primary ibtn" data-act="shv" aria-label="Share view">'+ICONS.share+'</button><button class="b sm more" data-act="vmore" aria-expanded="'+vo+'" aria-label="More view options">⋯</button></div>'+
-        (vo?'<div class="iconmenu">'+icb("rnview","pencil","Rename")+icb("dupv","dup","Duplicate","dup")+icb("delv","bin","Delete","del")+'</div>':'')+'</li>';
+        '<div class="rm-acts">'+ibt("shv","share","Share view","primary")+(vo?ibt("rnview","pencil","Rename")+ibt("dupv","dup","Duplicate","dup")+ibt("delv","bin","Delete","del"):"")+
+        '<button class="ibt more'+(vo?" on":"")+'" data-act="vmore" aria-expanded="'+vo+'" aria-label="'+(vo?"Close options":"More view options")+'">'+ICONS.dots+'</button></div></div></li>';
     });
     h+='</ul><div class="iconmenu slim">'+icb("newv","newv","New blank view")+icb("addcode","clip","Add view from code")+'</div></div>';
   });
@@ -2757,7 +3056,7 @@ function decodePayload(code){
 }
 function cleanObjs(arr){
   var roles=["bed","wardrobe","desk","chair","shelf","table","custom"];
-  return (Array.isArray(arr)?arr:[]).slice(0,300).map(function(o,i){o=o||{};return {id:str(o.id,40,"o"+i),name:str(o.name,60,"Object"),role:roles.indexOf(o.role)>=0?o.role:"custom",shape:o.shape==="round"?"round":"rect",
+  return (Array.isArray(arr)?arr:[]).slice(0,300).map(function(o,i){o=o||{};return {id:str(o.id,40,"o"+i),name:str(o.name,60,"Object"),role:roles.indexOf(o.role)>=0?o.role:"custom",shape:o.shape==="round"?"round":(o.shape==="poly"&&Array.isArray(o.pts)&&o.pts.length>=3&&o.pts.length<=40?"poly":"rect"),pts:(o.shape==="poly"&&Array.isArray(o.pts)&&o.pts.length>=3&&o.pts.length<=40)?o.pts.map(function(q){return [numOk(q[0],-600,600,0),numOk(q[1],-600,600,0)]}):undefined,under:!!o.under,ht:(+o.ht>0?numOk(o.ht,0,400,0):undefined),
     cx:numOk(o.cx,-300,4000,0),cy:numOk(o.cy,-300,4000,0),w:numOk(o.w,1,500,50),h:numOk(o.h,1,500,50),r:numOk(o.r,0,359,0),top:!!o.top,lamp:!!o.lamp,locked:!!o.locked,light:numOk(o.light,0,600,0),
     on:typeof o.on==="string"?o.on.slice(0,40):undefined,ox:numOk(o.ox,-500,500,0),oy:numOk(o.oy,-500,500,0),or:numOk(o.or,0,359,0)}}).map(function(o){if(!o.on){delete o.on;delete o.ox;delete o.oy;delete o.or}return o});
 }
@@ -2832,7 +3131,7 @@ function asShare(p){
 /* ---------- sharing: versioned views, one share dialog ---------- */
 function sig(v){var t=JSON.stringify(v.objs),h=5381;for(var i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;return h}
 function csig(v){
-  var a=v.objs.map(function(o){return [String(o.id),o.name,o.shape,Math.round(o.cx),Math.round(o.cy),Math.round(o.w*2),Math.round(o.h*2),Math.round(o.r),!!o.top,Math.round(+o.light||0)]});
+  var a=v.objs.map(function(o){return [String(o.id),o.name,o.shape,Math.round(o.cx),Math.round(o.cy),Math.round(o.w*2),Math.round(o.h*2),Math.round(o.r),!!o.top,Math.round(+o.light||0),!!o.under,Math.round(+o.ht||0),o.pts?o.pts.map(function(q){return Math.round(q[0])+","+Math.round(q[1])}).join(";"):""]});
   a.sort(function(x,y){return x[0]<y[0]?-1:x[0]>y[0]?1:0});
   var t=JSON.stringify(a),h=5381;for(var i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;return h;
 }
@@ -3014,7 +3313,7 @@ function importRooms(rooms){
 function restoreAll(p){
   var n=p.rooms.length;
   showModal({title:"Restore "+n+" room"+(n>1?"s":"")+"?",msg:p.rooms.map(function(r){return r.name+(r.kind==="friend"?" (Help a friend)":"")}).join(", ")+". Rooms come back where they were. Nothing you have now is replaced.",ok:"Restore",cb:function(){
-    var c=importRooms(p.rooms);closeDrawer();hideLanding();renderTree();
+    var c=importRooms(p.rooms);closeDrawer();hideLanding();$("nrDlg").hidden=true;renderTree();
     showInfo("Restored",c.nm+" room"+(c.nm===1?"":"s")+" in My rooms"+(c.nf?" and "+c.nf+" in Help a friend":"")+".");
   }});
 }
@@ -3176,18 +3475,29 @@ $("frGo").onclick=function(){var v=$("frCode").value.trim();if(!v){$("frErr").te
 $("frFile").onchange=function(){readFileInput(this,"friend",$("frErr"))};
 
 /* ---------- friend mode ---------- */
+var bpTool="walls";
 function enterBP(){
   if(FR||shared||!store.rooms.length)return;
-  BP=true;document.body.classList.add("bp");$("bpBar").hidden=false;
+  BP=true;bpTool="walls";document.body.classList.add("bp");$("bpStrip").hidden=false;$("bpTray").hidden=false;
   if(!$("wpanel").hidden)toggleLight();
-  select({t:"room",id:"room"},true);openSheet();updateShareBtn();
+  closeSheet();sel=null;drawRoom();applyLocks();drawOverlay();refreshSel();setTool("walls");updateShareBtn();updateUndo();
 }
 function exitBP(quiet){
-  if(!BP)return;BP=false;document.body.classList.remove("bp");$("bpBar").hidden=true;
+  if(!BP)return;BP=false;document.body.classList.remove("bp");$("bpStrip").hidden=true;$("bpTray").hidden=true;
   sel=null;closeSheet();drawRoom();applyLocks();drawOverlay();refreshSel();updateShareBtn();
 }
+function setTool(t){bpTool=t;document.querySelectorAll("#bpTray .tbtn").forEach(function(b){var on=b.getAttribute("data-tool")===t;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on)})}
 $("bpDone").onclick=function(){exitBP()};
-$("bpEdit").onclick=function(){select({t:"room",id:"room"},true);openSheet()};
+$("bpUndo").onclick=function(){undo()};$("bpRedo").onclick=function(){redo()};
+$("bpTray").addEventListener("click",function(e){
+  var b=e.target.closest("[data-tool]");if(!b)return;var t=b.getAttribute("data-tool");
+  if(t==="walls"){closeSheet();sel=null;drawRoom();drawOverlay();refreshSel();setTool("walls")}
+  else if(t==="window")addWindow();
+  else if(t==="door")addDoor();
+  else if(t==="outlet")addOutlet();
+  else if(t==="light")addCeiling();
+  else if(t==="details"){setTool("details");select({t:"room",id:"room"},true);openSheet()}
+});
 function updateMode(){
   FR=!shared&&!!room&&room.kind==="friend"&&!!store.rooms.length;
   if(FR&&BP)exitBP(true);
@@ -3220,14 +3530,37 @@ function hasIdeas(){
   captureBase();return room.views.some(function(v){return sessBase[baseKey(v)]!==sig(v)});
 }
 function updateShareBtn(){var b=$("shareIdeas");if(b)b.hidden=true;var bar=$("ideasBar");if(!bar||!room)return;bar.hidden=!hasIdeas()}
+
+/* ---------- import my rooms (file, link or code) ---------- */
+function importAsMine(p){
+  p=asShare(p);var r=p.rooms[0],c=reid(r);c.kind="mine";c.name=uniqueName(c.name,mineRooms());
+  store.rooms.push(c);save();hideLanding();closeDrawer();$("nrDlg").hidden=true;$("impDlg").hidden=true;
+  goTo(c.id);showInfo("Imported “"+c.name+"”","It's now one of your rooms.");
+}
+function importMine(code,errEl){
+  if(errEl)errEl.textContent="";
+  return decodePayload(code).then(function(p){
+    if(p.t==="all"){$("nrDlg").hidden=true;$("impDlg").hidden=true;restoreAll(p);return}
+    var q=asShare(clone(p)),r=q.rooms[0],ms=mineRooms(),target=ms.filter(function(x){return sameOrigin(x,r)})[0];
+    if(target){$("nrDlg").hidden=true;$("impDlg").hidden=true;closeDrawer();hideLanding();applyIntoMine(target,q,false);return}
+    importAsMine(p);
+  }).catch(function(e){if(errEl)errEl.textContent=e&&e.message==="old"?"This browser is too old to open compressed codes. Try another browser.":"That doesn't look like a Roomie code or link. Copy the whole thing and try again."});
+}
+function readTo(inp,errEl){var f=inp.files&&inp.files[0];if(!f)return;if(f.size>8e6){errEl.textContent="File is too large.";return}var rd=new FileReader();rd.onload=function(){importMine(String(rd.result),errEl)};rd.readAsText(f);inp.value=""}
+$("nrImpGo").onclick=function(){var v=$("nrImp").value.trim();if(!v){$("nrImpErr").textContent="Paste the code first.";return}importMine(v,$("nrImpErr"))};
+$("nrImpFile").onchange=function(){readTo(this,$("nrImpErr"))};
+$("importRoom").onclick=function(){$("impCode").value="";$("impErr").textContent="";$("impDlg").hidden=false;$("impCode").focus()};
+$("impGo").onclick=function(){var v=$("impCode").value.trim();if(!v){$("impErr").textContent="Paste the code first.";return}importMine(v,$("impErr"))};
+$("impFile").onchange=function(){readTo(this,$("impErr"))};
+$("impNo").onclick=function(){$("impDlg").hidden=true};
 function layoutSliders(){syncWeather()}
 function toggleLight(){
   var p=$("wpanel");p.hidden=!p.hidden;$("zLight").setAttribute("aria-pressed",!p.hidden);$("zLight").classList.toggle("on",!p.hidden);
   if(!p.hidden){syncWeather();if(window.requestAnimationFrame)requestAnimationFrame(syncWeather)}
 }
 function vsPos(el,min,max,val){
-  var f=clampN((val-min)/(max-min),0,1),th=el.querySelector(".vs-thumb"),fl=el.querySelector(".vs-fill");
-  th.style.bottom="calc("+(f*100)+"% - 13px)";fl.style.height=(f*100)+"%";
+  var f=clampN((val-min)/(max-min),0,1),th=el.querySelector(".vslide-thumb"),fl=el.querySelector(".vslide-fill");
+  th.style.bottom="calc("+(f*100)+"% - 9px)";fl.style.height=(f*100)+"%";
   el.setAttribute("aria-valuenow",String(val));
 }
 function makeVS(id,min,max,step,get,set){
@@ -3263,13 +3596,74 @@ makeVS("wMonth",1,12,1,function(){return +$("month").value},function(v){$("month
 makeVS("wHour",5,21,0.25,function(){return +$("hour").value},function(v){$("hour").value=v;renderNat()});
 $("lNat").onclick=function(){store.nat=!store.nat;syncToggles();save();syncWeather()};
 $("lArt").onclick=function(){store.art=!store.art;syncToggles();save();syncWeather()};
-function openStore(){
-  var body=$("storeBody");body.appendChild($("q"));body.appendChild($("results"));
-  $("roomParts").hidden=true;$("storeDlg").hidden=false;renderResults();$("q").focus();
+var SHL={rect:"Rectangle",square:"Square",circle:"Circle",oval:"Oval",custom:"Custom shape"};
+var SHI={
+  rect:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="16" width="52" height="32" rx="4" fill="#F5E7BF" stroke="#151311" stroke-width="4"/></svg>',
+  square:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="12" width="40" height="40" rx="4" fill="#F5E7BF" stroke="#151311" stroke-width="4"/></svg>',
+  circle:'<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="21" fill="#F5E7BF" stroke="#151311" stroke-width="4"/></svg>',
+  oval:'<svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="32" rx="27" ry="17" fill="#F5E7BF" stroke="#151311" stroke-width="4"/></svg>',
+  custom:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 12h22v18h18v22H12z" fill="#F5E7BF" stroke="#151311" stroke-width="4" stroke-linejoin="round"/><rect x="8" y="8" width="9" height="9" fill="#FFB81C" stroke="#151311" stroke-width="2.5"/><rect x="30" y="26" width="9" height="9" fill="#FFB81C" stroke="#151311" stroke-width="2.5"/><rect x="47" y="47" width="9" height="9" fill="#FFB81C" stroke="#151311" stroke-width="2.5"/></svg>'
+};
+var SUGG={
+  rect:[["Single bed",90,190,"bed","",0,50],["Double bed",140,190,"bed","",0,50],["King bed",160,200,"bed","",0,50],["Desk",120,60,"desk","",0,75],["Wardrobe",100,60,"wardrobe","",0,200],["Sofa",200,90,"custom","",0,85],["Bookshelf",80,30,"shelf","",0,180],["Dresser",80,45,"custom","",0,85],["Rug",160,230,"custom","under"]],
+  square:[["Side table",40,40,"table","",0,50],["Pouf",50,50,"custom","",0,40],["Stool",35,35,"custom","",0,45],["Chair",50,50,"chair","",0,90],["Plant pot",30,30,"custom","",0,50],["Rug",200,200,"custom","under"]],
+  circle:[["Side table",45,45,"table","",0,50],["Round table",90,90,"table","",0,75],["Pouf",50,50,"custom","",0,40],["Floor lamp",30,30,"custom","",150,150],["Table lamp",20,20,"custom","top",80],["Plant",40,40,"custom","",0,100],["Round rug",160,160,"custom","under"]],
+  oval:[["Rug",120,180,"custom","under"],["Dining table",90,160,"table","",0,75],["Coffee table",60,110,"table","",0,45]]
+};
+var addState=null;
+function roleOf(name){var n=norm(name);if(/\bbed\b/.test(n))return "bed";if(/wardrobe|armoire|closet/.test(n))return "wardrobe";if(/desk/.test(n))return "desk";if(/chair/.test(n))return "chair";if(/shel|book/.test(n))return "shelf";if(/table/.test(n))return "table";return "custom"}
+function openStore(){addState=null;renderStore();$("storeDlg").hidden=false}
+function closeStore(){$("storeDlg").hidden=true}
+function renderStore(){
+  var body=$("storeBody"),h="";
+  if(!addState){
+    h='<div class="shapegrid">'+["rect","square","circle","oval","custom"].map(function(k){return '<button class="shapebtn" data-shape="'+k+'" aria-label="'+SHL[k]+'">'+SHI[k]+'</button>'}).join("")+'</div>';
+    body.innerHTML=h;return;
+  }
+  var k=addState.kind,two=(k==="rect"||k==="oval"),one=(k==="square"||k==="circle");
+  h='<div class="addhead"><button class="ibt" id="aBack" aria-label="Back to shapes"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="addicon">'+SHI[k]+'</span><b class="addname">'+SHL[k]+'</b></div>'+
+    '<div class="f">'+fld("Name",'<input type="text" id="aName" maxlength="60" placeholder="'+SHL[k]+'" value="'+esc(addState.name||"")+'">',true)+
+    (two?fld("Width (cm)",num("aW",addState.w,5,500,0.5))+fld("Depth (cm)",num("aD",addState.h,5,500,0.5)):"")+
+    (one?fld(k==="circle"?"Diameter (cm)":"Side (cm)",num("aS",addState.w,5,500,0.5),true):"")+fld("Height (cm, optional)",'<input type="number" id="aHt" value="'+(addState.ht>0?addState.ht:"")+'" min="0" max="400" step="1" inputmode="decimal" placeholder="optional">',true)+'</div>';
+  if(k==="custom")h+='<p class="cap">Starts as a 60 cm square. Drag its corners on the plan, tap a + to add one, double-tap a corner to remove it.</p>';
+  else h+='<div class="sub" style="margin-top:8px">Typical sizes</div><div class="chips2">'+SUGG[k].map(function(s,i){return '<button class="chip2" data-sg="'+i+'">'+esc(s[0])+' · '+(k==="circle"?"Ø"+s[1]:k==="square"?s[1]:s[1]+"×"+s[2])+'</button>'}).join("")+'</div>';
+  h+='<div class="row"><button class="b primary" id="aAdd">Add</button></div><p class="cap bad" id="aErr" role="alert" style="margin:4px 0 0"></p>';
+  body.innerHTML=h;
 }
-function closeStore(){
-  var home=$("qHome");if(home&&$("q").parentNode!==home.parentNode){home.parentNode.insertBefore($("q"),home.nextSibling);$("q").parentNode.insertBefore($("results"),$("q").nextSibling)}
-  $("storeDlg").hidden=true;
+$("storeBody").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  if(b.hasAttribute("data-shape")){var k=b.getAttribute("data-shape");addState={kind:k,name:"",w:k==="rect"?90:k==="oval"?120:k==="circle"?50:k==="custom"?60:50,h:k==="rect"?60:k==="oval"?80:50,role:"custom"};renderStore();var n=$("aName");if(n)n.focus();return}
+  if(b.id==="aBack"){addState=null;renderStore();return}
+  if(b.hasAttribute("data-sg")){
+    var sg=SUGG[addState.kind][+b.getAttribute("data-sg")];
+    addState.name=sg[0];addState.w=sg[1];addState.h=sg[2];addState.role=sg[3]||roleOf(sg[0]);addState.top=sg[4]==="top";addState.under=sg[4]==="under";addState.light=sg[5]||0;addState.ht=sg[6]||0;
+    renderStore();return;
+  }
+  if(b.id==="aAdd")addShape();
+});
+function roomSpot(){
+  var cx=W/2,cy=H/2;if(inRoom(cx,cy))return [cx,cy];
+  var best=null,bd=1e9;
+  for(var y=10;y<H;y+=15)for(var x=10;x<W;x+=15){if(!inPoly(x,y,PTS))continue;var d=Math.hypot(x-cx,y-cy);if(d<bd){bd=d;best=[x,y]}}
+  return best||[cx,cy];
+}
+function addShape(){
+  var k=addState.kind,err=$("aErr"),name=str($("aName").value,60,""),w,h;
+  if(k==="rect"||k==="oval"){w=parseFloat($("aW").value);h=parseFloat($("aD").value)}
+  else if(k==="square"||k==="circle"){w=h=parseFloat($("aS").value)}
+  else{w=h=60}
+  if(!(w>=5&&w<=500&&h>=5&&h<=500)){err.textContent="Sizes must be between 5 and 500 cm.";return}
+  if(!name)name=SHL[k];
+  var role=addState.role&&addState.role!=="custom"?addState.role:roleOf(name),sp=roomSpot();
+  var o={id:uid("obj"),name:name,role:role,shape:(k==="circle"||k==="oval")?"round":(k==="custom"?"poly":"rect"),cx:sp[0],cy:sp[1],w:w,h:h,r:0};
+  if(k==="custom"){o.pts=[[-30,-30],[30,-30],[30,30],[-30,30]]}
+  if(addState.top)o.top=true;if(addState.under)o.under=true;
+  var hv=parseFloat($("aHt").value);if(isFinite(hv)&&hv>0&&hv<=400&&!o.under)o.ht=hv;
+  if(addState.light){o.light=addState.light;if(addState.top)o.lamp=true}else o.light=0;
+  mark();snapObj(o);clampObj(o);view.objs.push(o);rebuildItems();applyLocks();
+  if(o.top)dropStick(o);
+  if(o.light&&!store.art){store.art=true;syncToggles()}
+  save();select({t:"obj",id:o.id},true);closeStore();showPlan();
 }
 $("npcStore").onclick=openStore;$("zAdd").onclick=openStore;$("storeX").onclick=closeStore;
 /* ---------- misc ---------- */
