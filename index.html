@@ -36,6 +36,7 @@
 
 
 
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Condensed:wght@500;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
@@ -723,6 +724,12 @@ body.bp.sheet-tall main{padding-bottom:calc(80vh + 8px)}
 .mbox{margin:auto;max-height:none}
 .mbox.store{max-height:none;overflow:visible}
 #sdViews{max-height:34vh;overflow-y:auto;overscroll-behavior:contain}
+
+/* ===== v15: lighter lens, live light ===== */
+.mag{width:72px;height:72px}
+#magSvg text{visibility:hidden}
+.maglab{bottom:6px;font-size:12px}
+.sunlit{fill:#FFD23F;fill-opacity:.34}
 </style>
 </head>
 <body>
@@ -748,9 +755,7 @@ body.bp.sheet-tall main{padding-bottom:calc(80vh + 8px)}
       </div>
     </div>
     <p class="cap lg-foot">Your rooms stay on this device. Back them up in My rooms → Rooms and views → Vault.<br><span class="ver">Roomie v2.2</span></p>
-    
   </div>
-
 </section>
 
 <section class="landing" id="friendScr" aria-labelledby="frT" hidden>
@@ -962,7 +967,6 @@ body.bp.sheet-tall main{padding-bottom:calc(80vh + 8px)}
     </div>
     <p class="cap">Restoring adds rooms back. It never replaces what you have now.</p>
     </div>
-    <p class="cap ver">Roomie v2.2</p>
   </div>
 </div>
 
@@ -1484,7 +1488,7 @@ var rclip=mk("clipPath",{id:"roomclip"},defs);
 var dynDefs=mk("defs",{});
 var gGrid=mk("g",{"class":"grid"}),gStatic=mk("g",{}),gSwing=mk("g",{}),gPath=mk("g",{}),gItems=mk("g",{});
 var gNat=mk("g",{style:"pointer-events:none"}),gArt=mk("g",{style:"pointer-events:none"}),gOuts=mk("g",{}),gCeil=mk("g",{}),gSel=mk("g",{}),gGhost=mk("g",{style:"pointer-events:none"});
-var MAGL=[gGrid,gStatic,gSwing,gPath,gItems,gNat,gArt,gOuts,gCeil,gSel,gGhost];
+var MAGL=[gGrid,gStatic,gSwing,gPath,gItems,gNat,gArt,gOuts,gCeil];
 var route=mk("polyline",{id:"route",points:""},gPath),routeEnd=mk("circle",{id:"routeEnd",r:4,cx:-80,cy:-80},gPath);
 
 function base0(){return {x:-(NG.left+MG.l),y:-(NG.top+MG.t),w:W+NG.left+NG.right+MG.l+MG.r,h:H+NG.top+NG.bottom+MG.t+MG.b}}
@@ -2523,24 +2527,41 @@ function magSetup(){
   magInit=true;
 }
 function magHide(){var m=$("mag");if(m&&!m.hidden)m.hidden=true}
-function magShow(wx,wy,cx,cy,label){
+function toClient(x,y){var r=$("plan").getBoundingClientRect(),u=unitsPerPx();return [r.left+r.width/2+(x-zoom.cx)/u.x,r.top+r.height/2+(y-zoom.cy)/u.y]}
+function magShow(wx,wy,cx,cy,label,d,avoid,pref){
   var m=$("mag");if(!m)return;magSetup();
-  var u=unitsPerPx(),vw=84*u.x/2,r=wrapRect(),px=cx-r.left,py=cy-r.top;
+  var u=unitsPerPx(),SZ=72,R=96,vw=SZ*u.x/2,r=wrapRect();
   $("magSvg").setAttribute("viewBox",r1(wx-vw/2)+" "+r1(wy-vw/2)+" "+r1(vw)+" "+r1(vw));
   $("magLab").textContent=label||"";
-  var left=clampN(px-42,6,Math.max(6,r.width-90)),top=py-84-26;if(top<6)top=py+34;top=clampN(top,6,Math.max(6,r.height-90));
-  m.style.left=Math.round(left)+"px";m.style.top=Math.round(top)+"px";m.hidden=false;
+  var best=null,bs=-1e9;
+  for(var k=0;k<16;k++){
+    var a=k/16*2*Math.PI,ux=Math.cos(a),uy=Math.sin(a),px=cx+ux*R,py=cy+uy*R,lx=px-r.left,ly=py-r.top;
+    if(lx<SZ/2+6||lx>r.width-(SZ/2+86)||ly<SZ/2+6||ly>r.height-(SZ/2+6))continue;
+    var sc=0;
+    if(pref)sc+=(ux*pref[0]+uy*pref[1])*60;
+    (avoid||[]).forEach(function(q){sc+=Math.min(Math.hypot(px-q[0],py-q[1]),200)*0.4});
+    if(d&&d.magPos)sc-=Math.hypot(px-d.magPos[0],py-d.magPos[1])*0.25;
+    if(sc>bs){bs=sc;best=[px,py]}
+  }
+  if(!best)best=[clampN(cx,r.left+SZ/2+6,r.left+Math.max(SZ/2+6,r.width-SZ/2-86)),clampN(cy-R,r.top+SZ/2+6,r.top+Math.max(SZ/2+6,r.height-SZ/2-6))];
+  if(d&&d.magPos)best=[d.magPos[0]+(best[0]-d.magPos[0])*0.4,d.magPos[1]+(best[1]-d.magPos[1])*0.4];
+  if(d)d.magPos=best;
+  m.style.left=Math.round(best[0]-r.left-SZ/2)+"px";m.style.top=Math.round(best[1]-r.top-SZ/2)+"px";m.hidden=false;
 }
 function magFor(d,e,p){
   if(!d||!d.moved||arm)return;
   var L=lens();if(!L.on){magHide();return}
+  if(d.lx!=null){d.vx=(d.vx||0)*0.6+(e.clientX-d.lx)*0.4;d.vy=(d.vy||0)*0.6+(e.clientY-d.ly)*0.4}d.lx=e.clientX;d.ly=e.clientY;
+  var sp0=Math.hypot(d.vx||0,d.vy||0),mpref=sp0>1.2?[-d.vx/sp0,-d.vy/sp0]:null;
   var c=null,k=d.k;
   if(k==="obj"){
     var o=findObj(d.id);if(!o||!inside(o)){magHide();return}
     var cl=clearances(o),best=null;["l","r","u","d"].forEach(function(q){if(!best||cl[q].d<best.d)best=cl[q]});
     if(!best||best.d>=900){d.magOn=false;magHide();return}
     if(best.d<=L.tol)d.magOn=true;else if(best.d>L.tol+5)d.magOn=false;
-    if(d.magOn)magShow((best.x+best.x2)/2,(best.y+best.y2)/2,e.clientX,e.clientY,Math.round(best.d)+" cm");else magHide();
+    if(!d.magOn){magHide();return}
+    var sx=best.x2-best.x,sy=best.y2-best.y,sl=Math.hypot(sx,sy)||1,pref=mpref||[-sx/sl,-sy/sl];
+    magShow((best.x+best.x2)/2,(best.y+best.y2)/2,e.clientX,e.clientY,Math.round(best.d)+" cm",d,[toClient(best.x2,best.y2),toClient(o.cx,o.cy)],pref);
     return;
   }
   if(k==="clight"){var cc0=findCL(d.id);if(cc0)c=[cc0.x,cc0.y]}
@@ -2550,7 +2571,7 @@ function magFor(d,e,p){
   else if(k==="pt"){var pp=PTS[d.id];if(pp)c=pp}
   else if(k==="opt"){var oo=findObj(d.oid);if(oo&&oo.pts&&oo.pts[d.id]){var cs=Math.cos(oo.r*D2R),sn=Math.sin(oo.r*D2R),lq=oo.pts[d.id];c=[oo.cx+lq[0]*cs-lq[1]*sn,oo.cy+lq[0]*sn+lq[1]*cs]}}
   else if(k==="wl")c=[p.x,p.y];
-  if(c)magShow(c[0],c[1],e.clientX,e.clientY,"");
+  if(c)magShow(c[0],c[1],e.clientX,e.clientY,"",d,[],mpref);
 }
 
 /* ---------- magnifier and gap settings ---------- */
@@ -2681,7 +2702,7 @@ function updatePieceSun(o){
   var sg=pieceSunSegs(o),mo=MONTHS[+$("month").value-1];
   el.textContent=sg.length?"Sun reaches the top of it "+sg.map(function(x){return timeLabel(x[0])+"–"+timeLabel(x[1])}).join(", ")+" in "+mo+". Uses your window sill and top heights.":"No direct sun reaches it in "+mo+". Uses your window sill and top heights.";
 }
-function renderNat0(){NATINFO=null;
+function renderNat0(live){if(!live)NATINFO=null;
   var doy=curDoy(),h=+$("hour").value;
   $("monthL").textContent=MONTHS[+$("month").value-1];$("hourL").textContent=timeLabel(h);
   gNat.innerHTML="";dynDefs.innerHTML="";
@@ -2703,9 +2724,21 @@ function renderNat0(){NATINFO=null;
       any=true;area+=p.area;
       var nz=nichePoly(w);if(nz)mk("polygon",{points:pts(nz),"class":"sunbeam"},gNat);
       mk("polygon",{points:pts(hull([f.p0,f.p1].concat(p.poly))),"class":"sunbeam"},gNat);
+      if(p.poly&&p.poly.length>2)mk("polygon",{points:pts(p.poly),"class":"sunlit"},gNat);
     }
   });
-  if(sp.alt>0){var cells=sunCells(sp,heightBlockers());if(cells.lit)mk("path",{d:cells.lit,"class":"sunlit"},gNat);if(cells.shade)mk("path",{d:cells.shade,"class":"sunshade"},gNat)}
+  gNat.removeAttribute("mask");
+  if(sp.alt>0){
+    var blk=heightBlockers();
+    if(blk.length){
+      var tn=Math.tan(sp.alt*D2R),sv=planVec(sp.az),mskEl=mk("mask",{id:"natmask",maskUnits:"userSpaceOnUse",x:-4000,y:-4000,width:9000,height:9000},dynDefs);
+      mk("rect",{x:-4000,y:-4000,width:9000,height:9000,fill:"#fff"},mskEl);
+      blk.forEach(function(b){var Ls=Math.min(2500,b.ht/tn),dx=-sv[0]*Ls,dy=-sv[1]*Ls;
+        mk("polygon",{points:pts(hull(b.P.concat(b.P.map(function(q){return [q[0]+dx,q[1]+dy]})))),fill:"#000"},mskEl)});
+      gNat.setAttribute("mask","url(#natmask)");
+    }
+  }
+  if(live)return;
   if(sheetOpen&&sel&&sel.t==="obj"){var so9=findObj(sel.id);if(so9)updatePieceSun(so9)}
   var msg=any?"sun on the floor":sp.alt<=0?"dark":states.blocked?"behind the buildings opposite":states.wall?"sun hits the recess, not the floor":"no direct sun (sun on the other side)";
   var segs=sunSegments(doy),segTxt=segs.length?segs.map(function(s){return timeLabel(s[0])+"–"+timeLabel(s[1])}).join(", "):"none";
@@ -2775,7 +2808,7 @@ function wallRuns(objs,P){
   return res;
 }
 function gapsOf(o,objs,P){var c=clearances(o);return [c.l.d,c.r.d,c.u.d,c.d.d].map(function(v){return Math.round(Math.max(0,Math.min(v,9999)))})}
-function schedule(){if(!raf)raf=requestAnimationFrame(function(){raf=0;analyze()})}
+function schedule(){if(!raf)raf=requestAnimationFrame(function(){raf=0;analyze();renderNat0(true)})}
 function analyze(){
   var objs=view.objs.filter(solid),P={},bad={},probs=[];
   objs.forEach(function(o){P[o.id]=collPoly(o)});
@@ -3668,6 +3701,28 @@ var SUGG={
 };
 var addState=null;
 function roleOf(name){var n=norm(name);if(/\bbed\b/.test(n))return "bed";if(/wardrobe|armoire|closet/.test(n))return "wardrobe";if(/desk/.test(n))return "desk";if(/chair/.test(n))return "chair";if(/shel|book/.test(n))return "shelf";if(/table/.test(n))return "table";return "custom"}
+function typicalHeight(name){
+  var n=norm(name);
+  if(/rug|carpet|\bmat\b/.test(n))return 0;
+  if(/table lamp|desk lamp/.test(n))return 0;
+  if(/floor lamp|standing lamp/.test(n))return 150;
+  if(/wardrobe|armoire|closet/.test(n))return 200;
+  if(/book ?shelf|bookcase|shelf|shelves/.test(n))return 180;
+  if(/\bbed\b|mattress/.test(n))return 50;
+  if(/desk|workstation/.test(n))return 75;
+  if(/coffee table/.test(n))return 45;
+  if(/night ?stand|bed ?side|side table|end table/.test(n))return 50;
+  if(/table/.test(n))return 75;
+  if(/chair|armchair/.test(n))return 90;
+  if(/sofa|couch|loveseat/.test(n))return 85;
+  if(/dresser|drawers|chest|cabinet|sideboard/.test(n))return 85;
+  if(/pouf|ottoman|puff/.test(n))return 40;
+  if(/stool/.test(n))return 45;
+  if(/\btv\b|television/.test(n))return 50;
+  if(/plant/.test(n))return 100;
+  return 0;
+}
+$("storeBody").addEventListener("input",function(e){if(e.target.id==="aName"){var th=typicalHeight(e.target.value),h=$("aHt");if(h&&!h.value)h.placeholder=th?"typical "+th:"optional"}});
 function openStore(){addState=null;renderStore();$("storeDlg").hidden=false}
 function closeStore(){$("storeDlg").hidden=true}
 function renderStore(){
@@ -3714,7 +3769,7 @@ function addShape(){
   var o={id:uid("obj"),name:name,role:role,shape:(k==="circle"||k==="oval")?"round":(k==="custom"?"poly":"rect"),cx:sp[0],cy:sp[1],w:w,h:h,r:0};
   if(k==="custom"){o.pts=[[-30,-30],[30,-30],[30,30],[-30,30]]}
   if(addState.top)o.top=true;if(addState.under)o.under=true;
-  var hv=parseFloat($("aHt").value);if(isFinite(hv)&&hv>0&&hv<=400&&!o.under)o.ht=hv;
+  var hv=parseFloat($("aHt").value);if(isFinite(hv)&&hv>0&&hv<=400&&!o.under)o.ht=hv;else if(!o.under&&!addState.top){var th0=typicalHeight(name);if(th0)o.ht=th0}
   if(addState.light){o.light=addState.light;if(addState.top)o.lamp=true}else o.light=0;
   mark();snapObj(o);clampObj(o);view.objs.push(o);rebuildItems();applyLocks();
   if(o.top)dropStick(o);
